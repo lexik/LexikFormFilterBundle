@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="lexik_form_filter.query_builder.class">Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder</parameter>
+    </parameters>
+
+    <services>
+        <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%" />
+    
+        <!-- form filter extension -->
+        <service id="lexik_filter.filter_type_extension" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterExtension">
+            <argument type="service" id="validator" />
+            <tag name="form.type_extension" alias="filter_extension" />
+        </service>
+    </services>
+</container>
