@@ -34,6 +34,10 @@
     {{ block('field_widget') }}
 {% endblock filter_field_widget %}
 
+{% block filter_choice_widget %}
+    {{ block('choice_widget') }}
+{% endblock filter_choice_widget %}
+
 {# Labels #}
 {% block filter_field_label %}
     {{ block('field_label') }}

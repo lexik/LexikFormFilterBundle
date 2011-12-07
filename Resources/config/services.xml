@@ -12,24 +12,30 @@
         <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%" />
     
          <!-- FilterExtension -->
-        <service id="lexik_filter.type.filter" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterType">
-            <argument type="service" id="validator" />
-            <tag name="form.type" alias="filter" />
-        </service>
-
         <service id="lexik_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterFieldType">
             <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_field" />
         </service>
 
+        <service id="lexik_filter.type.filter" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterType">
+            <tag name="form.type" alias="filter" />
+        </service>
+
         <service id="lexik_filter.type.filter_text" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTextType">
-            <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_text" />
         </service>
 
         <service id="lexik_filter.type.filter_number" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterNumberType">
-            <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_number" />
+        </service>
+        
+        <service id="lexik_filter.type.filter_choice" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterChoiceType">
+            <tag name="form.type" alias="filter_choice" />
+        </service>
+        
+        <service id="lexik_filter.type.filter_entity" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterEntityType">
+            <argument type="service" id="doctrine" />
+            <tag name="form.type" alias="filter_entity" />
         </service>
         
     </services>

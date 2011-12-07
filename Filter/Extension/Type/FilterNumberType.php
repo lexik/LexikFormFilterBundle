@@ -74,6 +74,9 @@ class FilterNumberType extends NumberType implements FilterTypeInterface
         return 'filter_number';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {

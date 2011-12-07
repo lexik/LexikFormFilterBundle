@@ -20,6 +20,7 @@ class FilterExtension extends AbstractExtension
             new Type\FilterType(),
             new Type\FilterTextType(),
             new Type\FilterNumberType(),
+            new Type\FilterChoiceType(),
         );
     }
 }
