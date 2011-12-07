@@ -16,11 +16,11 @@ class FilterExtension extends AbstractExtension
     protected function loadTypes()
     {
         return array(
-            new Type\FilterFieldType(),
+            new Type\FieldFilterType(),
             new Type\FilterType(),
-            new Type\FilterTextType(),
-            new Type\FilterNumberType(),
-            new Type\FilterChoiceType(),
+            new Type\TextFilterType(),
+            new Type\NumberFilterType(),
+            new Type\ChoiceFilterType(),
         );
     }
 }

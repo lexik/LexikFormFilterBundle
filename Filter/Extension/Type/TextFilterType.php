@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterTextType extends TextType implements FilterTypeInterface
+class TextFilterType extends TextType implements FilterTypeInterface
 {
     const PATTERN_EQUALS     = '%s';
     const PATTERN_START_WITH = '%%%s';

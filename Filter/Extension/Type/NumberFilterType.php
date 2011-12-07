@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterNumberType extends NumberType implements FilterTypeInterface
+class NumberFilterType extends NumberType implements FilterTypeInterface
 {
     const OPERATOR_EQUAL              = '=';
     const OPERATOR_GREATER_THAN       = '>';

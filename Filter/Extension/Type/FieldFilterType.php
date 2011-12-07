@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterFieldType extends FormFieldType implements FilterTypeInterface
+class FieldFilterType extends FormFieldType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}

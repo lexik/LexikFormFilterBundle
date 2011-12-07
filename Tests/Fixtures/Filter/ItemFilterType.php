@@ -5,8 +5,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTextType;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterNumberType;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
 
 /**
  * Form filter for tests.
@@ -29,10 +29,10 @@ class ItemFilterType extends AbstractType
             $builder->add('position', 'filter_number');
         } else {
             $builder->add('name', 'filter_text', array(
-                'condition_pattern' => FilterTextType::SELECT_PATTERN,
+                'condition_pattern' => TextFilterType::SELECT_PATTERN,
             ));
             $builder->add('position', 'filter_number', array(
-                'condition_operator' => FilterNumberType::OPERATOR_GREATER_THAN,
+                'condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN,
             ));
         }
     }

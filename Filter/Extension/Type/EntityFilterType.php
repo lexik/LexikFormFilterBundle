@@ -6,7 +6,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Doctrine\ORM\QueryBuilder;
 
-class FilterEntityType extends EntityType implements FilterTypeInterface
+class EntityFilterType extends EntityType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
