@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class ChoiceFilterType extends ChoiceType// implements FilterTypeInterface
+class ChoiceFilterType extends ChoiceType
 {
     /**
      * {@inheritdoc}
@@ -21,12 +21,4 @@ class ChoiceFilterType extends ChoiceType// implements FilterTypeInterface
     {
         return 'filter_choice';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    /*public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
-    {
-
-    }*/
 }

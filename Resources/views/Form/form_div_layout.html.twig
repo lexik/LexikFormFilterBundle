@@ -38,6 +38,10 @@
     {{ block('choice_widget') }}
 {% endblock filter_choice_widget %}
 
+{% block filter_checkbox_widget %}
+    {{ block('checkbox_widget') }}
+{% endblock filter_checkbox_widget %}
+
 {# Labels #}
 {% block filter_field_label %}
     {{ block('field_label') }}
