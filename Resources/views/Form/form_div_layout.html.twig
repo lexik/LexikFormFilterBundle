@@ -17,18 +17,6 @@
     {% endif %}
 {% endblock filter_text_row %}
 
-{% block filter_number_row %}
-    {% if form.offsetExists('condition_operator') %}
-        <div>
-            {{ form_label(form) }}
-            {{ form_widget(form.condition_operator) }}
-            {{ form_widget(form.text) }}
-        </div>
-    {% else %}
-        {{ block('filter_field_row') }}
-    {% endif %}
-{% endblock filter_number_row %}
-
 {# Widgets #}
 {% block filter_field_widget %}
     {{ block('field_widget') }}
@@ -41,6 +29,25 @@
 {% block filter_checkbox_widget %}
     {{ block('checkbox_widget') }}
 {% endblock filter_checkbox_widget %}
+
+{% block filter_number_widget %}
+    {% if form.offsetExists('condition_operator') %}
+        <div>
+            {{ form_label(form) }}
+            {{ form_widget(form.condition_operator) }}
+            {{ form_widget(form.text) }}
+        </div>
+    {% else %}
+        {{ block('filter_field_widget') }}
+    {% endif %}
+{% endblock filter_number_widget %}
+
+{% block filter_number_range_widget %}
+    <div>
+        {{ form_widget(form.left_number) }}
+        {{ form_widget(form.right_number) }}
+    </div>
+{% endblock filter_number_range_widget %}
 
 {# Labels #}
 {% block filter_field_label %}

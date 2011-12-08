@@ -74,8 +74,18 @@ class QueryBuilder
         $data = $form->getData();
 
         if (is_array($data)) {
-            $values = array('value' => $data['text']);
-            unset($data['text']);
+            $keys = $form->hasAttribute('filter_value_keys') ? $form->getAttribute('filter_value_keys') : array('text');
+            $values = array('value' => array());
+
+            foreach ($keys as $key) {
+                $values['value'][$key] = $data[$key]['text'];
+                unset($data[$key]['text']);
+            }
+
+            if (count($values['value']) == 1) {
+                $values['value'] = $values['value'][0];
+            }
+
             $values += $data;
         } else {
             $values = array('value' => $data);

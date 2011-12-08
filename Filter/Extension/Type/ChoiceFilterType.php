@@ -4,6 +4,11 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
+/**
+ * Filter type for select list.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class ChoiceFilterType extends ChoiceType
 {
     /**

@@ -6,6 +6,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Filter type for boolean.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
 {
     /**

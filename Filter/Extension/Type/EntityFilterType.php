@@ -6,6 +6,11 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Filter type for related entities.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class EntityFilterType extends EntityType implements FilterTypeInterface
 {
     /**
