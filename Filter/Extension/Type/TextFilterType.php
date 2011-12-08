@@ -79,9 +79,9 @@ class TextFilterType extends TextType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf(':%s_param', $field);
+            $paramName = sprintf('%s_param', $field);
             $value = sprintf($values['condition_pattern'], $values['value']);
-            $condition = sprintf('%s.%s %s %s',
+            $condition = sprintf('%s.%s %s :%s',
                 $queryBuilder->getRootAlias(),
                 $field,
                 ($values['condition_pattern'] == self::PATTERN_EQUALS) ? '=' : 'LIKE',

@@ -35,9 +35,9 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf(':%s_param', $field);
+            $paramName = sprintf('%s_param', $field);
 
-            $queryBuilder->andWhere(sprintf('%s.%s = %s', $queryBuilder->getRootAlias(), $field, $paramName))
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
                 ->setParameter($paramName, $values['value'], \PDO::PARAM_BOOL);
         }
     }

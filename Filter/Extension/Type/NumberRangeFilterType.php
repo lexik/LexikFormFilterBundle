@@ -58,10 +58,10 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (isset($values['value']['left_number'], $values['value']['right_number'])) {
-            $leftParamName = sprintf(':left_%s_param', $field);
-            $rightParamName = sprintf(':right_%s_param', $field);
+            $leftParamName = sprintf('left_%s_param', $field);
+            $rightParamName = sprintf('right_%s_param', $field);
 
-            $condition = sprintf('(%s.%s %s %s AND %s.%s %s %s)',
+            $condition = sprintf('(%s.%s %s :%s AND %s.%s %s :%s)',
                 $queryBuilder->getRootAlias(),
                 $field,
                 $values['left_number']['condition_operator'],

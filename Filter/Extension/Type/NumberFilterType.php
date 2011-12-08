@@ -80,8 +80,8 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf(':%s_param', $field);
-            $condition = sprintf('%s.%s %s %s',
+            $paramName = sprintf('%s_param', $field);
+            $condition = sprintf('%s.%s %s :%s',
                 $queryBuilder->getRootAlias(),
                 $field,
                 $values['condition_operator'],
