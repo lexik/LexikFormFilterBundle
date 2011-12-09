@@ -21,7 +21,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     {
         parent::buildForm($builder, $options);
 
-        if ($options['apply_filter'] instanceof \Closure) {
+        if ($options['apply_filter'] instanceof \Closure || is_callable($options['apply_filter'])) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
         }
     }

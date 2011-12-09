@@ -45,5 +45,9 @@
             <argument type="service" id="doctrine" />
             <tag name="form.type" alias="filter_entity" />
         </service>
+        
+        <service id="lexik_filter.type.filter_date" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType">
+            <tag name="form.type" alias="filter_date" />
+        </service>
     </services>
 </container>

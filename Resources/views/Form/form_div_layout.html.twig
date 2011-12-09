@@ -30,6 +30,10 @@
     {{ block('checkbox_widget') }}
 {% endblock filter_checkbox_widget %}
 
+{% block filter_date_widget %}
+    {{ block('date_widget') }}
+{% endblock filter_date_widget %}
+
 {% block filter_number_widget %}
     {% if form.offsetExists('condition_operator') %}
         <div>
