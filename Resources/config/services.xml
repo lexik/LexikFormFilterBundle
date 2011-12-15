@@ -37,6 +37,10 @@
             <tag name="form.type" alias="filter_checkbox" />
         </service>
         
+        <service id="lexik_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
+            <tag name="form.type" alias="filter_boolean" />
+        </service>
+        
         <service id="lexik_filter.type.filter_choice" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\ChoiceFilterType">
             <tag name="form.type" alias="filter_choice" />
         </service>
