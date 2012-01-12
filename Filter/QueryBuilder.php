@@ -41,8 +41,13 @@ class QueryBuilder
 
         // apply the filter by using the closure set with the 'apply_filter' option
         if ($form->hasAttribute('apply_filter')) {
-            $closure = $form->getAttribute('apply_filter');
-            $closure($queryBuilder, $form->getName(), $values);
+            $callable = $form->getAttribute('apply_filter');
+
+            if ($callable instanceof \Closure) {
+                $callable($queryBuilder, $form->getName(), $values);
+            } else {
+                call_user_func($callable, $queryBuilder, $form->getName(), $values);
+            }
         } else {
             // if no closure we use the applyFilter() method from an FilterTypeInterface
             $types = array_reverse($form->getTypes());
@@ -74,8 +79,23 @@ class QueryBuilder
         $data = $form->getData();
 
         if (is_array($data)) {
-            $values = array('value' => $data['text']);
-            unset($data['text']);
+            $keys = $form->hasAttribute('filter_value_keys') ? $form->getAttribute('filter_value_keys') : null;
+            $values = array('value' => array());
+
+            if (null != $keys) {
+                foreach ($keys as $key) {
+                    $values['value'][$key] = $data[$key]['text'];
+                    unset($data[$key]['text']);
+                }
+
+                if (count($values['value']) == 1) {
+                    $values['value'] = reset($values['value']);
+                }
+            } else {
+                $values = array('value' => $data['text']);
+                unset($data['text']);
+            }
+
             $values += $data;
         } else {
             $values = array('value' => $data);

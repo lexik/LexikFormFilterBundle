@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterFieldType extends FormFieldType implements FilterTypeInterface
+class FieldFilterType extends FormFieldType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
@@ -21,7 +21,7 @@ class FilterFieldType extends FormFieldType implements FilterTypeInterface
     {
         parent::buildForm($builder, $options);
 
-        if ($options['apply_filter'] instanceof \Closure) {
+        if ($options['apply_filter'] instanceof \Closure || is_callable($options['apply_filter'])) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
         }
     }
@@ -53,9 +53,9 @@ class FilterFieldType extends FormFieldType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf(':%s_param', $field);
+            $paramName = sprintf('%s_param', $field);
 
-            $queryBuilder->andWhere(sprintf('%s.%s = %s', $queryBuilder->getRootAlias(), $field, $paramName))
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
                 ->setParameter($paramName, $values['value'], \PDO::PARAM_STR);
         }
     }

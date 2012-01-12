@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterNumberType extends NumberType implements FilterTypeInterface
+class NumberFilterType extends NumberType implements FilterTypeInterface
 {
     const OPERATOR_EQUAL              = '=';
     const OPERATOR_GREATER_THAN       = '>';
@@ -74,11 +74,14 @@ class FilterNumberType extends NumberType implements FilterTypeInterface
         return 'filter_number';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf(':%s_param', $field);
-            $condition = sprintf('%s.%s %s %s',
+            $paramName = sprintf('%s_param', $field);
+            $condition = sprintf('%s.%s %s :%s',
                 $queryBuilder->getRootAlias(),
                 $field,
                 $values['condition_operator'],
