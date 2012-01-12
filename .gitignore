@@ -1,2 +1,6 @@
 phpunit.xml
 .directory
+.project
+.buildpath
+.settings
+vendor
