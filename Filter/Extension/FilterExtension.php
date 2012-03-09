@@ -18,9 +18,13 @@ class FilterExtension extends AbstractExtension
         return array(
             new Type\FieldFilterType(),
             new Type\FilterType(),
-            new Type\TextFilterType(),
-            new Type\NumberFilterType(),
+            new Type\BooleanFilterType(),
+            new Type\CheckboxFilterType(),
             new Type\ChoiceFilterType(),
+            new Type\DateFilterType(),
+            new Type\NumberFilterType(),
+            new Type\NumberRangeFilterType(),
+            new Type\TextFilterType(),
         );
     }
 }

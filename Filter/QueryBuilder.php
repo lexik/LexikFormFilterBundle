@@ -49,7 +49,7 @@ class QueryBuilder
                 call_user_func($callable, $queryBuilder, $form->getName(), $values);
             }
         } else {
-            // if no closure we use the applyFilter() method from an FilterTypeInterface
+            // if no closure we use the applyFilter() method from a FilterTypeInterface
             $types = array_reverse($form->getTypes());
             $filterApplied = false;
             $i = 0;
