@@ -68,6 +68,8 @@ class QueryBuilder
     }
 
     /**
+     * @todo refractor or find a better way to get values and needed param.
+     *
      * Prepare all values needed to apply the filer.
      *
      * @param Form $form
@@ -78,25 +80,32 @@ class QueryBuilder
         $values = array();
         $data = $form->getData();
 
-        if (is_array($data)) {
+        if (is_array($data) && count($data) > 0) {
             $keys = $form->hasAttribute('filter_value_keys') ? $form->getAttribute('filter_value_keys') : null;
             $values = array('value' => array());
 
             if (null != $keys) {
                 foreach ($keys as $key) {
-                    $values['value'][$key] = $data[$key]['text'];
-                    unset($data[$key]['text']);
+                    if (is_array($data[$key])) {
+                        $values['value'][$key] = $data[$key]['text'];
+                        unset($data[$key]['text']);
+                    } else {
+                        $values['value'][$key] = $data[$key];
+                    }
                 }
 
                 if (count($values['value']) == 1) {
                     $values['value'] = reset($values['value']);
                 }
-            } else {
+            } else if (array_key_exists('text', $data)) {
                 $values = array('value' => $data['text']);
                 unset($data['text']);
+
+                $values += $data;
+            } else {
+                $values = array('value' => $data);
             }
 
-            $values += $data;
         } else {
             $values = array('value' => $data);
         }
