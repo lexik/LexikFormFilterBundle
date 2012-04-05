@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Translation\TranslatorInterface;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -15,6 +16,19 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * {@inheritdoc}
@@ -39,11 +53,25 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     {
         return array(
             'choices' => array(
-                self::VALUE_YES  => 'boolean.yes',
-                self::VALUE_NO   => 'boolean.no'
+                self::VALUE_YES  => $this->trans('boolean.yes'),
+                self::VALUE_NO   => $this->trans('boolean.no'),
             ),
-            'empty_value' => 'boolean.yes_or_no',
+            'empty_value' => $this->trans('boolean.yes_or_no'),
         );
+    }
+
+    /**
+     * Translate a key for a domain
+     *
+     * @param string $key
+     * @param array  $parameters
+     * @param string $domain
+     *
+     * @return string
+     */
+    private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
+    {
+        return $this->translator->trans($key, $parameters, $domain);
     }
 
     /**

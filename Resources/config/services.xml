@@ -10,7 +10,7 @@
 
     <services>
         <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%" />
-    
+
          <!-- FilterExtension -->
         <service id="lexik_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
             <argument type="service" id="validator" />
@@ -28,28 +28,29 @@
         <service id="lexik_filter.type.filter_number" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType">
             <tag name="form.type" alias="filter_number" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_number_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberRangeFilterType">
             <tag name="form.type" alias="filter_number_range" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CheckboxFilterType">
             <tag name="form.type" alias="filter_checkbox" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
+            <argument type="service" id="translator" />
             <tag name="form.type" alias="filter_boolean" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_choice" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\ChoiceFilterType">
             <tag name="form.type" alias="filter_choice" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_entity" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EntityFilterType">
             <argument type="service" id="doctrine" />
             <tag name="form.type" alias="filter_entity" />
         </service>
-        
+
         <service id="lexik_filter.type.filter_date" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType">
             <tag name="form.type" alias="filter_date" />
         </service>
