@@ -3,12 +3,13 @@ Overview
 
 This Symfony2 bundle aims to provide classes to build a form filter and then build a doctrine query from this form filter.
 
+[![Build Status](https://secure.travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](http://travis-ci.org/lexik/LexikFormFilterBundle)
+
 The idea is:
 
 1. Create a form type extending from `Symfony\Component\Form\AbstractType` as usual
 2. Add form fields by using filter types instead of form types (e.g. use `filter_text` instead of `text` type)
 3. Then call a service to build the query from the form instance.
-
 
 Documentation
 =============
