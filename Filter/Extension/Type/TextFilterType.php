@@ -21,6 +21,8 @@ class TextFilterType extends TextType implements FilterTypeInterface
 
     const SELECT_PATTERN = 'select_pattern';
 
+    protected $transformerId;
+
     /**
      * {@inheritdoc}
      */
@@ -29,6 +31,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
         parent::buildForm($builder, $options);
 
         $attributes = array();
+        $this->transformerId = 'lexik_filter.transformer.default';
 
         if ($options['condition_pattern'] == self::SELECT_PATTERN) {
             $textOptions = array_intersect_key($options, parent::getDefaultOptions(array()));
@@ -39,6 +42,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
             	'choices' => self::getConditionChoices(),
             ));
             $builder->add('text', 'text', $textOptions);
+            $this->transformerId = 'lexik_filter.transformer.text';
         } else {
             $attributes['condition_pattern'] = $options['condition_pattern'];
         }
@@ -71,6 +75,11 @@ class TextFilterType extends TextType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_text';
+    }
+
+    public function getTransformerId()
+    {
+        return $this->transformerId;
     }
 
     /**

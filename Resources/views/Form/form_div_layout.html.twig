@@ -53,6 +53,13 @@
     </div>
 {% endblock filter_number_range_widget %}
 
+{% block filter_date_range_widget %}
+    <div>
+        {{ form_widget(form.left_date) }}
+        {{ form_widget(form.right_date) }}
+    </div>
+{% endblock filter_date_range_widget %}
+
 {# Labels #}
 {% block filter_field_label %}
     {{ block('field_label') }}

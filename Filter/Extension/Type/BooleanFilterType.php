@@ -23,14 +23,6 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     protected $translator;
 
     /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getParent(array $options)
@@ -61,6 +53,16 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     }
 
     /**
+     * Set Translator
+     *
+     * @param Translator $translator
+     */
+    public function setTranslator(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * Translate a key for a domain
      *
      * @param string $key
@@ -72,6 +74,11 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
     {
         return $this->translator->trans($key, $parameters, $domain);
+    }
+
+    public function getTransformerId()
+    {
+        return 'default';
     }
 
     /**

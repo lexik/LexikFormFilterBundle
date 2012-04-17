@@ -19,4 +19,11 @@ interface FilterTypeInterface
      * @param array $values
      */
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values);
+
+    /**
+     * Return service id used to transforme values
+     *
+     * @return string
+     */
+    public function getTransformerId();
 }

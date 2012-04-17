@@ -74,6 +74,11 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
         return 'filter_number';
     }
 
+    public function getTransformerId()
+    {
+        return 'lexik_filter.transformer.default';
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -9,7 +9,9 @@
     </parameters>
 
     <services>
-        <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%" />
+        <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%">
+            <argument type="service" id="lexik_filter.transformer_aggregator" />
+        </service>
 
          <!-- FilterExtension -->
         <service id="lexik_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
@@ -38,7 +40,9 @@
         </service>
 
         <service id="lexik_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
-            <argument type="service" id="translator" />
+            <call method="setTranslator">
+                <argument type="service" id="translator" />
+            </call>
             <tag name="form.type" alias="filter_boolean" />
         </service>
 
@@ -54,5 +58,31 @@
         <service id="lexik_filter.type.filter_date" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType">
             <tag name="form.type" alias="filter_date" />
         </service>
+
+        <service id="lexik_filter.type.filter_date_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType">
+            <tag name="form.type" alias="filter_date_range" />
+        </service>
+        
+        <!--         Filter transformer agggregator -->
+        <service id="lexik_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator">
+        </service>
+
+        <!--         Tag filter transformer -->
+        <service id="lexik_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">
+            <tag name="filter_form.transformer" alias="filter_transformer_value_key" />
+        </service>
+        
+        <service id="lexik_filter.transformer.default" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDefaultTransformer">
+            <tag name="filter_form.transformer" alias="filter_transformer_default" />
+        </service>
+        
+        <service id="lexik_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
+            <tag name="filter_form.transformer" alias="filter_transformer_date" />
+        </service>
+        
+        <service id="lexik_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
+            <tag name="filter_form.transformer" alias="filter_transformer_text" />
+        </service>
+        
     </services>
 </container>

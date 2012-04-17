@@ -22,7 +22,9 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
         $builder->add('left_number', 'filter_number', $options['left_number']);
         $builder->add('right_number', 'filter_number', $options['right_number']);
 
-        $builder->setAttribute('filter_value_keys', array('left_number', 'right_number'));
+        $builder->setAttribute('filter_value_keys', array(
+                'left_number' => $options['left_number'],
+                'right_number' => $options['right_number']));
     }
 
     /**
@@ -52,29 +54,34 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
         return 'filter_number_range';
     }
 
+    public function getTransformerId()
+    {
+        return 'lexik_filter.transformer.value_keys';
+    }
+
     /**
      * {@inheritdoc}
      */
     public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
     {
-        if (isset($values['value']['left_number'], $values['value']['right_number'])) {
+        if (isset($values['value']['left_number'][0], $values['value']['right_number'][0])) {
             $leftParamName = sprintf('left_%s_param', $field);
             $rightParamName = sprintf('right_%s_param', $field);
 
             $condition = sprintf('(%s.%s %s :%s AND %s.%s %s :%s)',
                 $queryBuilder->getRootAlias(),
                 $field,
-                $values['left_number']['condition_operator'],
+                $values['value']['left_number']['condition_operator'],
                 $leftParamName,
                 $queryBuilder->getRootAlias(),
                 $field,
-                $values['right_number']['condition_operator'],
+                $values['value']['right_number']['condition_operator'],
                 $rightParamName
             );
 
             $queryBuilder->andWhere($condition)
-                ->setParameter($leftParamName, $values['value']['left_number'], \PDO::PARAM_INT)
-                ->setParameter($rightParamName, $values['value']['right_number'], \PDO::PARAM_INT);
+                ->setParameter($leftParamName, $values['value']['left_number'][0], \PDO::PARAM_INT)
+                ->setParameter($rightParamName, $values['value']['right_number'][0], \PDO::PARAM_INT);
         }
     }
 }

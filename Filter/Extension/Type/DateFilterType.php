@@ -15,10 +15,6 @@ class DateFilterType extends DateType implements FilterTypeInterface
     public function buildForm(FormBuilder $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
-        if ($options['widget'] != 'single_text') {
-            $builder->setAttribute('filter_value_keys', array('year', 'month', 'day'));
-        }
     }
 
     /**
@@ -35,6 +31,11 @@ class DateFilterType extends DateType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_date';
+    }
+
+    public function getTransformerId()
+    {
+        return 'lexik_filter.transformer.default';
     }
 
     /**

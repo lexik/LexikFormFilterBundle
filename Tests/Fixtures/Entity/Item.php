@@ -29,6 +29,10 @@ class Item
     protected $position;
 
     /**
+     * @ORM\Column(type="datetime", name="created_at", nullable="true")
+     */
+    protected $createdAt;
+    /**
      * Get id
      *
      * @return integer
@@ -76,5 +80,25 @@ class Item
     public function setPosition($position)
     {
         $this->position = $position;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return datetime $createdAt
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

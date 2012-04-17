@@ -46,6 +46,11 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
         return 'filter_field';
     }
 
+    public function getTransformerId()
+    {
+        return 'lexik_filter.transformer.default';
+    }
+
     /**
      * Default implementation of the applyFieldFilter() method.
      * We just add a 'and where' clause.

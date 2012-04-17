@@ -2,6 +2,20 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
+
+use Symfony\Component\Config\FileLocator;
+
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
+
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
+
 use Symfony\Component\HttpFoundation\Request;
 
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder;
@@ -18,7 +32,7 @@ class QueryBuilderTest extends TestCase
     public function testBuildQuery()
     {
         $form = $this->formFactory->create(new ItemFilterType());
-        $filterQueryBuilder = new QueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilder();
 
         // without binding the form
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -50,7 +64,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
 
-        // use filter type options
+//         // use filter type options
         $form = $this->formFactory->create(new ItemFilterType(true, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -63,11 +77,67 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals(array('name_param' => 'blabla%', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
     }
 
+    public function testNumberRange()
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new OtherFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->craeteRequest(array('position' => array('left_number' => 1, 'right_number' => 3)));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE (i.position > :left_position_param AND i.position < :right_position_param)';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+    }
+
+    public function testDateRange()
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new OtherFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->craeteRequest(array('createdAt' => array(
+                'left_date' => array('year' => '2012', 'month' => '05', 'day' => '12'),
+                'right_date' => array('year' => '2012', 'month' => '05', 'day' => '22')))
+                );
+
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.createdAt >= :left_createdAt_param AND i.createdAt <= :right_createdAt_param';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+    }
+
     protected function createDoctrineQueryBuilder()
     {
         return $this->em->createQueryBuilder()
             ->select('i')
             ->from('Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity', 'i');
+    }
+
+    protected function initQueryBuilder()
+    {
+        $container = $this->getContainer();
+        return $container->get('lexik_form_filter.query_builder');
+    }
+
+    protected function getContainer()
+    {
+        $container = new ContainerBuilder();
+        $filter = new LexikFormFilterExtension();
+        $container->registerExtension($filter);
+        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../Resources/config'));
+        $loadXml->load('services.xml');
+
+        $container->getCompilerPassConfig()->setOptimizationPasses(array());
+        $container->getCompilerPassConfig()->setRemovingPasses(array());
+        $container->addCompilerPass(new FilterTransformerCompilerPass());
+        $container->compile();
+
+        return $container;
     }
 
     protected function craeteRequest($values)

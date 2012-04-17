@@ -25,6 +25,7 @@ class FilterExtension extends AbstractExtension
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
             new Type\TextFilterType(),
+            new Type\DateRangeFilterType()
         );
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-use Symfony\Component\Form\Form;
-
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
+use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
+
+use Symfony\Component\Form\Form;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
@@ -13,6 +15,22 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
  */
 class QueryBuilder
 {
+    /**
+     *
+     * @var FilterTransformerAggregator
+     */
+    protected $filterTransformerAggregator;
+
+    /**
+     * Constructor
+     *
+     * @param TransformerAggregator $filterTransformerAggregator
+     */
+    public function __construct(TransformerAggregator $filterTransformerAggregator)
+    {
+        $this->filterTransformerAggregator = $filterTransformerAggregator;
+    }
+
     /**
      * Build a filter query.
      *
@@ -68,8 +86,6 @@ class QueryBuilder
     }
 
     /**
-     * @todo refractor or find a better way to get values and needed param.
-     *
      * Prepare all values needed to apply the filer.
      *
      * @param Form $form
@@ -80,34 +96,23 @@ class QueryBuilder
         $values = array();
         $data = $form->getData();
 
-        if (is_array($data) && count($data) > 0) {
-            $keys = $form->hasAttribute('filter_value_keys') ? $form->getAttribute('filter_value_keys') : null;
-            $values = array('value' => array());
+        $types = array_reverse($form->getTypes());
+        $transformerApplied = false;
+        $i = 0;
 
-            if (null != $keys) {
-                foreach ($keys as $key) {
-                    if (is_array($data[$key])) {
-                        $values['value'][$key] = $data[$key]['text'];
-                        unset($data[$key]['text']);
-                    } else {
-                        $values['value'][$key] = $data[$key];
-                    }
-                }
+        while ($i<count($types) && !$transformerApplied) {
+            $type = $types[$i];
 
-                if (count($values['value']) == 1) {
-                    $values['value'] = reset($values['value']);
-                }
-            } else if (array_key_exists('text', $data)) {
-                $values = array('value' => $data['text']);
-                unset($data['text']);
+            if ($type instanceof FilterTypeInterface) {
+                $transformerId = $type->getTransformerId();
 
-                $values += $data;
-            } else {
-                $values = array('value' => $data);
+                /** @var FilterTransformerInterface */
+                $transformer = $this->filterTransformerAggregator->get($transformerId);
+                $values = $transformer->transform($form);
+                $transformerApplied = true;
             }
 
-        } else {
-            $values = array('value' => $data);
+            $i++;
         }
 
         if ($form->hasAttribute('filter_options')) {
