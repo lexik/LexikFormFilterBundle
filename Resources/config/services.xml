@@ -62,27 +62,26 @@
         <service id="lexik_filter.type.filter_date_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType">
             <tag name="form.type" alias="filter_date_range" />
         </service>
-        
-        <!--         Filter transformer agggregator -->
+
+        <!-- Filter transformer agggregator -->
         <service id="lexik_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator">
         </service>
 
-        <!--         Tag filter transformer -->
+        <!-- Tag filter transformer -->
         <service id="lexik_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">
             <tag name="filter_form.transformer" alias="filter_transformer_value_key" />
         </service>
-        
+
         <service id="lexik_filter.transformer.default" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDefaultTransformer">
             <tag name="filter_form.transformer" alias="filter_transformer_default" />
         </service>
-        
+
         <service id="lexik_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
             <tag name="filter_form.transformer" alias="filter_transformer_date" />
         </service>
-        
+
         <service id="lexik_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
             <tag name="filter_form.transformer" alias="filter_transformer_text" />
         </service>
-        
     </services>
 </container>

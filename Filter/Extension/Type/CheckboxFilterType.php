@@ -29,6 +29,9 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
         return 'filter_checkbox';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.default';

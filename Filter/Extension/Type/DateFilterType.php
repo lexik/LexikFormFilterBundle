@@ -33,6 +33,9 @@ class DateFilterType extends DateType implements FilterTypeInterface
         return 'filter_date';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.default';

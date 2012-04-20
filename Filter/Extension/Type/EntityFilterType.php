@@ -30,6 +30,9 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
         return 'filter_entity';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.default';

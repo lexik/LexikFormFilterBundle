@@ -50,6 +50,9 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
         return 'filter_date_range';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.value_keys';

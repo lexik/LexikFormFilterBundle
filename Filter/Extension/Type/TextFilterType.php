@@ -77,6 +77,9 @@ class TextFilterType extends TextType implements FilterTypeInterface
         return 'filter_text';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return $this->transformerId;

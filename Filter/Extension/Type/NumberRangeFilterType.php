@@ -54,6 +54,9 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
         return 'filter_number_range';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.value_keys';

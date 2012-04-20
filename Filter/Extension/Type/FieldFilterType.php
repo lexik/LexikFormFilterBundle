@@ -46,6 +46,9 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
         return 'filter_field';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
         return 'lexik_filter.transformer.default';
