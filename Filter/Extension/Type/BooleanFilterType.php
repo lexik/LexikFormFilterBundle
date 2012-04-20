@@ -55,9 +55,9 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * Set Translator
      *
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
-    public function setTranslator(Translator $translator)
+    public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
@@ -76,9 +76,12 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
         return $this->translator->trans($key, $parameters, $domain);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformerId()
     {
-        return 'default';
+        return 'lexik_filter.transformer.default';
     }
 
     /**
