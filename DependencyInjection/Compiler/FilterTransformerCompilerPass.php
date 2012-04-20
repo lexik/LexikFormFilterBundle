@@ -15,13 +15,13 @@ class FilterTransformerCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('lexik_filter.transformer_aggregator')) {
+        if (false === $container->hasDefinition('lexik_form_filter.transformer_aggregator')) {
             return;
         }
 
-        $definition = $container->getDefinition('lexik_filter.transformer_aggregator');
+        $definition = $container->getDefinition('lexik_form_filter.transformer_aggregator');
 
-        foreach ($container->findTaggedServiceIds('filter_form.transformer') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('lexik_form_filter.transformer') as $id => $attributes) {
             $definition->addMethodCall('addFilterTransformer', array($id, new Reference($id)));
         }
     }

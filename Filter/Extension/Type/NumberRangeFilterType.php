@@ -59,7 +59,7 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
      */
     public function getTransformerId()
     {
-        return 'lexik_filter.transformer.value_keys';
+        return 'lexik_form_filter.transformer.value_keys';
     }
 
     /**

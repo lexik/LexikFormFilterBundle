@@ -38,7 +38,7 @@ class DateFilterType extends DateType implements FilterTypeInterface
      */
     public function getTransformerId()
     {
-        return 'lexik_filter.transformer.default';
+        return 'lexik_form_filter.transformer.default';
     }
 
     /**

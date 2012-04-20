@@ -10,78 +10,78 @@
 
     <services>
         <service id="lexik_form_filter.query_builder" class="%lexik_form_filter.query_builder.class%">
-            <argument type="service" id="lexik_filter.transformer_aggregator" />
+            <argument type="service" id="lexik_form_filter.transformer_aggregator" />
         </service>
 
          <!-- FilterExtension -->
-        <service id="lexik_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
+        <service id="lexik_form_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
             <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_field" />
         </service>
 
-        <service id="lexik_filter.type.filter" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterType">
+        <service id="lexik_form_filter.type.filter" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterType">
             <tag name="form.type" alias="filter" />
         </service>
 
-        <service id="lexik_filter.type.filter_text" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType">
+        <service id="lexik_form_filter.type.filter_text" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType">
             <tag name="form.type" alias="filter_text" />
         </service>
 
-        <service id="lexik_filter.type.filter_number" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType">
+        <service id="lexik_form_filter.type.filter_number" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType">
             <tag name="form.type" alias="filter_number" />
         </service>
 
-        <service id="lexik_filter.type.filter_number_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberRangeFilterType">
+        <service id="lexik_form_filter.type.filter_number_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberRangeFilterType">
             <tag name="form.type" alias="filter_number_range" />
         </service>
 
-        <service id="lexik_filter.type.filter_checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CheckboxFilterType">
+        <service id="lexik_form_filter.type.filter_checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CheckboxFilterType">
             <tag name="form.type" alias="filter_checkbox" />
         </service>
 
-        <service id="lexik_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
+        <service id="lexik_form_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
             <call method="setTranslator">
                 <argument type="service" id="translator" />
             </call>
             <tag name="form.type" alias="filter_boolean" />
         </service>
 
-        <service id="lexik_filter.type.filter_choice" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\ChoiceFilterType">
+        <service id="lexik_form_filter.type.filter_choice" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\ChoiceFilterType">
             <tag name="form.type" alias="filter_choice" />
         </service>
 
-        <service id="lexik_filter.type.filter_entity" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EntityFilterType">
+        <service id="lexik_form_filter.type.filter_entity" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EntityFilterType">
             <argument type="service" id="doctrine" />
             <tag name="form.type" alias="filter_entity" />
         </service>
 
-        <service id="lexik_filter.type.filter_date" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType">
+        <service id="lexik_form_filter.type.filter_date" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType">
             <tag name="form.type" alias="filter_date" />
         </service>
 
-        <service id="lexik_filter.type.filter_date_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType">
+        <service id="lexik_form_filter.type.filter_date_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType">
             <tag name="form.type" alias="filter_date_range" />
         </service>
 
         <!-- Filter transformer agggregator -->
-        <service id="lexik_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator">
+        <service id="lexik_form_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator">
         </service>
 
         <!-- Tag filter transformer -->
-        <service id="lexik_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">
-            <tag name="filter_form.transformer" alias="filter_transformer_value_key" />
+        <service id="lexik_form_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">
+            <tag name="lexik_form_filter.transformer" alias="filter_transformer_value_key" />
         </service>
 
-        <service id="lexik_filter.transformer.default" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDefaultTransformer">
-            <tag name="filter_form.transformer" alias="filter_transformer_default" />
+        <service id="lexik_form_filter.transformer.default" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDefaultTransformer">
+            <tag name="lexik_form_filter.transformer" alias="filter_transformer_default" />
         </service>
 
-        <service id="lexik_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
-            <tag name="filter_form.transformer" alias="filter_transformer_date" />
+        <service id="lexik_form_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
+            <tag name="lexik_form_filter.transformer" alias="filter_transformer_date" />
         </service>
 
-        <service id="lexik_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
-            <tag name="filter_form.transformer" alias="filter_transformer_text" />
+        <service id="lexik_form_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
+            <tag name="lexik_form_filter.transformer" alias="filter_transformer_text" />
         </service>
     </services>
 </container>
