@@ -41,14 +41,14 @@ class TransformerAggregator
      *
      * @param string $id Service id
      *
-     * @throws \Exception
+     * @throws \RuntimeException
      *
-     * @return FilterTransformerInterface
+     * @return Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface
      */
     public function get($id)
     {
         if (!isset($this->filterTransformers[$id])) {
-            throw new \Exception(sprintf('No filter transformer found with id %s', $id));
+            throw new \RuntimeException(sprintf('No filter transformer found with id %s', $id));
         }
 
         return $this->filterTransformers[$id];
