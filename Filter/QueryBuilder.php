@@ -16,8 +16,7 @@ use Symfony\Component\Form\Form;
 class QueryBuilder
 {
     /**
-     *
-     * @var FilterTransformerAggregator
+     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator
      */
     protected $filterTransformerAggregator;
 
@@ -68,19 +67,10 @@ class QueryBuilder
             }
         } else {
             // if no closure we use the applyFilter() method from a FilterTypeInterface
-            $types = array_reverse($form->getTypes());
-            $filterApplied = false;
-            $i = 0;
+            $type = $this->getFilterType($form->getTypes());
 
-            while ($i<count($types) && !$filterApplied) {
-                $type = $types[$i];
-
-                if ($type instanceof FilterTypeInterface) {
-                    $type->applyFilter($queryBuilder, $form->getName(), $values);
-                    $filterApplied = true;
-                }
-
-                $i++;
+            if ($type instanceof FilterTypeInterface) {
+                $type->applyFilter($queryBuilder, $form->getName(), $values);
             }
         }
     }
@@ -94,25 +84,11 @@ class QueryBuilder
     protected function prepareFilterValues(Form $form)
     {
         $values = array();
-        $data = $form->getData();
+        $type = $this->getFilterType($form->getTypes());
 
-        $types = array_reverse($form->getTypes());
-        $transformerApplied = false;
-        $i = 0;
-
-        while ($i<count($types) && !$transformerApplied) {
-            $type = $types[$i];
-
-            if ($type instanceof FilterTypeInterface) {
-                $transformerId = $type->getTransformerId();
-
-                /** @var FilterTransformerInterface */
-                $transformer = $this->filterTransformerAggregator->get($transformerId);
-                $values = $transformer->transform($form);
-                $transformerApplied = true;
-            }
-
-            $i++;
+        if ($type instanceof FilterTypeInterface) {
+            $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
+            $values = $transformer->transform($form);
         }
 
         if ($form->hasAttribute('filter_options')) {
@@ -120,5 +96,26 @@ class QueryBuilder
         }
 
         return $values;
+    }
+
+    /**
+     * Returns the first FilterTypeInterface instance.
+     *
+     * @param array $types
+     * @return Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface
+     */
+    protected function getFilterType(array $types)
+    {
+        $types = array_reverse($types);
+
+        $type = null;
+        $i = 0;
+
+        while ($i<count($types) && null == $type) {
+            $type = ($types[$i] instanceof FilterTypeInterface) ? $types[$i] : null;
+            $i++;
+        }
+
+        return $type;
     }
 }
