@@ -17,7 +17,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     const OPERATOR_EQUAL              = '=';
     const OPERATOR_GREATER_THAN       = '>';
     const OPERATOR_GREATER_THAN_EQUAL = '>=';
-    const OPERATOR_LOWER_THAN_        = '<';
+    const OPERATOR_LOWER_THAN         = '<';
     const OPERATOR_LOWER_THAN_EQUAL   = '<=';
 
     const SELECT_OPERATOR = 'select_operator';

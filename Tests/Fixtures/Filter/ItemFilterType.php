@@ -32,12 +32,10 @@ class ItemFilterType extends AbstractType
             ));
             $builder->add('position', 'filter_number');
         } else {
-            $builder->add('name', 'filter_text', array(
-                'condition_pattern' => TextFilterType::SELECT_PATTERN,
-            ));
-            $builder->add('position', 'filter_number', array(
-                'condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN,
-                'apply_filter' => $this->withCallback ? function($queryBuilder, $field, $values) {
+            $positionOptions = array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN);
+
+            if ($this->withCallback) {
+                $positionOptions['apply_filter'] = function($queryBuilder, $field, $values) {
                     if (!empty($values['value'])) {
                         $paramName = sprintf('%s_param', $field);
                         $condition = sprintf('%s.%s <> :%s',
@@ -49,8 +47,13 @@ class ItemFilterType extends AbstractType
                         $queryBuilder->andWhere($condition)
                             ->setParameter($paramName, $values['value']);
                     }
-                } : null,
+                };
+            }
+
+            $builder->add('name', 'filter_text', array(
+                'condition_pattern' => TextFilterType::SELECT_PATTERN,
             ));
+            $builder->add('position', 'filter_number', $positionOptions);
         }
     }
 

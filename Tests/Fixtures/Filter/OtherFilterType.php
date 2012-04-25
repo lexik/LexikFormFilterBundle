@@ -18,12 +18,12 @@ class OtherFilterType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('position', 'filter_number_range', array(
-                'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN),
-                'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_)
+                    'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN),
+                    'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN)
                 ))
                 ->add('createdAt', 'filter_date_range', array(
-                'left_date' => array('widget' => 'choice'),
-                'right_date' => array('widget' => 'choice')
+                    'left_date' => array('widget' => 'choice'),
+                    'right_date' => array('widget' => 'choice')
                 ));
     }
 
