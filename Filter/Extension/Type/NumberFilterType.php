@@ -23,13 +23,21 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     const SELECT_OPERATOR = 'select_operator';
 
     /**
+     * @var string
+     */
+    protected $transformerId;
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
         $attributes = array();
+        $this->transformerId = 'lexik_form_filter.transformer.default';
 
         if ($options['condition_operator'] == self::SELECT_OPERATOR) {
+            $this->transformerId = 'lexik_form_filter.transformer.text';
+
             $numberOptions = array_intersect_key($options, parent::getDefaultOptions(array()));
             $numberOptions['required'] = isset($options['required']) ? $options['required'] : false;
             $numberOptions['trim'] = isset($options['trim']) ? $options['trim'] : true;
@@ -79,7 +87,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function getTransformerId()
     {
-        return 'lexik_form_filter.transformer.default';
+        return $this->transformerId;
     }
 
     /**

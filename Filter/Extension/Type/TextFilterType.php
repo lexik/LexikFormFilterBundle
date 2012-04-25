@@ -15,8 +15,8 @@ use Doctrine\ORM\QueryBuilder;
 class TextFilterType extends TextType implements FilterTypeInterface
 {
     const PATTERN_EQUALS     = '%s';
-    const PATTERN_START_WITH = '%%%s';
-    const PATTERN_END_WITH   = '%s%%';
+    const PATTERN_START_WITH = '%s%%';
+    const PATTERN_END_WITH   = '%%%s';
     const PATTERN_CONTAINS   = '%%%s%%';
 
     const SELECT_PATTERN = 'select_pattern';
