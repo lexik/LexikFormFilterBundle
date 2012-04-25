@@ -29,9 +29,15 @@ class Item
     protected $position;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
      * @ORM\Column(type="datetime", name="created_at", nullable="true")
      */
     protected $createdAt;
+
     /**
      * Get id
      *
@@ -80,6 +86,26 @@ class Item
     public function setPosition($position)
     {
         $this->position = $position;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
     }
 
     /**

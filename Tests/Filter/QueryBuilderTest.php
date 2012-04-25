@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
+
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,6 +61,30 @@ class QueryBuilderTest extends TestCase
         $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
+
+        // bind a request to the form - 3 params
+        $form = $this->formFactory->create(new ItemFilterType());
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param AND i.enabled = :enabled_param';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2, 'enabled_param' => 1), $doctrineQueryBuilder->getParameters());
+
+        // bind a request to the form - 3 params (use checkbox for enabled field)
+        $form = $this->formFactory->create(new ItemFilterType(false, true));
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param AND i.enabled = :enabled_param';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2, 'enabled_param' => 1), $doctrineQueryBuilder->getParameters());
 
         // bind a request to the form - 2 params + pattern selector
         $form = $this->formFactory->create(new ItemFilterType(true));

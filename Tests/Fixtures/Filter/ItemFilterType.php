@@ -16,10 +16,12 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
 class ItemFilterType extends AbstractType
 {
     protected $withSelector;
+    protected $checkbox;
 
-    public function __construct($withSelector = false)
+    public function __construct($withSelector = false, $checkbox = false)
     {
         $this->withSelector = $withSelector;
+        $this->checkbox = $checkbox;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -37,6 +39,8 @@ class ItemFilterType extends AbstractType
                 'condition_operator' => NumberFilterType::SELECT_OPERATOR,
             ));
         }
+
+        $builder->add('enabled', $this->checkbox ? 'filter_checkbox' : 'filter_boolean');
     }
 
     public function getName()
