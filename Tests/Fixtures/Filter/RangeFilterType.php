@@ -13,7 +13,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class OtherFilterType extends AbstractType
+class RangeFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {

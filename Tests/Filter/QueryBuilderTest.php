@@ -16,7 +16,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
 
@@ -117,7 +117,7 @@ class QueryBuilderTest extends TestCase
     public function testNumberRange()
     {
         // use filter type options
-        $form = $this->formFactory->create(new OtherFilterType());
+        $form = $this->formFactory->create(new RangeFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -132,7 +132,7 @@ class QueryBuilderTest extends TestCase
     public function testDateRange()
     {
         // use filter type options
-        $form = $this->formFactory->create(new OtherFilterType());
+        $form = $this->formFactory->create(new RangeFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
