@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -18,7 +20,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     const VALUE_NO  = 'n';
 
     /**
-     * @var TranslatorInterface
+     * @var Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
 
@@ -73,7 +75,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
     {
-        return $this->translator->trans($key, $parameters, $domain);
+        return ($this->translator instanceof TranslatorInterface) ? $this->translator->trans($key, $parameters, $domain) : $key;
     }
 
     /**
