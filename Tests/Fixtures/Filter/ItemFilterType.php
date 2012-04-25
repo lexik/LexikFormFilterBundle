@@ -15,66 +15,32 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
  */
 class ItemFilterType extends AbstractType
 {
-    protected $addTypeOptions;
-    protected $withCallback;
+    protected $withSelector;
 
-    public function __construct($addTypeOptions = false, $withCallback = false)
+    public function __construct($withSelector = false)
     {
-        $this->addTypeOptions = $addTypeOptions;
-        $this->withCallback = $withCallback;
+        $this->withSelector = $withSelector;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        if (!$this->addTypeOptions) {
-            $builder->add('name', 'filter_text', array(
-                'apply_filter' => $this->withCallback ? array($this, 'fieldNameCallback') : null,
+        if (!$this->withSelector) {
+            $builder->add('name', 'filter_text');
+            $builder->add('position', 'filter_number', array(
+                'condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN,
             ));
-            $builder->add('position', 'filter_number');
         } else {
-            $positionOptions = array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN);
-
-            if ($this->withCallback) {
-                $positionOptions['apply_filter'] = function($queryBuilder, $field, $values) {
-                    if (!empty($values['value'])) {
-                        $paramName = sprintf('%s_param', $field);
-                        $condition = sprintf('%s.%s <> :%s',
-                            $queryBuilder->getRootAlias(),
-                            $field,
-                            $paramName
-                        );
-
-                        $queryBuilder->andWhere($condition)
-                            ->setParameter($paramName, $values['value']);
-                    }
-                };
-            }
-
             $builder->add('name', 'filter_text', array(
                 'condition_pattern' => TextFilterType::SELECT_PATTERN,
             ));
-            $builder->add('position', 'filter_number', $positionOptions);
+            $builder->add('position', 'filter_number', array(
+                'condition_operator' => NumberFilterType::SELECT_OPERATOR,
+            ));
         }
     }
 
     public function getName()
     {
         return 'item_filter';
-    }
-
-    public function fieldNameCallback($queryBuilder, $field, $values)
-    {
-        if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-            $value = sprintf($values['condition_pattern'], $values['value']);
-            $condition = sprintf('%s.%s <> :%s',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $value, \PDO::PARAM_STR);
-        }
     }
 }

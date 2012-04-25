@@ -9,10 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
 
 /**
@@ -46,28 +49,43 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals(array('name_param' => 'blabla'), $doctrineQueryBuilder->getParameters());
 
         // bind a request to the form - 2 params
-        $form = $this->formFactory->create(new ItemFilterType(false, true));
+        $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2));
         $form->bindRequest($request);
 
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name <> :name_param AND i.position = :position_param';
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param';
         $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
 
-        // use filter type options
-        $form = $this->formFactory->create(new ItemFilterType(true, true));
+        // bind a request to the form - 2 params + pattern selector
+        $form = $this->formFactory->create(new ItemFilterType(true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => array('text' => 'blabla', 'condition_pattern' => '%s%%'), 'position' => 2));
+        $request = $this->craeteRequest(array(
+            'name' => array('text' => 'blabla', 'condition_pattern' => TextFilterType::PATTERN_END_WITH),
+            'position' => array('text' => 2, 'condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL))
+        );
         $form->bindRequest($request);
 
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE :name_param AND i.position <> :position_param';
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE :name_param AND i.position <= :position_param';
         $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
-        $this->assertEquals(array('name_param' => 'blabla%', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
+        $this->assertEquals(array('name_param' => '%blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
+
+        // use apply_filter option
+        $form = $this->formFactory->create(new ItemCallbackFilterType());
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name <> :name_param AND i.position <> :position_param';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
     }
 
     public function testNumberRange()
