@@ -29,7 +29,7 @@ class TransformerAggregator
      * @param string                     $id          Service filter transformer id
      * @param FilterTransformerInterface $transformer Service filter transformer instance
      */
-    public function addFilterTransformer($id, $transformer)
+    public function addFilterTransformer($id, FilterTransformerInterface $transformer)
     {
         if (!(isset($this->filterTransformers[$id]))) {
             $this->filterTransformers[$id] = $transformer;
@@ -48,7 +48,7 @@ class TransformerAggregator
     public function get($id)
     {
         if (!isset($this->filterTransformers[$id])) {
-            throw new \RuntimeException(sprintf('No filter transformer found with id %s', $id));
+            throw new \RuntimeException(sprintf('No filter transformer found with id "%s"', $id));
         }
 
         return $this->filterTransformers[$id];
