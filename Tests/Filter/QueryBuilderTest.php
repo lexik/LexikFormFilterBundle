@@ -2,23 +2,16 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
-use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
-
 use Symfony\Component\Config\FileLocator;
-
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-
-use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
-
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
-
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
-
 use Symfony\Component\HttpFoundation\Request;
 
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
+use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\OtherFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
 
@@ -64,7 +57,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('name_param' => 'blabla', 'position_param' => 2), $doctrineQueryBuilder->getParameters());
 
-//         // use filter type options
+        // use filter type options
         $form = $this->formFactory->create(new ItemFilterType(true, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
