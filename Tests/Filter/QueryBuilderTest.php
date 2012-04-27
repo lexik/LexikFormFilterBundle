@@ -42,7 +42,7 @@ class QueryBuilderTest extends TestCase
 
         // bind a request to the form - 1 params
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => ''));
+        $request = $this->createRequest(array('name' => 'blabla', 'position' => ''));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param';
@@ -54,7 +54,7 @@ class QueryBuilderTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2));
+        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param';
@@ -66,7 +66,7 @@ class QueryBuilderTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
+        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param AND i.enabled = :enabled_param';
@@ -78,7 +78,7 @@ class QueryBuilderTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(false, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
+        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name = :name_param AND i.position > :position_param AND i.enabled = :enabled_param';
@@ -90,7 +90,7 @@ class QueryBuilderTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array(
+        $request = $this->createRequest(array(
             'name' => array('text' => 'blabla', 'condition_pattern' => TextFilterType::PATTERN_END_WITH),
             'position' => array('text' => 2, 'condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL))
         );
@@ -105,7 +105,7 @@ class QueryBuilderTest extends TestCase
         $form = $this->formFactory->create(new ItemCallbackFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('name' => 'blabla', 'position' => 2));
+        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name <> :name_param AND i.position <> :position_param';
@@ -121,7 +121,7 @@ class QueryBuilderTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('position' => array('left_number' => 1, 'right_number' => 3)));
+        $request = $this->createRequest(array('position' => array('left_number' => 1, 'right_number' => 3)));
         $form->bindRequest($request);
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE (i.position > :left_position_param AND i.position < :right_position_param)';
@@ -136,7 +136,7 @@ class QueryBuilderTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->craeteRequest(array('createdAt' => array(
+        $request = $this->createRequest(array('createdAt' => array(
                 'left_date' => array('year' => '2012', 'month' => '05', 'day' => '12'),
                 'right_date' => array('year' => '2012', 'month' => '05', 'day' => '22')))
                 );
@@ -177,7 +177,7 @@ class QueryBuilderTest extends TestCase
         return $container;
     }
 
-    protected function craeteRequest($values)
+    protected function createRequest($values)
     {
         return new Request(
             array(),
