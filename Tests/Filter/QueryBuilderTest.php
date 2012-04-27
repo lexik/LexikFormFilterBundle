@@ -129,6 +129,22 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
 
+    public function testNumberRangeDefaultValues()
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->createRequest(array('default_position' => array('left_number' => 1, 'right_number' => 3)));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE (i.default_position >= :left_default_position_param AND i.default_position <= :right_default_position_param)';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+    }
+
     public function testDateRange()
     {
         // use filter type options
