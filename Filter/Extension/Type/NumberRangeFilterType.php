@@ -33,8 +33,8 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     public function getDefaultOptions(array $options)
     {
         return array(
-            'left_number' => array(),
-            'right_number' => array(),
+            'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
+            'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
         );
     }
 
