@@ -40,7 +40,7 @@ class QueryBuilder
     public function buildQuery(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         foreach ($form->getChildren() as $child) {
-            $this->addFilerCondition($queryBuilder, $child);
+            $this->addFilterCondition($queryBuilder, $child);
         }
 
         return $queryBuilder;
@@ -52,7 +52,7 @@ class QueryBuilder
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder
      * @param Form $form
      */
-    protected function addFilerCondition(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form)
+    protected function addFilterCondition(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form)
     {
         $values = $this->prepareFilterValues($form);
 
