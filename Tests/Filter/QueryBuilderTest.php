@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\EmbedFilterType;
+
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 
 use Symfony\Component\Config\FileLocator;
@@ -162,6 +164,22 @@ class QueryBuilderTest extends TestCase
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.createdAt >= :left_createdAt_param AND i.createdAt <= :right_createdAt_param';
         $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+    }
+
+    public function testEmbedFormFilter()
+    {
+        $form = $this->formFactory->create(new EmbedFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $request = $this->createRequest(array('name' => 'dude', 'options' => array('label' => 'color', 'rank' => 3)));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name = :name_param AND opt.label = :label_param AND opt.rank = :rank_param';
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('name_param' => 'dude', 'label_param' => 'color', 'rank_param' => 3), $doctrineQueryBuilder->getParameters());
     }
 
     protected function createDoctrineQueryBuilder()

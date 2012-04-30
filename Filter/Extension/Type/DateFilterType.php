@@ -44,12 +44,12 @@ class DateFilterType extends DateType implements FilterTypeInterface
     /**
     * {@inheritdoc}
     */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if ($values['value'] instanceof \DateTime) {
             $paramName = sprintf('%s_param', $field);
             $condition = sprintf('%s.%s = :%s',
-                $queryBuilder->getRootAlias(),
+                $alias,
                 $field,
                 $paramName
             );

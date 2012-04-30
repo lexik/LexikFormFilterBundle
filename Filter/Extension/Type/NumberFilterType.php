@@ -93,12 +93,12 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if (!empty($values['value'])) {
             $paramName = sprintf('%s_param', $field);
             $condition = sprintf('%s.%s %s :%s',
-                $queryBuilder->getRootAlias(),
+                $alias,
                 $field,
                 $values['condition_operator'],
                 $paramName

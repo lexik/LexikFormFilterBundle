@@ -15,10 +15,11 @@ interface FilterTypeInterface
      * Add condition(s) to the query builder for the current type.
      *
      * @param Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param string $alias
      * @param string $field
      * @param array $values
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values);
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values);
 
     /**
      * Return service id used to transforme values

@@ -61,12 +61,12 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if ($values['value']['left_date'][0] instanceof \DateTime) {
             $leftParamName = sprintf('left_%s_param', $field);
             $condition = sprintf('%s.%s %s :%s',
-                $queryBuilder->getRootAlias(),
+                $alias,
                 $field,
                 '>=',
                 $leftParamName
@@ -79,7 +79,7 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
         if ($values['value']['right_date'][0] instanceof \DateTime) {
             $rightParamName = sprintf('right_%s_param', $field);
             $condition = sprintf('%s.%s %s :%s',
-                $queryBuilder->getRootAlias(),
+                $alias,
                 $field,
                 '<=',
                 $rightParamName

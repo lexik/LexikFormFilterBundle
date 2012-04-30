@@ -58,12 +58,12 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
      * Default implementation of the applyFieldFilter() method.
      * We just add a 'and where' clause.
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if (!empty($values['value'])) {
             $paramName = sprintf('%s_param', $field);
 
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $field, $paramName))
                 ->setParameter($paramName, $values['value'], \PDO::PARAM_STR);
         }
     }

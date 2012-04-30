@@ -41,7 +41,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if (is_object($values['value'])) {
             if ($values['value'] instanceof Collection) {
@@ -57,7 +57,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                 if (count($ids) > 0) {
                     $joinAlias = substr($field, 0, 3);
 
-                    $queryBuilder->leftJoin(sprintf('%s.%s', $queryBuilder->getRootAlias(), $field), $joinAlias)
+                    $queryBuilder->leftJoin(sprintf('%s.%s', $alias, $field), $joinAlias)
                         ->andWhere($queryBuilder->expr()->in($joinAlias, $ids));
                 }
 
@@ -68,7 +68,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
 
                 $paramName = sprintf('%s_param', $field);
 
-                $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
+                $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $field, $paramName))
                     ->setParameter($paramName, $values['value']->getId(), \PDO::PARAM_INT);
             }
         }

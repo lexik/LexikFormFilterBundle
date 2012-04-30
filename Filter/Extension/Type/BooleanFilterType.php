@@ -89,12 +89,12 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
     {
         if (!empty($values['value'])) {
             $paramName = sprintf('%s_param', $field);
 
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $field, $paramName))
                 ->setParameter($paramName, (int) (self::VALUE_YES == $values['value']), \PDO::PARAM_BOOL);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\EmbeddedFilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
@@ -21,6 +22,11 @@ class QueryBuilder
     protected $filterTransformerAggregator;
 
     /**
+     * @var array
+     */
+    private $joins;
+
+    /**
      * Constructor
      *
      * @param TransformerAggregator $filterTransformerAggregator
@@ -35,15 +41,48 @@ class QueryBuilder
      *
      * @param \Symfony\Component\Form\Form $form
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param string $alias
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function buildQuery(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function buildQuery(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder, $alias = null)
     {
+        if (null == $alias) {
+            $alias = $queryBuilder->getRootAlias();
+        }
+
         foreach ($form->getChildren() as $child) {
-            $this->addFilterCondition($queryBuilder, $child);
+            if ($this->isEmbeddedFilter($child)) {
+                $childAlias = $this->addJoin($queryBuilder, $child);
+                $this->buildQuery($child, $queryBuilder, $childAlias);
+            } else {
+                $this->addFilterCondition($queryBuilder, $child, $alias);
+            }
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * Add a join on the doctrine query builder and return the alias.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param Form $form
+     * @return string
+     */
+    protected function addJoin(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form)
+    {
+        $relationName = $form->getName();
+        $alias = substr($relationName, 0, 3);
+        $join = $queryBuilder->getRootAlias().'.'.$relationName;
+
+        if (!isset($this->joins[$join])) {
+            $queryBuilder->leftJoin($join, $alias);
+            $this->joins[$join] = $alias;
+        } else {
+            $alias = $this->joins[$join];
+        }
+
+        return $alias;
     }
 
     /**
@@ -51,8 +90,9 @@ class QueryBuilder
      *
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder
      * @param Form $form
+     * @param string $alias
      */
-    protected function addFilterCondition(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form)
+    protected function addFilterCondition(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form, $alias)
     {
         $values = $this->prepareFilterValues($form);
 
@@ -61,22 +101,22 @@ class QueryBuilder
             $callable = $form->getAttribute('apply_filter');
 
             if ($callable instanceof \Closure) {
-                $callable($queryBuilder, $form->getName(), $values);
+                $callable($queryBuilder, $alias, $form->getName(), $values);
             } else {
-                call_user_func($callable, $queryBuilder, $form->getName(), $values);
+                call_user_func($callable, $queryBuilder, $alias, $form->getName(), $values);
             }
         } else {
             // if no closure we use the applyFilter() method from a FilterTypeInterface
             $type = $this->getFilterType($form->getTypes());
 
             if ($type instanceof FilterTypeInterface) {
-                $type->applyFilter($queryBuilder, $form->getName(), $values);
+                $type->applyFilter($queryBuilder, $alias, $form->getName(), $values);
             }
         }
     }
 
     /**
-     * Prepare all values needed to apply the filer.
+     * Prepare all values needed to apply the filter.
      *
      * @param Form $form
      * @return array
@@ -117,5 +157,18 @@ class QueryBuilder
         }
 
         return $type;
+    }
+
+    /**
+     * Returns true if the given form is an embedded form filter.
+     *
+     * @param Form $form
+     * @return boolean
+     */
+    protected function isEmbeddedFilter(Form $form)
+    {
+        $types = array_reverse($form->getTypes());
+
+        return (isset($types[0]) && $types[0] instanceof EmbeddedFilterInterface);
     }
 }
