@@ -63,6 +63,19 @@ class QueryBuilder
     }
 
     /**
+     * Set joins to use with the Doctrine query builder.
+     *
+     * @param array $joins
+     * @return \Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder
+     */
+    public function setJoins(array $joins)
+    {
+        $this->joins = $joins;
+
+        return $this;
+    }
+
+    /**
      * Add a join on the doctrine query builder and return the alias.
      *
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder

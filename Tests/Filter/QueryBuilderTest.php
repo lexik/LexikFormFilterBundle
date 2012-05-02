@@ -169,6 +169,8 @@ class QueryBuilderTest extends TestCase
     public function testEmbedFormFilter()
     {
         $form = $this->formFactory->create(new EmbedFilterType());
+
+        // doctrine query builder without any joins
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -180,6 +182,22 @@ class QueryBuilderTest extends TestCase
         $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('name_param' => 'dude', 'label_param' => 'color', 'rank_param' => 3), $doctrineQueryBuilder->getParameters());
+
+        // doctrine query builder with joins
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $doctrineQueryBuilder->leftJoin('i.options', 'o');
+        $request = $this->createRequest(array('name' => 'dude', 'options' => array('label' => 'size', 'rank' => 5)));
+        $form->bindRequest($request);
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i';
+        $expectedDql .= ' LEFT JOIN i.options o WHERE i.name = :name_param AND o.label = :label_param AND o.rank = :rank_param';
+
+        $filterQueryBuilder->setJoins(array('i.options' => 'o'));
+        $filterQueryBuilder->buildQuery($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('name_param' => 'dude', 'label_param' => 'size', 'rank_param' => 5), $doctrineQueryBuilder->getParameters());
     }
 
     protected function createDoctrineQueryBuilder()
