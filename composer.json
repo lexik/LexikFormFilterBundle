@@ -1,0 +1,27 @@
+{
+    "name": "lexik/form-filter-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle aim to provide classes to build some form filters and then build a doctrine query from this form filter.",
+    "keywords": ["Symfony2", "bundle", "form", "filter", "doctrine"],
+    "homepage": "https://github.com/lexik/LexikFormFilterBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cedric Girard",
+            "email": "c.girard@lexik.fr"
+        },
+        {
+            "name": "Dev Lexik",
+            "email": "dev@lexik.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.0.*",
+        "doctrine/orm": "2.1.*"
+    },
+    "autoload":     {
+        "psr-0": { "Lexik\\Bundle\\FormFilterBundle": "" }
+    },
+    "target-dir": "Lexik/Bundle/FormFilterBundle"
+}
