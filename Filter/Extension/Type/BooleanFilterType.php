@@ -7,7 +7,9 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter to use with boolean values.
@@ -20,14 +22,14 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     const VALUE_NO  = 'n';
 
     /**
-     * @var Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
 
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_choice';
     }
@@ -43,15 +45,15 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'choices' => array(
+        $resolver->setDefaults(array(
+            'choices'     => array(
                 self::VALUE_YES  => $this->trans('boolean.yes'),
                 self::VALUE_NO   => $this->trans('boolean.no'),
             ),
             'empty_value' => $this->trans('boolean.yes_or_no'),
-        );
+        ));
     }
 
     /**
@@ -75,7 +77,9 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
     {
-        return ($this->translator instanceof TranslatorInterface) ? $this->translator->trans($key, $parameters, $domain) : $key;
+        return ($this->translator instanceof TranslatorInterface)
+            ? $this->translator->trans($key, $parameters, $domain)
+            : $key;
     }
 
     /**
@@ -89,13 +93,11 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
-                ->setParameter($paramName, (int) (self::VALUE_YES == $values['value']), \PDO::PARAM_BOOL);
+            $value = (int)(self::VALUE_YES == $values['value']);
+            $queryBuilder->andWhere($e->eq($field, $value));
         }
     }
 }

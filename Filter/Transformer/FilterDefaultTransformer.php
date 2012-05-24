@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Transform data into default format
@@ -13,10 +13,10 @@ use Symfony\Component\Form\Form;
 class FilterDefaultTransformer implements FilterTransformerInterface
 {
     /**
-     * (non-PHPdoc)
+     * {@inheritDoc}
      * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
      */
-    public function transform(Form $form)
+    public function transform(FormInterface $form)
     {
         return array('value' => $form->getData());
     }

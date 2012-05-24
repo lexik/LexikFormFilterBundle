@@ -4,7 +4,9 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for boolean.
@@ -16,7 +18,7 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_field';
     }
@@ -40,13 +42,10 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
-                ->setParameter($paramName, $values['value'], \PDO::PARAM_BOOL);
+            $queryBuilder->andWhere($e->eq($field, $values['value']));
         }
     }
 }

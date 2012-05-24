@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Transform data with filter_value_key's attributes into a right format
@@ -13,16 +13,17 @@ use Symfony\Component\Form\Form;
 class FilterValueKeysTransformer implements FilterTransformerInterface
 {
     /**
-     * (non-PHPdoc)
+     * {@inheritDoc}
      * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
      */
-    public function transform(Form $form)
+    public function transform(FormInterface $form)
     {
-        $data = $form->getData();
-        $keys = null;
+        $data   = $form->getData();
+        $keys   = null;
+        $config = $form->getConfig();
 
-        if ($form->hasAttribute('filter_value_keys')) {
-            $keys = array_merge($data, $form->getAttribute('filter_value_keys'));
+        if ($config->hasAttribute('filter_value_keys')) {
+            $keys = array_merge($data, $config->getAttribute('filter_value_keys'));
         }
         $values = array('value' => array());
 
@@ -38,4 +39,3 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
         return $values;
     }
 }
-

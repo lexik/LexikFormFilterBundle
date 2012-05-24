@@ -3,9 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for numbers.
@@ -17,31 +19,32 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('left_number', 'filter_number', $options['left_number']);
         $builder->add('right_number', 'filter_number', $options['right_number']);
 
         $builder->setAttribute('filter_value_keys', array(
-                'left_number' => $options['left_number'],
-                'right_number' => $options['right_number']));
+            'left_number'  => $options['left_number'],
+            'right_number' => $options['right_number']
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
             'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
-        );
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter';
     }
@@ -65,26 +68,15 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
-        if (isset($values['value']['left_number'][0], $values['value']['right_number'][0])) {
-            $leftParamName = sprintf('left_%s_param', $field);
-            $rightParamName = sprintf('right_%s_param', $field);
-
-            $condition = sprintf('(%s.%s %s :%s AND %s.%s %s :%s)',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $values['value']['left_number']['condition_operator'],
-                $leftParamName,
-                $queryBuilder->getRootAlias(),
-                $field,
-                $values['value']['right_number']['condition_operator'],
-                $rightParamName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($leftParamName, $values['value']['left_number'][0], \PDO::PARAM_INT)
-                ->setParameter($rightParamName, $values['value']['right_number'][0], \PDO::PARAM_INT);
+        $value = $values['value'];
+        if (isset($value['left_number'][0], $value['right_number'][0])) {
+            $leftCond   = $value['left_number']['condition_operator'];
+            $leftValue  = $value['left_number'][0];
+            $rightCond  = $value['right_number']['condition_operator'];
+            $rightValue = $value['right_number'][0];
+            $queryBuilder->andWhere($e->andX($e->$leftCond($field, $leftValue), $e->$rightCond($field, $rightValue)));
         }
     }
 }

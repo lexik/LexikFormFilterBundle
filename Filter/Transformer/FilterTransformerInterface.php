@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
-use Symfony\component\form\Form;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * This interface allows the implementation of a transform filter
@@ -12,11 +12,11 @@ use Symfony\component\form\Form;
 interface FilterTransformerInterface
 {
     /**
-     * Transform data of a form into value manipulate by QueryBuilder
+     * Transform data of a form into value manipulate by QueryBuilderUpdater
      *
-     * @param Form $form
+     * @param FormInterface $form
      *
      * @return array
      */
-    public function transform(Form $form);
+    public function transform(FormInterface $form);
 }
