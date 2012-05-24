@@ -7,7 +7,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use Doctrine\ORM\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**

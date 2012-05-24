@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-use Doctrine\ORM\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**

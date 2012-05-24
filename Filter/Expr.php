@@ -2,14 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-use Doctrine\DBAL\Types\DateType;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
-use Doctrine\ORM\Query\Expr as BaseExpr;
 
 use DateTime;
 
-class Expr extends BaseExpr
+class Expr extends \Doctrine\ORM\Query\Expr
 {
     /**
      * @see Expr::_stringLike()
@@ -30,7 +28,7 @@ class Expr extends BaseExpr
      * @param  string $field field name
      * @param  int $min minimum value
      * @param  int $max maximum value
-     * @return Expr\Comparison|string
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
     public function inRange($field, $min, $max)
     {
@@ -64,6 +62,7 @@ class Expr extends BaseExpr
      * </code>
      * @param string $field
      * @param array $value
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
     public function inRangeValue($field, array $value) {
         return $this->inRange($field, $value['min'], $value['max']);
@@ -84,7 +83,7 @@ class Expr extends BaseExpr
      * 
      * @param  array  $values
      * @param  array  $fields
-     * @return Expr\Comparison|string|null
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string|null
      */
     public function rangeInRangeForm(array $values, array $fields)
     {
@@ -101,13 +100,11 @@ class Expr extends BaseExpr
      * Returns lte expression if max is null
      * Returns gte expression if min is null
      *
-     * WARNING! Due to bug in Doctrine 2.0 сannot be used in 'andWhere' QueryBuilder method (Only in 'where' method)
-     *
      * @param  string|DateTime $minDate alias.fieldName or mysql date string format or  DateTime
      * @param  string|DateTime $maxDate alias.fieldName or mysql date string format or  DateTime
      * @param  string|DateTime $minField alias.fieldName or mysql date string format or  DateTime
      * @param  string|DateTime $maxField alias.fieldName or mysql date string format or  DateTime
-     * @return Expr\Comparison|string|null
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string|null
      */
     public function rangeInRange($minDate = null, $maxDate = null, $minField = null, $maxField = null)
     {
@@ -149,12 +146,10 @@ class Expr extends BaseExpr
      * Returns lte expression if max is null
      * Returns gte expression if min is null
      *
-     * WARNING! Due to bug in Doctrine 2.0 сannot be used in 'andWhere' QueryBuilder method (Only in 'where' method)
-     *
      * @param  string|DateTime $value alias.fieldName or mysql date string format or  DateTime
      * @param  string|DateTime $min alias.fieldName or mysql date string format or  DateTime
      * @param  string|DateTime $max alias.fieldName or mysql date string format or  DateTime
-     * @return Expr\Comparison|string
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
     public function dateInRange($value, $min = null, $max = null)
     {
@@ -191,7 +186,7 @@ class Expr extends BaseExpr
      * Prepare value for like operation
      *
      * @param string $value
-     * @param int $type one of CrudExpr::STRING_*
+     * @param int $type one of Expr::STRING_*
      * @throws \InvalidArgumentException
      * @return string
      */
@@ -226,8 +221,8 @@ class Expr extends BaseExpr
      *
      * @param  string $field field name
      * @param  string $value string value
-     * @param  int    $type one of CrudExpr::STRING_* constant
-     * @return Expr\Comparison
+     * @param  int    $type one of Expr::STRING_* constant
+     * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     protected function _stringLike($field, $value, $type = self::STRING_BOTH)
     {
@@ -239,9 +234,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression with string start matching rule
      *
-     * @see CrudExpr::_stringLike()
+     * @see Expr::_stringLike()
      * @param string $field
      * @param string $value
+     * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringStarts($field, $value)
     {
@@ -251,9 +247,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression with string end matching rule
      *
-     * @see CrudExpr::_stringLike()
+     * @see Expr::_stringLike()
      * @param string $field
      * @param string $value
+     * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringEnds($field, $value)
     {
@@ -263,9 +260,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression with both string and end string matching rule
      *
-     * @see CrudExpr::_stringLike()
+     * @see Expr::_stringLike()
      * @param string $field
      * @param string $value
+     * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringBoth($field, $value)
     {
@@ -275,9 +273,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression with equal string matching rule
      *
-     * @see CrudExpr::_stringLike()
+     * @see Expr::_stringLike()
      * @param string $field
      * @param string $value
+     * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringEq($field, $value)
     {
@@ -290,7 +289,7 @@ class Expr extends BaseExpr
      * @param  string $field
      * @param  array|string $values
      * @param  int $type one of self::STRING_*
-     * @return \Doctrine\ORM\Query\Expr\Orx
+     * @return Orx
      */
     protected function _stringLikeAnyWord($field, $values, $type = self::STRING_BOTH)
     {
@@ -304,15 +303,16 @@ class Expr extends BaseExpr
             $exprs[] = $this->_stringLike($field, $value, $type);
         }
 
-        return new Expr\Orx($exprs);
+        return new Orx($exprs);
     }
 
     /**
     * Get like expression for any matching word with string end matching rule
     *
-    * @see   CrudExpr::_stringLikeAnyWord()
+    * @see   Expr::_stringLikeAnyWord()
     * @param string $field
     * @param string $value
+    * @return Orx
     */
     public function stringEndsAnyWord($field, $value)
     {
@@ -322,9 +322,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression  for any matching word with both string and end string matching rule
      *
-     * @see   CrudExpr::_stringLikeAnyWord()
+     * @see   Expr::_stringLikeAnyWord()
      * @param string $field
      * @param string $value
+     * @return Orx
      */
     public function stringBothAnyWord($field, $value)
     {
@@ -334,9 +335,10 @@ class Expr extends BaseExpr
     /**
      * Get like expression  for any matching word with equal string matching rule
      *
-     * @see   CrudExpr::_stringLikeAnyWord()
+     * @see   Expr::_stringLikeAnyWord()
      * @param string $field
      * @param string $value
+     * @return Orx
      */
     public function stringEqAnyWord($field, $value)
     {
@@ -355,14 +357,14 @@ class Expr extends BaseExpr
      *
      * @param    mixed $x Left expression
      * @param    mixed $y Right expression
-     * @return   Expr\Comparison
+     * @return   \Doctrine\ORM\Query\Expr\Comparison
      */
     public function lteNull($x, $y)
     {
         if (is_null($y)) {
-
+            return null;
         } else {
-            return new Expr\Comparison($x, Expr\Comparison::LTE, $y);
+            return new \Doctrine\ORM\Query\Expr\Comparison($x, \Doctrine\ORM\Query\Expr\Comparison::LTE, $y);
         }
     }
 
@@ -378,17 +380,24 @@ class Expr extends BaseExpr
      *
      * @param    mixed $x Left expression
      * @param    mixed $y Right expression
-     * @return   Expr\Comparison
+     * @return   \Doctrine\ORM\Query\Expr\Comparison
      */
     public function gteNull($x, $y)
     {
         if (is_null($y)) {
-
+            return null;
         } else {
-            return new Expr\Comparison($x, Expr\Comparison::GTE, $y);
+            return new \Doctrine\ORM\Query\Expr\Comparison($x, \Doctrine\ORM\Query\Expr\Comparison::GTE, $y);
         }
     }
 
+    /**
+     * Normalize date time boundary
+     *
+     * @param  DateTime|string $date
+     * @param  bool $isMax
+     * @return \Doctrine\ORM\Query\Expr\Literal
+     */
     protected function convertToSqlDate($date, $isMax = false)
     {
         if ($date instanceof DateTime) {

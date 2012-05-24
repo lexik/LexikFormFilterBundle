@@ -17,9 +17,14 @@ use Doctrine\ORM\QueryBuilder;
 class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
 {
     /**
-     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface
+     * @var TransformerAggregatorInterface
      */
     protected $filterTransformerAggregator;
+
+    /**
+     * @var Expr
+     */
+    protected $expr;
 
     /**
      * Constructor
@@ -29,6 +34,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
     public function __construct(TransformerAggregatorInterface $filterTransformerAggregator)
     {
         $this->filterTransformerAggregator = $filterTransformerAggregator;
+        $this->expr = new Expr;
     }
 
     /**
@@ -64,9 +70,8 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
             $alias = $values['alias'];
 
             $field = ($alias ? ($alias . '.') : '') . $form->getName();
-            $e     = $queryBuilder->expr();
 
-            $type->applyFilter($queryBuilder, $e, $field, $values);
+            $type->applyFilter($queryBuilder, $this->expr, $field, $values);
         }
     }
 

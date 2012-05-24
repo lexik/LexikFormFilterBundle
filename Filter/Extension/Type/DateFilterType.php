@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilder;
 
-use Doctrine\ORM\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 class DateFilterType extends DateType implements FilterTypeInterface

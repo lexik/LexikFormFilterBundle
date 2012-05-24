@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-use Doctrine\ORM\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
 
