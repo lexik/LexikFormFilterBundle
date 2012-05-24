@@ -7,6 +7,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -46,7 +47,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     public function getDefaultOptions()
     {
         return array(
-            'choices' => array(
+            'choices'     => array(
                 self::VALUE_YES  => $this->trans('boolean.yes'),
                 self::VALUE_NO   => $this->trans('boolean.no'),
             ),
@@ -75,7 +76,9 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
     {
-        return ($this->translator instanceof TranslatorInterface) ? $this->translator->trans($key, $parameters, $domain) : $key;
+        return ($this->translator instanceof TranslatorInterface)
+            ? $this->translator->trans($key, $parameters, $domain)
+            : $key;
     }
 
     /**
@@ -89,13 +92,11 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $queryBuilder->getRootAlias(), $field, $paramName))
-                ->setParameter($paramName, (int) (self::VALUE_YES == $values['value']), \PDO::PARAM_BOOL);
+            $value = (int)(self::VALUE_YES == $values['value']);
+            $queryBuilder->andWhere($e->eq($field, $value));
         }
     }
 }

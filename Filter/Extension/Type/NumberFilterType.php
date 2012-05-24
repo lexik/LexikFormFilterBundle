@@ -5,6 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilder;
 
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -14,11 +15,11 @@ use Doctrine\ORM\QueryBuilder;
  */
 class NumberFilterType extends NumberType implements FilterTypeInterface
 {
-    const OPERATOR_EQUAL              = '=';
-    const OPERATOR_GREATER_THAN       = '>';
-    const OPERATOR_GREATER_THAN_EQUAL = '>=';
-    const OPERATOR_LOWER_THAN         = '<';
-    const OPERATOR_LOWER_THAN_EQUAL   = '<=';
+    const OPERATOR_EQUAL              = 'eq';
+    const OPERATOR_GREATER_THAN       = 'gt';
+    const OPERATOR_GREATER_THAN_EQUAL = 'gte';
+    const OPERATOR_LOWER_THAN         = 'lt';
+    const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
 
     const SELECT_OPERATOR = 'select_operator';
 
@@ -93,19 +94,11 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-            $condition = sprintf('%s.%s %s :%s',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $values['condition_operator'],
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $values['value']);
+            $op = $values['condition_operator'];
+            $queryBuilder->andWhere($e->$op($field, $values['value']));
         }
     }
 

@@ -58,8 +58,15 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
         $type = $this->getFilterType($form);
 
         if ($type) {
-            $values = $this->prepareFilterValues($form);
-            $type->applyFilter($queryBuilder, $form->getName(), $values);
+            $values  = $this->prepareFilterValues($form);
+            $aliases = $queryBuilder->getRootAliases();
+            $values += array('alias' => (isset($aliases[0]) ? $aliases[0] : null));
+            $alias = $values['alias'];
+
+            $field = ($alias ? ($alias . '.') : '') . $form->getName();
+            $e     = $queryBuilder->expr();
+
+            $type->applyFilter($queryBuilder, $e, $field, $values);
         }
     }
 

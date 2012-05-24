@@ -5,6 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilder;
 
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 class DateFilterType extends DateType implements FilterTypeInterface
@@ -44,18 +45,11 @@ class DateFilterType extends DateType implements FilterTypeInterface
     /**
     * {@inheritdoc}
     */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if ($values['value'] instanceof \DateTime) {
-            $paramName = sprintf('%s_param', $field);
-            $condition = sprintf('%s.%s = :%s',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $values['value']->format('Y-m-d'), \PDO::PARAM_STR);
+            $date = $values['value']->format('Y-m-d');
+            $queryBuilder->andWhere($e->eq($field, $date));
         }
     }
 }

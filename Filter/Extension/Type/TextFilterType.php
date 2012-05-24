@@ -5,6 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilder;
 
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -30,13 +31,13 @@ class TextFilterType extends TextType implements FilterTypeInterface
     {
         parent::buildForm($builder, $options);
 
-        $attributes = array();
+        $attributes          = array();
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
         if ($options['condition_pattern'] == self::SELECT_PATTERN) {
-            $textOptions = array_intersect_key($options, parent::getDefaultOptions(array()));
+            $textOptions             = array_intersect_key($options, parent::getDefaultOptions(array()));
             $textOptions['required'] = isset($options['required']) ? $options['required'] : false;
-            $textOptions['trim'] = isset($options['trim']) ? $options['trim'] : true;
+            $textOptions['trim']     = isset($options['trim']) ? $options['trim'] : true;
 
             $builder->add('condition_pattern', 'choice', array(
             	'choices' => self::getConditionChoices(),
@@ -55,10 +56,9 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getDefaultOptions()
     {
-        $options = parent::getDefaultOptions();
-        $options['condition_pattern'] = self::PATTERN_EQUALS;
-
-        return $options;
+        return array_merge(parent::getDefaultOptions(), array(
+            'condition_pattern' => self::PATTERN_EQUALS,
+        ));
     }
 
     /**
@@ -88,20 +88,12 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
+            $op    = ($values['condition_pattern'] == self::PATTERN_EQUALS) ? 'eq' : 'like';
             $value = sprintf($values['condition_pattern'], $values['value']);
-            $condition = sprintf('%s.%s %s :%s',
-                $queryBuilder->getRootAlias(),
-                $field,
-                ($values['condition_pattern'] == self::PATTERN_EQUALS) ? '=' : 'LIKE',
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $value, \PDO::PARAM_STR);
+            $queryBuilder->andWhere($e->$op($field, $e->literal($value)));
         }
     }
 

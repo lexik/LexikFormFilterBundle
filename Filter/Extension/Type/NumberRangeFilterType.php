@@ -5,6 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -65,26 +66,15 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
-        if (isset($values['value']['left_number'][0], $values['value']['right_number'][0])) {
-            $leftParamName = sprintf('left_%s_param', $field);
-            $rightParamName = sprintf('right_%s_param', $field);
-
-            $condition = sprintf('(%s.%s %s :%s AND %s.%s %s :%s)',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $values['value']['left_number']['condition_operator'],
-                $leftParamName,
-                $queryBuilder->getRootAlias(),
-                $field,
-                $values['value']['right_number']['condition_operator'],
-                $rightParamName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($leftParamName, $values['value']['left_number'][0], \PDO::PARAM_INT)
-                ->setParameter($rightParamName, $values['value']['right_number'][0], \PDO::PARAM_INT);
+        $value = $values['value'];
+        if (isset($value['left_number'][0], $value['right_number'][0])) {
+            $leftCond   = $value['left_number']['condition_operator'];
+            $leftValue  = $value['left_number'][0];
+            $rightCond  = $value['right_number']['condition_operator'];
+            $rightValue = $value['right_number'][0];
+            $queryBuilder->andWhere($e->andX($e->$leftCond($field, $leftValue), $e->$rightCond($field, $rightValue)));
         }
     }
 }
