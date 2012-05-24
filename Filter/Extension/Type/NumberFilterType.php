@@ -107,7 +107,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      *
      * @return array
      */
-    static public function getOperatorChoices()
+    static private function getOperatorChoices()
     {
         $choices = array();
 

@@ -48,7 +48,7 @@ class DateFilterType extends DateType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if ($values['value'] instanceof \DateTime) {
-            $date = $values['value']->format('Y-m-d');
+            $date = $values['value']->format(Expr::SQL_DATE);
             $queryBuilder->andWhere($e->eq($field, $date));
         }
     }

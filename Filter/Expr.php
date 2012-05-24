@@ -10,12 +10,12 @@ use DateTime;
 class Expr extends \Doctrine\ORM\Query\Expr
 {
     /**
-     * @see Expr::_stringLike()
+     * @see Expr::stringLike()
      */
-    const STRING_BOTH   = 0;
     const STRING_STARTS = 1;
     const STRING_ENDS   = 2;
     const STRING_EQ     = 3;
+    const STRING_BOTH   = 4;
 
     const SQL_DATE            = 'Y-m-d';
     const SQL_DATE_TIME       = 'Y-m-d H:i:s';
@@ -50,49 +50,6 @@ class Expr extends \Doctrine\ORM\Query\Expr
         }
 
         return $findExpression;
-    }
-
-    /**
-     * Returns between expression if min and max not null, get it from array
-     *
-     * @see self::inRange()
-     * @example
-     * <code>
-     *     $value = array('min' => 1, 'max' => 2);
-     * </code>
-     * @param string $field
-     * @param array $value
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
-     */
-    public function inRangeValue($field, array $value) {
-        return $this->inRange($field, $value['min'], $value['max']);
-    }
-
-    public function dateInRangeForm($value, array $fields)
-    {
-        $fields += array(
-            'min' => null,
-            'max' => null,
-        );
-
-        return $this->dateInRange($value, $fields['min'], $fields['max']);
-    }
-
-    /**
-     * Get QB expression to find entities that have date range entering in target date range
-     * 
-     * @param  array  $values
-     * @param  array  $fields
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string|null
-     */
-    public function rangeInRangeForm(array $values, array $fields)
-    {
-        $fields += array(
-            'min' => null,
-            'max' => null,
-        );
-
-        return $this->rangeInRange($values['min'], $values['max'], $fields['min'], $fields['max']);
     }
 
     /**
@@ -224,7 +181,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      * @param  int    $type one of Expr::STRING_* constant
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    protected function _stringLike($field, $value, $type = self::STRING_BOTH)
+    public function stringLike($field, $value, $type = self::STRING_BOTH)
     {
         $value = $this->_convertTypeToMask($value, $type);
 
@@ -234,53 +191,53 @@ class Expr extends \Doctrine\ORM\Query\Expr
     /**
      * Get like expression with string start matching rule
      *
-     * @see Expr::_stringLike()
+     * @see Expr::stringLike()
      * @param string $field
      * @param string $value
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringStarts($field, $value)
     {
-        return $this->_stringLike($field, $value, self::STRING_STARTS);
+        return $this->stringLike($field, $value, self::STRING_STARTS);
     }
 
     /**
      * Get like expression with string end matching rule
      *
-     * @see Expr::_stringLike()
+     * @see Expr::stringLike()
      * @param string $field
      * @param string $value
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringEnds($field, $value)
     {
-        return $this->_stringLike($field, $value, self::STRING_ENDS);
+        return $this->stringLike($field, $value, self::STRING_ENDS);
     }
 
     /**
      * Get like expression with both string and end string matching rule
      *
-     * @see Expr::_stringLike()
+     * @see Expr::stringLike()
      * @param string $field
      * @param string $value
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringBoth($field, $value)
     {
-        return $this->_stringLike($field, $value, self::STRING_BOTH);
+        return $this->stringLike($field, $value, self::STRING_BOTH);
     }
 
     /**
      * Get like expression with equal string matching rule
      *
-     * @see Expr::_stringLike()
+     * @see Expr::stringLike()
      * @param string $field
      * @param string $value
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     public function stringEq($field, $value)
     {
-        return $this->_stringLike($field, $value, self::STRING_EQ);
+        return $this->stringLike($field, $value, self::STRING_EQ);
     }
 
     /**
@@ -291,7 +248,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      * @param  int $type one of self::STRING_*
      * @return Orx
      */
-    protected function _stringLikeAnyWord($field, $values, $type = self::STRING_BOTH)
+    public function stringLikeAnyWord($field, $values, $type = self::STRING_BOTH)
     {
         if (!is_array($values)) {
             $values = explode(' ', $values);
@@ -300,7 +257,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         $exprs = array();
 
         foreach ($values as $value) {
-            $exprs[] = $this->_stringLike($field, $value, $type);
+            $exprs[] = $this->stringLike($field, $value, $type);
         }
 
         return new Orx($exprs);
@@ -309,40 +266,40 @@ class Expr extends \Doctrine\ORM\Query\Expr
     /**
     * Get like expression for any matching word with string end matching rule
     *
-    * @see   Expr::_stringLikeAnyWord()
+    * @see   Expr::stringLikeAnyWord()
     * @param string $field
     * @param string $value
     * @return Orx
     */
     public function stringEndsAnyWord($field, $value)
     {
-        return $this->_stringLikeAnyWord($field, $value, self::STRING_ENDS);
+        return $this->stringLikeAnyWord($field, $value, self::STRING_ENDS);
     }
 
     /**
      * Get like expression  for any matching word with both string and end string matching rule
      *
-     * @see   Expr::_stringLikeAnyWord()
+     * @see   Expr::stringLikeAnyWord()
      * @param string $field
      * @param string $value
      * @return Orx
      */
     public function stringBothAnyWord($field, $value)
     {
-        return $this->_stringLikeAnyWord($field, $value, self::STRING_BOTH);
+        return $this->stringLikeAnyWord($field, $value, self::STRING_BOTH);
     }
 
     /**
      * Get like expression  for any matching word with equal string matching rule
      *
-     * @see   Expr::_stringLikeAnyWord()
+     * @see   Expr::stringLikeAnyWord()
      * @param string $field
      * @param string $value
      * @return Orx
      */
     public function stringEqAnyWord($field, $value)
     {
-        return $this->_stringLikeAnyWord($field, $value, self::STRING_EQ);
+        return $this->stringLikeAnyWord($field, $value, self::STRING_EQ);
     }
 
     /**

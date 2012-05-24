@@ -15,10 +15,10 @@ use Doctrine\ORM\QueryBuilder;
  */
 class TextFilterType extends TextType implements FilterTypeInterface
 {
-    const PATTERN_EQUALS     = '%s';
-    const PATTERN_START_WITH = '%s%%';
-    const PATTERN_END_WITH   = '%%%s';
-    const PATTERN_CONTAINS   = '%%%s%%';
+    const PATTERN_EQUALS     = Expr::STRING_EQ;
+    const PATTERN_START_WITH = Expr::STRING_STARTS;
+    const PATTERN_END_WITH   = Expr::STRING_ENDS;
+    const PATTERN_CONTAINS   = Expr::STRING_BOTH;
 
     const SELECT_PATTERN = 'select_pattern';
 
@@ -91,9 +91,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
     {
         if (!empty($values['value'])) {
-            $op    = ($values['condition_pattern'] == self::PATTERN_EQUALS) ? 'eq' : 'like';
-            $value = sprintf($values['condition_pattern'], $values['value']);
-            $queryBuilder->andWhere($e->$op($field, $e->literal($value)));
+            $queryBuilder->andWhere($e->stringLike($field, $values['value'], $values['condition_pattern']));
         }
     }
 
@@ -102,7 +100,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      *
      * @return array
      */
-    static public function getConditionChoices()
+    static private function getConditionChoices()
     {
         $choices = array();
 
