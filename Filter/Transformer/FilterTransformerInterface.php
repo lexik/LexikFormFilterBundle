@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
-use Symfony\component\form\Form;
+use Symfony\component\Form\FormInterface;
 
 /**
  * This interface allows the implementation of a transform filter
@@ -18,5 +18,5 @@ interface FilterTransformerInterface
      *
      * @return array
      */
-    public function transform(Form $form);
+    public function transform(FormInterface $form);
 }

@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Transform a filter text into a right format
@@ -14,13 +14,13 @@ use Symfony\Component\Form\Form;
 class FilterTextTransformer implements FilterTransformerInterface
 {
     /**
-     * (non-PHPdoc)
+     * {@inheritDoc}
      * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
      */
-    public function transform(Form $form)
+    public function transform(FormInterface $form)
     {
-        $data = $form->getData();
-        $keys = null;
+        $data   = $form->getData();
+        $keys   = null;
         $values = array('value' => array());
 
         if (array_key_exists('text', $data)) {
@@ -31,4 +31,3 @@ class FilterTextTransformer implements FilterTransformerInterface
         return $values;
     }
 }
-

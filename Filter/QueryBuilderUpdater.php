@@ -3,29 +3,30 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
+use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
 use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class QueryBuilderUpdater
+class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
 {
     /**
-     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator
+     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface
      */
     protected $filterTransformerAggregator;
 
     /**
      * Constructor
      *
-     * @param TransformerAggregator $filterTransformerAggregator
+     * @param TransformerAggregatorInterface $filterTransformerAggregator
      */
-    public function __construct(TransformerAggregator $filterTransformerAggregator)
+    public function __construct(TransformerAggregatorInterface $filterTransformerAggregator)
     {
         $this->filterTransformerAggregator = $filterTransformerAggregator;
     }
@@ -33,14 +34,14 @@ class QueryBuilderUpdater
     /**
      * Build a filter query.
      *
-     * @param \Symfony\Component\Form\Form $form
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param  FormInterface $form
+     * @param  QueryBuilder $queryBuilder
+     * @return QueryBuilder
      */
-    public function addFilterConditions(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder)
     {
         foreach ($form->getChildren() as $child) {
-            $this->addFilterCondition($queryBuilder, $child);
+            $this->addFilterCondition($child, $queryBuilder);
         }
 
         return $queryBuilder;
@@ -49,46 +50,33 @@ class QueryBuilderUpdater
     /**
      * Add a condition to the builder for the given form.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
-     * @param Form $form
+     * @param FormInterface $form
+     * @param QueryBuilder $queryBuilder
      */
-    protected function addFilterCondition(\Doctrine\ORM\QueryBuilder $queryBuilder, Form $form)
+    protected function addFilterCondition(FormInterface $form, QueryBuilder $queryBuilder)
     {
-        $values = $this->prepareFilterValues($form);
+        $type = $this->getFilterType($form);
 
-        // apply the filter by using the closure set with the 'apply_filter' option
-        if ($form->hasAttribute('apply_filter')) {
-            $callable = $form->getAttribute('apply_filter');
-
-            if ($callable instanceof \Closure) {
-                $callable($queryBuilder, $form->getName(), $values);
-            } else {
-                call_user_func($callable, $queryBuilder, $form->getName(), $values);
-            }
-        } else {
-            // if no closure we use the applyFilter() method from a FilterTypeInterface
-            $type = $this->getFilterType($form->getTypes());
-
-            if ($type instanceof FilterTypeInterface) {
-                $type->applyFilter($queryBuilder, $form->getName(), $values);
-            }
+        if ($type) {
+            $values = $this->prepareFilterValues($form);
+            $type->applyFilter($queryBuilder, $form->getName(), $values);
         }
     }
 
     /**
      * Prepare all values needed to apply the filer.
      *
-     * @param Form $form
+     * @param  FormInterface $form
      * @return array
      */
-    protected function prepareFilterValues(Form $form)
+    protected function prepareFilterValues(FormInterface $form)
     {
         $values = array();
-        $type = $this->getFilterType($form->getTypes());
+        $type   = $this->getFilterType($form);
 
-        if ($type instanceof FilterTypeInterface) {
+        if ($type) {
             $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
-            $values = $transformer->transform($form);
+            $values      = $transformer->transform($form);
         }
 
         if ($form->hasAttribute('filter_options')) {
@@ -99,23 +87,27 @@ class QueryBuilderUpdater
     }
 
     /**
-     * Returns the first FilterTypeInterface instance.
+     * Returns the first FilterTypeInterface instance
      *
-     * @param array $types
-     * @return Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface
+     * Each form field has hierarchy of form types.
+     * Get first form type which realizes FilterTypeInterface
+     *
+     * @param  FormInterface $form
+     * @return FilterTypeInterface|null
      */
-    protected function getFilterType(array $types)
+    protected function getFilterType(FormInterface $form)
     {
-        $types = array_reverse($types);
+        $filterType = null;
+        $config     = $form->getConfig();
+        $types      = $config->getTypes();
 
-        $type = null;
-        $i = 0;
-
-        while ($i<count($types) && null == $type) {
-            $type = ($types[$i] instanceof FilterTypeInterface) ? $types[$i] : null;
-            $i++;
+        foreach (array_reverse($types) as $type) {
+            if ($type instanceof FilterTypeInterface) {
+                $filterType = $type;
+                break;
+            }
         }
 
-        return $type;
+        return $filterType;
     }
 }
