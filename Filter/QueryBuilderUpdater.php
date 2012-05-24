@@ -13,7 +13,7 @@ use Symfony\Component\Form\Form;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class QueryBuilder
+class QueryBuilderUpdater
 {
     /**
      * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator
@@ -37,7 +37,7 @@ class QueryBuilder
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function buildQuery(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function addFilterConditions(Form $form, \Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         foreach ($form->getChildren() as $child) {
             $this->addFilterCondition($queryBuilder, $child);

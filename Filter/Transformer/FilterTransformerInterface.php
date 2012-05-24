@@ -12,7 +12,7 @@ use Symfony\component\form\Form;
 interface FilterTransformerInterface
 {
     /**
-     * Transform data of a form into value manipulate by QueryBuilder
+     * Transform data of a form into value manipulate by QueryBuilderUpdater
      *
      * @param Form $form
      *
