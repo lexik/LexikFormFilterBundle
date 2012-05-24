@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "This bundle aim to provide classes to build some form filters and then build a doctrine query from this form filter.",
     "keywords": ["Symfony2", "bundle", "form", "filter", "doctrine"],
-    "homepage": "https://github.com/AndreyChernykh/LexikFormFilterBundle",
+    "homepage": "https://github.com/lexik/LexikFormFilterBundle",
     "license": "MIT",
     "authors": [
         {
