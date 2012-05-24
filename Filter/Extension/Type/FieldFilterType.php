@@ -29,7 +29,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function getDefaultOptions()
     {
         $options = parent::getDefaultOptions($options);
         $options['required'] = false;

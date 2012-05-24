@@ -53,7 +53,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function getDefaultOptions()
     {
         $options = parent::getDefaultOptions($options);
         $options['condition_pattern'] = self::PATTERN_EQUALS;

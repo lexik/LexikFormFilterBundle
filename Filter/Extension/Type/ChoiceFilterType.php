@@ -16,7 +16,7 @@ class ChoiceFilterType extends ChoiceType
      */
     public function getParent(array $options)
     {
-        return $options['expanded'] ? 'filter' : 'filter_field';
+        return isset($options['expanded']) && $options['expanded'] ? 'filter' : 'filter_field';
     }
 
     /**
