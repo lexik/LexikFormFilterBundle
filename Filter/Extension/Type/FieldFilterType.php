@@ -31,7 +31,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
      */
     public function getDefaultOptions()
     {
-        $options = parent::getDefaultOptions($options);
+        $options = parent::getDefaultOptions();
         $options['required'] = false;
         $options['apply_filter'] = null;
 
