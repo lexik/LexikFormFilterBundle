@@ -18,11 +18,12 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
      */
     public function transform(FormInterface $form)
     {
-        $data = $form->getData();
-        $keys = null;
+        $data   = $form->getData();
+        $keys   = null;
+        $config = $form->getConfig();
 
-        if ($form->getConfig()->hasAttribute('filter_value_keys')) {
-            $keys = array_merge($data, $form->getConfig()->getAttribute('filter_value_keys'));
+        if ($config->hasAttribute('filter_value_keys')) {
+            $keys = array_merge($data, $config->getAttribute('filter_value_keys'));
         }
         $values = array('value' => array());
 
@@ -38,4 +39,3 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
         return $values;
     }
 }
-

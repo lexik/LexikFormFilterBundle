@@ -34,8 +34,8 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-             'required'     => false,
-             'apply_filter' => null
+            'required'     => false,
+            'apply_filter' => null
         ));
     }
 
@@ -59,7 +59,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
      * Default implementation of the applyFieldFilter() method.
      * We just add a 'and where' clause.
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
             $queryBuilder->andWhere($e->eq($field, $values['value']));

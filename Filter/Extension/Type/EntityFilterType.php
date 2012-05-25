@@ -43,7 +43,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (is_object($values['value'])) {
             if ($values['value'] instanceof Collection) {

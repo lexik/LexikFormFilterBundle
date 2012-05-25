@@ -25,8 +25,9 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
         $builder->add('right_number', 'filter_number', $options['right_number']);
 
         $builder->setAttribute('filter_value_keys', array(
-                'left_number' => $options['left_number'],
-                'right_number' => $options['right_number']));
+            'left_number'  => $options['left_number'],
+            'right_number' => $options['right_number']
+        ));
     }
 
     /**

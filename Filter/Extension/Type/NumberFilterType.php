@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Filter type for numbers.
@@ -62,7 +63,14 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('condition_operator' => self::OPERATOR_EQUAL));
+        $compound = function (Options $options) {
+            return $options['condition_pattern'] != self::SELECT_OPERATOR;
+        };
+
+        $resolver->setDefaults(array(
+            'condition_operator' => self::OPERATOR_EQUAL
+            'compound' => $compound,
+        ));
     }
 
     /**
@@ -70,7 +78,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return ($options['condition_operator'] == self::SELECT_OPERATOR) ? 'filter' : 'filter_field';
+        return 'filter';
     }
 
     /**
@@ -92,7 +100,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
             $op = $values['condition_operator'];

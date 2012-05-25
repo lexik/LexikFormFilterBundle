@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormInterface;
 class FilterDefaultTransformer implements FilterTransformerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
      */
     public function transform(FormInterface $form)

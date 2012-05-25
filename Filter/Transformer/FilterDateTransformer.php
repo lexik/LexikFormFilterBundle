@@ -18,10 +18,11 @@ class FilterDateTransformer implements FilterTransformerInterface
      */
     public function transform(FormInterface $form)
     {
-        $data = $form->getData();
-        $keys = null;
-        if ($form->getConfig()->hasAttribute('filter_value_keys')) {
-            $keys = $form->getConfig()->getAttribute('filter_value_keys');
+        $data   = $form->getData();
+        $config = $form->getConfig();
+        $keys   = null;
+        if ($config->hasAttribute('filter_value_keys')) {
+            $keys = $config->getAttribute('filter_value_keys');
         }
         $values = array('value' => array());
 
@@ -32,3 +33,4 @@ class FilterDateTransformer implements FilterTransformerInterface
         return $values;
     }
 }
+

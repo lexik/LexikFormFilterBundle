@@ -22,7 +22,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     const VALUE_NO  = 'n';
 
     /**
-     * @var Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
 
@@ -93,7 +93,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
             $value = (int)(self::VALUE_YES == $values['value']);

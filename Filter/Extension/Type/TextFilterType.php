@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Filter type for strings.
@@ -41,7 +42,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
             $textOptions['trim']     = isset($options['trim']) ? $options['trim'] : true;
 
             $builder->add('condition_pattern', 'choice', array(
-            	'choices' => self::getConditionChoices(),
+                'choices' => self::getConditionChoices(),
             ));
             $builder->add('text', 'text', $textOptions);
             $this->transformerId = 'lexik_form_filter.transformer.text';
@@ -57,8 +58,13 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        $compound = function (Options $options) {
+            return $options['condition_pattern'] != self::SELECT_PATTERN;
+        };
+
         $resolver->setDefaults(array(
             'condition_pattern' => self::PATTERN_EQUALS,
+            'compound' => $compound,
         ));
     }
 
@@ -67,7 +73,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return ($options['condition_pattern'] == self::SELECT_PATTERN) ? 'filter' : 'filter_field';
+        return 'filter';
     }
 
     /**

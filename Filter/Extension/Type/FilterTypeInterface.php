@@ -20,7 +20,7 @@ interface FilterTypeInterface
      * @param string $field
      * @param array $values
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values);
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values);
 
     /**
      * Return service id used to transforme values

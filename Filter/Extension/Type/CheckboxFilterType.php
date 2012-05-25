@@ -42,7 +42,7 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
             $queryBuilder->andWhere($e->eq($field, $values['value']));

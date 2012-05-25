@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 class DateFilterType extends DateType implements FilterTypeInterface
 {
@@ -16,7 +17,7 @@ class DateFilterType extends DateType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return $options['widget'] === 'single_text' ? 'filter_field' : 'filter';
+        return 'filter';
     }
 
     /**
@@ -36,9 +37,23 @@ class DateFilterType extends DateType implements FilterTypeInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $compound = function (Options $options) {
+            return $options['widget'] != 'single_text';
+        };
+
+        $resolver->setDefaults(array(
+            'compound' => $compound,
+        ));
+    }
+
+    /**
     * {@inheritdoc}
     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if ($values['value'] instanceof \DateTime) {
             $date = $values['value']->format(Expr::SQL_DATE);
