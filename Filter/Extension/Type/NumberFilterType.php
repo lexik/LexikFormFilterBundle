@@ -68,7 +68,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
         };
 
         $resolver->setDefaults(array(
-            'condition_operator' => self::OPERATOR_EQUAL
+            'condition_operator' => self::OPERATOR_EQUAL,
             'compound' => $compound,
         ));
     }

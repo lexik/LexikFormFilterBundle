@@ -68,7 +68,7 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         $value = $values['value'];
         if (isset($value['left_number'][0], $value['right_number'][0])) {
