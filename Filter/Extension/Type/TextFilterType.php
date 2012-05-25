@@ -3,10 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for strings.
@@ -27,7 +28,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
@@ -54,9 +55,9 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array_merge(parent::getDefaultOptions(), array(
+        $resolver->setDefaults(array(
             'condition_pattern' => self::PATTERN_EQUALS,
         ));
     }

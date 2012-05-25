@@ -3,21 +3,14 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DateFilterType extends DateType implements FilterTypeInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilder $builder, array $options)
-    {
-        parent::buildForm($builder, $options);
-    }
-
     /**
      * {@inheritdoc}
      */

@@ -9,6 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter to use with boolean values.
@@ -44,15 +45,15 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'choices'     => array(
                 self::VALUE_YES  => $this->trans('boolean.yes'),
                 self::VALUE_NO   => $this->trans('boolean.no'),
             ),
             'empty_value' => $this->trans('boolean.yes_or_no'),
-        );
+        ));
     }
 
     /**

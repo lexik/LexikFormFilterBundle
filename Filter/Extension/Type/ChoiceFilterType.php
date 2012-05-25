@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for select list.

@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for related entities.

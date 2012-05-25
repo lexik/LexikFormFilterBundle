@@ -3,10 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for numbers.
@@ -18,7 +19,7 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('left_number', 'filter_number', $options['left_number']);
         $builder->add('right_number', 'filter_number', $options['right_number']);
@@ -31,12 +32,12 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
             'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
-        );
+        ));
     }
 
     /**

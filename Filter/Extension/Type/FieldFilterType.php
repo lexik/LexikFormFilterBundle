@@ -3,10 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\AbstractType as FormFieldType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Base filter type.
@@ -18,7 +19,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
@@ -30,9 +31,9 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array_merge(parent::getDefaultOptions(), array(
+        $resolver->setDefaults(array(
              'required'     => false,
              'apply_filter' => null
         ));

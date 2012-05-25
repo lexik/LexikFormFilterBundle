@@ -3,10 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for numbers.
@@ -31,7 +32,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributes = array();
         $this->transformerId = 'lexik_form_filter.transformer.default';
@@ -59,12 +60,9 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $options = parent::getDefaultOptions();
-        $options['condition_operator'] = self::OPERATOR_EQUAL;
-
-        return $options;
+        $resolver->setDefaults(array('condition_operator' => self::OPERATOR_EQUAL));
     }
 
     /**
