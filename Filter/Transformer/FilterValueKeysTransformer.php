@@ -21,8 +21,8 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
         $data = $form->getData();
         $keys = null;
 
-        if ($form->hasAttribute('filter_value_keys')) {
-            $keys = array_merge($data, $form->getAttribute('filter_value_keys'));
+        if ($form->getConfig()->hasAttribute('filter_value_keys')) {
+            $keys = array_merge($data, $form->getConfig()->getAttribute('filter_value_keys'));
         }
         $values = array('value' => array());
 

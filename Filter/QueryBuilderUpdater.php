@@ -46,7 +46,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
      */
     public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder)
     {
-        foreach ($form->getChildren() as $child) {
+        foreach ($form->all() as $child) {
             $this->addFilterCondition($child, $queryBuilder);
         }
 
@@ -91,8 +91,8 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
             $values      = $transformer->transform($form);
         }
 
-        if ($form->hasAttribute('filter_options')) {
-            $values = array_merge($values, $form->getAttribute('filter_options'));
+        if ($form->getConfig()->hasAttribute('filter_options')) {
+            $values = array_merge($values, $form->getConfig()->getAttribute('filter_options'));
         }
 
         return $values;
