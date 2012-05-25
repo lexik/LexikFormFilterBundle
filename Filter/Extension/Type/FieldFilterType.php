@@ -34,8 +34,9 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'required'     => false,
-            'apply_filter' => null
+             'required'     => false,
+             'apply_filter' => null,
+             'compound'     => false,
         ));
     }
 
@@ -65,4 +66,5 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
             $queryBuilder->andWhere($e->eq($field, $values['value']));
         }
     }
+
 }

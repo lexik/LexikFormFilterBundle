@@ -37,7 +37,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
         if ($options['condition_pattern'] == self::SELECT_PATTERN) {
-            $textOptions             = array_intersect_key($options, parent::getDefaultOptions(array()));
+            $textOptions             = $options; //array_intersect_key($options, parent::getDefaultOptions(array()));
             $textOptions['required'] = isset($options['required']) ? $options['required'] : false;
             $textOptions['trim']     = isset($options['trim']) ? $options['trim'] : true;
 
@@ -59,7 +59,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $compound = function (Options $options) {
-            return $options['condition_pattern'] != TextFilterType::SELECT_PATTERN;
+            return $options['condition_pattern'] == TextFilterType::SELECT_PATTERN;
         };
 
         $resolver->setDefaults(array(
@@ -73,7 +73,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter';
+        return 'filter_field';
     }
 
     /**
