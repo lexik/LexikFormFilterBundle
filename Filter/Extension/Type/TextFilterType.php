@@ -59,7 +59,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $compound = function (Options $options) {
-            return $options['condition_pattern'] != self::SELECT_PATTERN;
+            return $options['condition_pattern'] != TextFilterType::SELECT_PATTERN;
         };
 
         $resolver->setDefaults(array(
@@ -95,7 +95,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
             $queryBuilder->andWhere($e->stringLike($field, $values['value'], $values['condition_pattern']));
