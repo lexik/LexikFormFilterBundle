@@ -15,7 +15,7 @@ class ChoiceFilterType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return isset($options['expanded']) && $options['expanded'] ? 'filter' : 'filter_field';
     }

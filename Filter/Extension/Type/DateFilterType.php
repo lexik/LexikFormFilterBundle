@@ -14,7 +14,7 @@ class DateFilterType extends DateType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return $options['widget'] === 'single_text' ? 'filter_field' : 'filter';
     }

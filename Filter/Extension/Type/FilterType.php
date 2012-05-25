@@ -15,7 +15,7 @@ class FilterType extends FormType
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_field';
     }

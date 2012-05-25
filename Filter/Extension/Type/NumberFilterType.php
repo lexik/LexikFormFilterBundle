@@ -68,7 +68,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return ($options['condition_operator'] == self::SELECT_OPERATOR) ? 'filter' : 'filter_field';
     }

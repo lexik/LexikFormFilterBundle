@@ -65,7 +65,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return ($options['condition_pattern'] == self::SELECT_PATTERN) ? 'filter' : 'filter_field';
     }

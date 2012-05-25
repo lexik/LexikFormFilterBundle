@@ -18,7 +18,7 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_field';
     }
