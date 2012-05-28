@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type for select list.
@@ -14,9 +15,9 @@ class ChoiceFilterType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
-        return $options['expanded'] ? 'filter' : 'filter_field';
+        return isset($options['expanded']) && $options['expanded'] ? 'filter' : 'filter_field';
     }
 
     /**

@@ -3,26 +3,21 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 class DateFilterType extends DateType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function getParent()
     {
-        parent::buildForm($builder, $options);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent(array $options)
-    {
-        return $options['widget'] === 'single_text' ? 'filter_field' : 'filter';
+        return 'filter';
     }
 
     /**
@@ -42,20 +37,27 @@ class DateFilterType extends DateType implements FilterTypeInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $compound = function (Options $options) {
+            return $options['widget'] != 'single_text';
+        };
+
+        $resolver->setDefaults(array(
+            'compound' => $compound,
+        ));
+    }
+
+    /**
     * {@inheritdoc}
     */
-    public function applyFilter(QueryBuilder $queryBuilder, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if ($values['value'] instanceof \DateTime) {
-            $paramName = sprintf('%s_param', $field);
-            $condition = sprintf('%s.%s = :%s',
-                $queryBuilder->getRootAlias(),
-                $field,
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $values['value']->format('Y-m-d'), \PDO::PARAM_STR);
+            $date = $values['value']->format(Expr::SQL_DATE);
+            $queryBuilder->andWhere($e->eq($field, $date));
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Filter type.
@@ -14,7 +15,7 @@ class FilterType extends FormType
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_field';
     }
