@@ -2,7 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
+use Symfony\Component\Form\FormTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
 use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
 
@@ -34,7 +36,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
     public function __construct(TransformerAggregatorInterface $filterTransformerAggregator)
     {
         $this->filterTransformerAggregator = $filterTransformerAggregator;
-        $this->expr = new Expr;
+        $this->expr                        = new Expr;
     }
 
     /**
@@ -42,84 +44,66 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
      *
      * @param  FormInterface $form
      * @param  QueryBuilder $queryBuilder
+     * @param  string|null $alias
+     * @param  array & $parts
      * @return QueryBuilder
      */
-    public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder)
+    public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder, $alias = null, array & $parts = array())
     {
+        if (!$alias) {
+            $aliases = $queryBuilder->getRootAliases();
+            $alias   = isset($aliases[0]) ? $aliases[0] : '';
+        }
+
+        /** @var $child FormInterface */
         foreach ($form->all() as $child) {
-            $this->addFilterCondition($child, $queryBuilder);
+
+            $config = $child->getConfig();
+            $types  = $config->getTypes();
+
+            /** @var $type FormTypeInterface */
+            foreach (array_reverse($types) as $type) {
+                if ($type instanceof FilterTypeInterface) {
+                    $values = $this->prepareFilterValues($child, $type);
+                    $values += array('alias' => $alias);
+                    $field = $values['alias'] . '.' . $child->getName();
+                    $type->applyFilter($queryBuilder, $this->expr, $field, $values);
+                    break;
+                } else if ($type instanceof FilterTypeSharedableInterface) {
+                    $qbe = new QueryBuilderExecuter($queryBuilder, $alias, $this->expr, $parts);
+                    $type->addShared($qbe);
+
+                    if (count($parts)) {
+                        $partsKeys  = array_keys($parts);
+                        $childAlias = end($partsKeys);
+                        $this->addFilterConditions($child, $queryBuilder, $childAlias, $parts);
+                    }
+                    break;
+                }
+            }
         }
 
         return $queryBuilder;
     }
 
     /**
-     * Add a condition to the builder for the given form.
-     *
-     * @param FormInterface $form
-     * @param QueryBuilder $queryBuilder
-     */
-    protected function addFilterCondition(FormInterface $form, QueryBuilder $queryBuilder)
-    {
-        $type = $this->getFilterType($form);
-
-        if ($type) {
-            $values  = $this->prepareFilterValues($form);
-            $aliases = $queryBuilder->getRootAliases();
-            $values += array('alias' => (isset($aliases[0]) ? $aliases[0] : null));
-            $alias = $values['alias'];
-
-            $field = ($alias ? ($alias . '.') : '') . $form->getName();
-
-            $type->applyFilter($queryBuilder, $this->expr, $field, $values);
-        }
-    }
-
-    /**
-     * Prepare all values needed to apply the filer.
+     * Prepare all values needed to apply the filter
      *
      * @param  FormInterface $form
+     * @param  FilterTypeInterface $type
      * @return array
      */
-    protected function prepareFilterValues(FormInterface $form)
+    protected function prepareFilterValues(FormInterface $form, FilterTypeInterface $type)
     {
-        $values = array();
-        $type   = $this->getFilterType($form);
+        $values      = array();
+        $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
+        $values      = $transformer->transform($form);
+        $config = $form->getConfig();
 
-        if ($type) {
-            $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
-            $values      = $transformer->transform($form);
-        }
-
-        if ($form->getConfig()->hasAttribute('filter_options')) {
-            $values = array_merge($values, $form->getConfig()->getAttribute('filter_options'));
+        if ($config->hasAttribute('filter_options')) {
+            $values = array_merge($values, $config->getAttribute('filter_options'));
         }
 
         return $values;
-    }
-
-    /**
-     * Returns the first FilterTypeInterface instance
-     *
-     * Each form field has hierarchy of form types.
-     * Get first form type which realizes FilterTypeInterface
-     *
-     * @param  FormInterface $form
-     * @return FilterTypeInterface|null
-     */
-    protected function getFilterType(FormInterface $form)
-    {
-        $filterType = null;
-        $config     = $form->getConfig();
-        $types      = $config->getTypes();
-
-        foreach (array_reverse($types) as $type) {
-            if ($type instanceof FilterTypeInterface) {
-                $filterType = $type;
-                break;
-            }
-        }
-
-        return $filterType;
     }
 }

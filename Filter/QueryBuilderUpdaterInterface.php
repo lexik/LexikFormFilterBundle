@@ -13,8 +13,10 @@ interface QueryBuilderUpdaterInterface
      *
      * @param  FormInterface $form
      * @param  QueryBuilder $queryBuilder
+     * @param  string|null $alias
+     * @param  array $parts
      * @return QueryBuilder
      */
-    public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder);
 
+    public function addFilterConditions(FormInterface $form, QueryBuilder $queryBuilder, $alias = null, array & $parts = array());
 }
