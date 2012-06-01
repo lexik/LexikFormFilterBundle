@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -14,12 +16,12 @@ interface FilterTypeInterface
     /**
      * Add condition(s) to the query builder for the current type.
      *
-     * @param Doctrine\ORM\QueryBuilder $queryBuilder
-     * @param string $alias
+     * @param QueryBuilder $queryBuilder
+     * @param Expr $e
      * @param string $field
      * @param array $values
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values);
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values);
 
     /**
      * Return service id used to transforme values

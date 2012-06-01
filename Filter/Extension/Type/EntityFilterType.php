@@ -3,6 +3,9 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +20,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter_choice';
     }
@@ -41,7 +44,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (is_object($values['value'])) {
             if ($values['value'] instanceof Collection) {
@@ -55,10 +58,11 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                 }
 
                 if (count($ids) > 0) {
-                    $joinAlias = substr($field, 0, 3);
-
-                    $queryBuilder->leftJoin(sprintf('%s.%s', $alias, $field), $joinAlias)
-                        ->andWhere($queryBuilder->expr()->in($joinAlias, $ids));
+                    $alias = $value['alias'];
+                    $joinAlias = 'a' . $alias;
+                    $queryBuilder
+                        ->leftJoin($field, $joinAlias)
+                        ->andWhere($e->in($joinAlias, $ids));
                 }
 
             } else {
@@ -66,10 +70,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $paramName = sprintf('%s_param', $field);
-
-                $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $field, $paramName))
-                    ->setParameter($paramName, $values['value']->getId(), \PDO::PARAM_INT);
+                $queryBuilder->andWhere($e->eq($field, $values['value']->getId()));
             }
         }
     }

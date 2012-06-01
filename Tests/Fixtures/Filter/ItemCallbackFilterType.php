@@ -18,17 +18,9 @@ class ItemCallbackFilterType extends AbstractType
             'apply_filter' => array($this, 'fieldNameCallback'),
         ));
         $builder->add('position', 'filter_number', array(
-            'apply_filter' => function($queryBuilder, $alias, $field, $values) {
+            'apply_filter' => function($queryBuilder, $expr, $field, $values) {
                 if (!empty($values['value'])) {
-                    $paramName = sprintf('%s_param', $field);
-                    $condition = sprintf('%s.%s <> :%s',
-                        $alias,
-                        $field,
-                        $paramName
-                    );
-
-                    $queryBuilder->andWhere($condition)
-                        ->setParameter($paramName, $values['value']);
+                    $queryBuilder->andWhere($expr->neq($field, $values['value']));
                 }
             },
         ));
@@ -39,19 +31,11 @@ class ItemCallbackFilterType extends AbstractType
         return 'item_filter';
     }
 
-    public function fieldNameCallback($queryBuilder, $alias, $field, $values)
+    public function fieldNameCallback($queryBuilder, $expr, $field, $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
             $value = sprintf($values['condition_pattern'], $values['value']);
-            $condition = sprintf('%s.%s <> :%s',
-                $alias,
-                $field,
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $value, \PDO::PARAM_STR);
+            $queryBuilder->andWhere($expr->neq($field, $value));
         }
     }
 }

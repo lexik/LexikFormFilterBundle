@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Transform a date data in right format
@@ -13,15 +13,16 @@ use Symfony\Component\Form\Form;
 class FilterDateTransformer implements FilterTransformerInterface
 {
     /**
-     * (non-PHPdoc)
+     * {@inheritDoc}
      * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
      */
-    public function transform(Form $form)
+    public function transform(FormInterface $form)
     {
-        $data = $form->getData();
-        $keys = null;
-        if ($form->hasAttribute('filter_value_keys')) {
-            $keys = $form->getAttribute('filter_value_keys');
+        $data   = $form->getData();
+        $config = $form->getConfig();
+        $keys   = null;
+        if ($config->hasAttribute('filter_value_keys')) {
+            $keys = $config->getAttribute('filter_value_keys');
         }
         $values = array('value' => array());
 

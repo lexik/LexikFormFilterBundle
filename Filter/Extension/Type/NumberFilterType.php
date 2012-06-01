@@ -3,7 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -14,11 +18,11 @@ use Doctrine\ORM\QueryBuilder;
  */
 class NumberFilterType extends NumberType implements FilterTypeInterface
 {
-    const OPERATOR_EQUAL              = '=';
-    const OPERATOR_GREATER_THAN       = '>';
-    const OPERATOR_GREATER_THAN_EQUAL = '>=';
-    const OPERATOR_LOWER_THAN         = '<';
-    const OPERATOR_LOWER_THAN_EQUAL   = '<=';
+    const OPERATOR_EQUAL              = 'eq';
+    const OPERATOR_GREATER_THAN       = 'gt';
+    const OPERATOR_GREATER_THAN_EQUAL = 'gte';
+    const OPERATOR_LOWER_THAN         = 'lt';
+    const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
 
     const SELECT_OPERATOR = 'select_operator';
 
@@ -30,7 +34,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributes = array();
         $this->transformerId = 'lexik_form_filter.transformer.default';
@@ -58,20 +62,24 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $options = parent::getDefaultOptions($options);
-        $options['condition_operator'] = self::OPERATOR_EQUAL;
+        $compound = function (Options $options) {
+            return $options['condition_pattern'] != NumberFilterType::SELECT_OPERATOR;
+        };
 
-        return $options;
+        $resolver->setDefaults(array(
+            'condition_operator' => self::OPERATOR_EQUAL,
+            'compound' => $compound,
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
-        return ($options['condition_operator'] == self::SELECT_OPERATOR) ? 'filter' : 'filter_field';
+        return 'filter';
     }
 
     /**
@@ -93,19 +101,11 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-            $condition = sprintf('%s.%s %s :%s',
-                $alias,
-                $field,
-                $values['condition_operator'],
-                $paramName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($paramName, $values['value']);
+            $op = $values['condition_operator'];
+            $queryBuilder->andWhere($e->$op($field, $values['value']));
         }
     }
 
@@ -114,7 +114,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      *
      * @return array
      */
-    static public function getOperatorChoices()
+    static private function getOperatorChoices()
     {
         $choices = array();
 

@@ -2,8 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\FieldType as FormFieldType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\AbstractType as FormFieldType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -17,7 +20,7 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
@@ -29,13 +32,13 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $options = parent::getDefaultOptions($options);
-        $options['required'] = false;
-        $options['apply_filter'] = null;
-
-        return $options;
+        $resolver->setDefaults(array(
+             'required'     => false,
+             'apply_filter' => null,
+             'compound'     => false,
+        ));
     }
 
     /**
@@ -58,13 +61,11 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
      * Default implementation of the applyFieldFilter() method.
      * We just add a 'and where' clause.
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $paramName = sprintf('%s_param', $field);
-
-            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $field, $paramName))
-                ->setParameter($paramName, $values['value'], \PDO::PARAM_STR);
+            $queryBuilder->andWhere($e->eq($field, $values['value']));
         }
     }
+
 }

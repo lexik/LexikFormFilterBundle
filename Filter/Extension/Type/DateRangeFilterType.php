@@ -2,42 +2,45 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
 use Doctrine\ORM\QueryBuilder;
 
-use Symfony\Component\Form\FormBuilder;
-
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DateRangeFilterType extends AbstractType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('left_date', 'filter_date', $options['left_date']);
         $builder->add('right_date', 'filter_date', $options['right_date']);
 
         $builder->setAttribute('filter_value_keys', array(
-                'left_date' => $options['left_date'],
-                'right_date' => $options['right_date']));
+            'left_date'  => $options['left_date'],
+            'right_date' => $options['right_date']
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'left_date' => array(),
+        $resolver->setDefaults(array(
+            'left_date'  => array(),
             'right_date' => array(),
-        );
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'filter';
     }
@@ -61,32 +64,9 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, $alias, $field, $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
     {
-        if ($values['value']['left_date'][0] instanceof \DateTime) {
-            $leftParamName = sprintf('left_%s_param', $field);
-            $condition = sprintf('%s.%s %s :%s',
-                $alias,
-                $field,
-                '>=',
-                $leftParamName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($leftParamName, $values['value']['left_date'][0]->format('Y-m-d'), \PDO::PARAM_STR);
-        }
-
-        if ($values['value']['right_date'][0] instanceof \DateTime) {
-            $rightParamName = sprintf('right_%s_param', $field);
-            $condition = sprintf('%s.%s %s :%s',
-                $alias,
-                $field,
-                '<=',
-                $rightParamName
-            );
-
-            $queryBuilder->andWhere($condition)
-                ->setParameter($rightParamName, $values['value']['right_date'][0]->format('Y-m-d'), \PDO::PARAM_STR);
-        }
+        $value = $values['value'];
+        $queryBuilder->andWhere($e->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
     }
 }

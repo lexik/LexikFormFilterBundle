@@ -16,7 +16,7 @@ use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformer
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
-use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
@@ -27,7 +27,7 @@ use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class QueryBuilderTest extends TestCase
+class QueryBuilderUpdaterTest extends TestCase
 {
     public function testBuildQuery()
     {

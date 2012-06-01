@@ -8,7 +8,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
  * @author <g.gauthier@lexik.com>
  *
  */
-class TransformerAggregator
+class TransformerAggregator implements TransformerAggregatorInterface
 {
     /**
      * @var array
