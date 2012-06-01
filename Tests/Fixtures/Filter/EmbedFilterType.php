@@ -2,8 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
+
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Form filter for tests.
@@ -12,7 +14,7 @@ use Symfony\Component\Form\FormBuilder;
  */
 class EmbedFilterType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'filter_text');
         $builder->add('options', new OptionFilterType());

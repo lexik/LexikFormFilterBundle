@@ -34,6 +34,8 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $resolver->setDefaults(array(
              'required'     => false,
              'apply_filter' => null,

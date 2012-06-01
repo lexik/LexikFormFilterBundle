@@ -120,7 +120,7 @@ Then in an action, create a form object from the MySuperFilterType. Let's say we
                     ->createQueryBuilder('e');
 
                 // build the query from the given form object
-                $this->get('lexik_form_filter.query_builder')->addFilterConditions($form, $queryBuilder);
+                $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $queryBuilder);
 
                 // now look at the DQL =)
                 var_dump($queryBuilder->getDql());

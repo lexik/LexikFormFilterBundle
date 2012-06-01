@@ -21,18 +21,11 @@ $deps = array(
 );
 
 $revs = array(
-    'v2.0.12' => array(
-        'symfony'           => 'v2.0.12',
-        'doctrine-common'   => '2.1.4',
-        'doctrine-dbal'     => '2.1.6',
-        'doctrine'          => '2.1.6',
-        'doctrine-fixtures' => 'origin/master',
-    ),
-    'v2.0.14' => array(
-        'symfony'           => 'v2.0.14',
-        'doctrine-common'   => '2.1.4',
-        'doctrine-dbal'     => '2.1.6',
-        'doctrine'          => '2.1.6',
+    'v2.1' => array(
+        'symfony'           => '1541fe26e4d78135ab24ae2edfb1dbc2a9b2fa40', // merged branch bschussek/fix (PR #4478)
+        'doctrine-common'   => '2.2.2',
+        'doctrine-dbal'     => '2.2.2',
+        'doctrine'          => '2.2.2',
         'doctrine-fixtures' => 'origin/master',
     ),
 );

@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
@@ -24,7 +24,7 @@ class ItemFilterType extends AbstractType
         $this->checkbox = $checkbox;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (!$this->withSelector) {
             $builder->add('name', 'filter_text');

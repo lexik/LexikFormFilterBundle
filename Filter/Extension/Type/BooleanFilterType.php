@@ -47,6 +47,8 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $resolver->setDefaults(array(
             'choices'     => array(
                 self::VALUE_YES  => $this->trans('boolean.yes'),

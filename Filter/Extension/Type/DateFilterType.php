@@ -42,6 +42,8 @@ class DateFilterType extends DateType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $compound = function (Options $options) {
             return $options['widget'] != 'single_text';
         };

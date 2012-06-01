@@ -64,8 +64,10 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $compound = function (Options $options) {
-            return $options['condition_pattern'] != NumberFilterType::SELECT_OPERATOR;
+            return $options['condition_operator'] != NumberFilterType::SELECT_OPERATOR;
         };
 
         $resolver->setDefaults(array(

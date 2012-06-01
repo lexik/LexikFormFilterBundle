@@ -31,6 +31,8 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $resolver->setDefaults(array(
             'left_date'  => array(),
             'right_date' => array(),
