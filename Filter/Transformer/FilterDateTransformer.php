@@ -20,7 +20,8 @@ class FilterDateTransformer implements FilterTransformerInterface
     {
         $data   = $form->getData();
         $config = $form->getConfig();
-        $keys   = null;
+        $keys   = array();
+
         if ($config->hasAttribute('filter_value_keys')) {
             $keys = $config->getAttribute('filter_value_keys');
         }

@@ -20,7 +20,6 @@ class FilterTextTransformer implements FilterTransformerInterface
     public function transform(FormInterface $form)
     {
         $data   = $form->getData();
-        $keys   = null;
         $values = array('value' => array());
 
         if (array_key_exists('text', $data)) {

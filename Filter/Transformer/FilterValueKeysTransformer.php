@@ -19,7 +19,7 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
     public function transform(FormInterface $form)
     {
         $data   = $form->getData();
-        $keys   = null;
+        $keys   = array();
         $config = $form->getConfig();
 
         if ($config->hasAttribute('filter_value_keys')) {
