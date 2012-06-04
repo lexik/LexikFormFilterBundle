@@ -25,15 +25,18 @@ class TextFilterType extends TextType implements FilterTypeInterface
 
     const SELECT_PATTERN = 'select_pattern';
 
+    /**
+     * @var string
+     */
     protected $transformerId;
+
+    protected $parent;
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $attributes          = array();
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
@@ -46,8 +49,11 @@ class TextFilterType extends TextType implements FilterTypeInterface
                 'choices' => self::getConditionChoices(),
             ));
             $builder->add('text', 'text', $textOptions);
+
             $this->transformerId = 'lexik_form_filter.transformer.text';
         } else {
+            parent::buildForm($builder, $options);
+
             $attributes['condition_pattern'] = $options['condition_pattern'];
         }
 
@@ -76,7 +82,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter_field';
+        return 'filter';
     }
 
     /**
@@ -98,10 +104,10 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($e->stringLike($field, $values['value'], $values['condition_pattern']));
+            $queryBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
         }
     }
 

@@ -5,7 +5,6 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\Request;
 
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
@@ -42,8 +41,7 @@ class QueryBuilderUpdaterTest extends TestCase
 
         // bind a request to the form - 1 params
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'blabla', 'position' => ''));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'blabla', 'position' => ''));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'blabla\'';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -54,8 +52,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'blabla', 'position' => 2));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'blabla\' AND i.position > 2';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -66,8 +63,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'blabla\' AND i.position > 2 AND i.enabled = 1';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -78,24 +74,24 @@ class QueryBuilderUpdaterTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(false, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'blabla\' AND i.position > 2 AND i.enabled = 1';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
-        // bind a request to the form - 2 params + pattern selector
+
+        // bind a request to the form - date + pattern selector
         $form = $this->formFactory->create(new ItemFilterType(true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array(
+        $form->bind(array(
             'name' => array('text' => 'blabla', 'condition_pattern' => TextFilterType::PATTERN_END_WITH),
             'position' => array('text' => 2, 'condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
+            'createdAt' => array('year' => 2012, 'month' => 09, 'day' => 27),
         ));
-        $form->bindRequest($request);
 
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'%blabla\' AND i.position <= 2';
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'%blabla\' AND i.position <= 2 AND i.createdAt = \'2013-09-27\'';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
@@ -106,8 +102,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'blabla', 'position' => 2));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'blabla', 'position' => 2));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name <> \'blabla\' AND i.position <> 2';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -121,8 +116,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('position' => array('left_number' => 1, 'right_number' => 3)));
-        $form->bindRequest($request);
+        $form->bind(array('position' => array('left_number' => 1, 'right_number' => 3)));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.position > 1 AND i.position < 3';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -136,8 +130,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('default_position' => array('left_number' => 1, 'right_number' => 3)));
-        $form->bindRequest($request);
+        $form->bind(array('default_position' => array('left_number' => 1, 'right_number' => 3)));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.default_position >= 1 AND i.default_position <= 3';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -152,12 +145,12 @@ class QueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('createdAt' => array(
-            'left_date' => array('year' => '2012', 'month' => '05', 'day' => '12'),
-            'right_date' => array('year' => '2012', 'month' => '05', 'day' => '22')))
-        );
-
-        $form->bindRequest($request);
+        $form->bind(array(
+            'createdAt' => array(
+                'left_date' => '2012-05-12',
+                'right_date' => array('year' => '2012', 'month' => '05', 'day' => '22'),
+            ),
+        ));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.createdAt >= \'2012-05-12\' AND i.createdAt <= \'2012-05-22\'';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
@@ -171,8 +164,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $request = $this->createRequest(array('name' => 'dude', 'options' => array('label' => 'color', 'rank' => 3)));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'dude', 'options' => array('label' => 'color', 'rank' => 3)));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i';
         $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name LIKE \'dude\' AND opt.label LIKE \'color\' AND opt.rank = 3';
@@ -186,8 +178,7 @@ class QueryBuilderUpdaterTest extends TestCase
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $doctrineQueryBuilder->leftJoin('i.options', 'o');
-        $request = $this->createRequest(array('name' => 'dude', 'options' => array('label' => 'size', 'rank' => 5)));
-        $form->bindRequest($request);
+        $form->bind(array('name' => 'dude', 'options' => array('label' => 'size', 'rank' => 5)));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i';
         $expectedDql .= ' LEFT JOIN i.options o WHERE i.name LIKE \'dude\' AND o.label LIKE \'size\' AND o.rank = 5';
@@ -225,10 +216,5 @@ class QueryBuilderUpdaterTest extends TestCase
         $container->compile();
 
         return $container;
-    }
-
-    protected function createRequest($values)
-    {
-        return Request::create('http://local.tld', 'POST', array('item_filter' => $values));
     }
 }

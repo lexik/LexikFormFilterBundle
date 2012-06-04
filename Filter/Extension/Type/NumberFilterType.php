@@ -42,7 +42,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
         if ($options['condition_operator'] == self::SELECT_OPERATOR) {
             $this->transformerId = 'lexik_form_filter.transformer.text';
 
-            $numberOptions = array_intersect_key($options, parent::getDefaultOptions(array()));
+            $numberOptions = array_intersect_key($options, parent::getDefaultOptions());
             $numberOptions['required'] = isset($options['required']) ? $options['required'] : false;
             $numberOptions['trim'] = isset($options['trim']) ? $options['trim'] : true;
 
@@ -67,7 +67,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
         parent::setDefaultOptions($resolver);
 
         $compound = function (Options $options) {
-            return $options['condition_operator'] != NumberFilterType::SELECT_OPERATOR;
+            return $options['condition_operator'] == NumberFilterType::SELECT_OPERATOR;
         };
 
         $resolver->setDefaults(array(
@@ -103,11 +103,11 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
             $op = $values['condition_operator'];
-            $queryBuilder->andWhere($e->$op($field, $values['value']));
+            $queryBuilder->andWhere($expr->$op($field, $values['value']));
         }
     }
 

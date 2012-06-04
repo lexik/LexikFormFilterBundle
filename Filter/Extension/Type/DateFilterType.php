@@ -40,27 +40,11 @@ class DateFilterType extends DateType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        parent::setDefaultOptions($resolver);
-
-        $compound = function (Options $options) {
-            return $options['widget'] != 'single_text';
-        };
-
-        $resolver->setDefaults(array(
-            'compound' => $compound,
-        ));
-    }
-
-    /**
-    * {@inheritdoc}
-    */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if ($values['value'] instanceof \DateTime) {
             $date = $values['value']->format(Expr::SQL_DATE);
-            $queryBuilder->andWhere($e->eq($field, $date));
+            $queryBuilder->andWhere($expr->eq($field, $date));
         }
     }
 }

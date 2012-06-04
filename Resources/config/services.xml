@@ -64,8 +64,7 @@
         </service>
 
         <!-- Filter transformer agggregator -->
-        <service id="lexik_form_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator">
-        </service>
+        <service id="lexik_form_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator" />
 
         <!-- Tag filter transformer -->
         <service id="lexik_form_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">

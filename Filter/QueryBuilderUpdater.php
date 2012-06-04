@@ -4,6 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormConfigInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
@@ -74,7 +75,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
 
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
-            $type = $this->getFilterType($child->getTypes());
+            $type = $this->getFilterType($child->getConfig());
 
             if ($type instanceof FilterTypeInterface) {
                 $this->applyFilterCondition($child, $type, $queryBuilder, $alias);
@@ -111,9 +112,11 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
         $values += array('alias' => $alias);
         $field = $values['alias'] . '.' . $form->getName();
 
+        $config = $form->getConfig();
+
         // apply the filter by using the closure set with the 'apply_filter' option
-        if ($form->hasAttribute('apply_filter')) {
-            $callable = $form->getAttribute('apply_filter');
+        if ($config->hasAttribute('apply_filter')) {
+            $callable = $config->getAttribute('apply_filter');
 
             if ($callable instanceof \Closure) {
                 $callable($queryBuilder, $this->expr, $field, $values);
@@ -139,8 +142,10 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
         $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
         $values      = $transformer->transform($form);
 
-        if ($form->hasAttribute('filter_options')) {
-            $values = array_merge($values, $form->getAttribute('filter_options'));
+        $config = $form->getConfig();
+
+        if ($config->hasAttribute('filter_options')) {
+            $values = array_merge($values, $config->getAttribute('filter_options'));
         }
 
         return $values;
@@ -149,12 +154,12 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
     /**
      * Returns the first FilterTypeInterface or FilterTypeSharedableInterface instance found among form types.
      *
-     * @param array $types
+     * @param FormConfigInterface $config
      * @return Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface
      */
-    protected function getFilterType(array $types)
+    protected function getFilterType(FormConfigInterface $config)
     {
-        $types = array_reverse($types);
+        $types = array_reverse($config->getTypes());
 
         $type = null;
         $i = 0;

@@ -44,7 +44,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (is_object($values['value'])) {
             if ($values['value'] instanceof Collection) {
@@ -62,7 +62,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                     $joinAlias = 'a' . $alias;
                     $queryBuilder
                         ->leftJoin($field, $joinAlias)
-                        ->andWhere($e->in($joinAlias, $ids));
+                        ->andWhere($expr->in($joinAlias, $ids));
                 }
 
             } else {
@@ -70,7 +70,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $queryBuilder->andWhere($e->eq($field, $values['value']->getId()));
+                $queryBuilder->andWhere($expr->eq($field, $values['value']->getId()));
             }
         }
     }

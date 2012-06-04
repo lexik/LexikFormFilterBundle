@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\AbstractType as FormFieldType;
+use Symfony\Component\Form\Extension\Core\Type\FieldType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -15,32 +15,14 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FieldFilterType extends FormFieldType implements FilterTypeInterface
+class FieldFilterType extends FieldType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getParent()
     {
-        parent::buildForm($builder, $options);
-
-        if ($options['apply_filter'] instanceof \Closure || is_callable($options['apply_filter'])) {
-            $builder->setAttribute('apply_filter', $options['apply_filter']);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        parent::setDefaultOptions($resolver);
-
-        $resolver->setDefaults(array(
-             'required'     => false,
-             'apply_filter' => null,
-             'compound'     => false,
-        ));
+        return 'filter';
     }
 
     /**
@@ -50,24 +32,4 @@ class FieldFilterType extends FormFieldType implements FilterTypeInterface
     {
         return 'filter_field';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
-    }
-
-    /**
-     * Default implementation of the applyFieldFilter() method.
-     * We just add a 'and where' clause.
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
-    {
-        if (!empty($values['value'])) {
-            $queryBuilder->andWhere($e->eq($field, $values['value']));
-        }
-    }
-
 }

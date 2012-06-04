@@ -28,11 +28,16 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
         $values = array('value' => array());
 
         foreach ($keys as $key => $value) {
-            $values['value'][$key][] = $data[$key];
-            if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $values['value'][$key][$k] = $v;
+            if (array_key_exists($key, $data)) {
+                $values['value'][$key][] = $data[$key];
+
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
+                        $values['value'][$key][$k] = $v;
+                    }
                 }
+            } else {
+                throw new \InvalidArgumentException(sprintf('No value found for key "%s" in form data.', $key));
             }
         }
 

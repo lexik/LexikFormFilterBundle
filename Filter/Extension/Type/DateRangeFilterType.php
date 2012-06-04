@@ -22,7 +22,7 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
 
         $builder->setAttribute('filter_value_keys', array(
             'left_date'  => $options['left_date'],
-            'right_date' => $options['right_date']
+            'right_date' => $options['right_date'],
         ));
     }
 
@@ -66,9 +66,9 @@ class DateRangeFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         $value = $values['value'];
-        $queryBuilder->andWhere($e->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
+        $queryBuilder->andWhere($expr->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
     }
 }
