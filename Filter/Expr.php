@@ -149,11 +149,11 @@ class Expr extends \Doctrine\ORM\Query\Expr
     {
         switch($type) {
             case self::STRING_STARTS:
-                $value = '%' . $value;
+                $value .= '%';
                 break;
 
             case self::STRING_ENDS:
-                $value .= '%';
+                $value = '%' . $value;
                 break;
 
             case self::STRING_BOTH:
