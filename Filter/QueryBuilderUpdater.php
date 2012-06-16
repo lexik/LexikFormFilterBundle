@@ -84,7 +84,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
                 $join = $alias.'.'.$child->getName();
 
                 if (!isset($this->parts[$join])) {
-                    $qbe = new QueryBuilderExecuter($queryBuilder, $alias, $this->expr, & $this->parts);
+                    $qbe = new QueryBuilderExecuter($queryBuilder, $alias, $this->expr, $this->parts);
                     $type->addShared($qbe);
                 }
 
