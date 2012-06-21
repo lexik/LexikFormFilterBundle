@@ -20,21 +20,22 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
     {
         $data = $form->getData();
         $keys = null;
+        $values = null;
+        if(!empty($data)){
+            if ($form->hasAttribute('filter_value_keys')) {
+                $keys = array_merge($data, $form->getAttribute('filter_value_keys'));
+            }
+            $values = array('value' => array());
 
-        if ($form->hasAttribute('filter_value_keys')) {
-            $keys = array_merge($data, $form->getAttribute('filter_value_keys'));
-        }
-        $values = array('value' => array());
-
-        foreach ($keys as $key => $value) {
-            $values['value'][$key][] = $data[$key];
-            if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $values['value'][$key][$k] = $v;
+            foreach ($keys as $key => $value) {
+                $values['value'][$key][] = $data[$key];
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
+                        $values['value'][$key][$k] = $v;
+                    }
                 }
             }
         }
-
         return $values;
     }
 }
