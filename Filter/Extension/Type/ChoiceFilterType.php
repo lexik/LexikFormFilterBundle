@@ -46,7 +46,8 @@ class ChoiceFilterType extends ChoiceType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($expr->eq($field, $values['value']));
+            $queryBuilder->andWhere($expr->eq($field, ':value'))
+                         ->setParameter('value', $values['value']);
         }
     }
 }
