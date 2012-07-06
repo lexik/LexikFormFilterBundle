@@ -147,12 +147,12 @@ class QueryBuilderUpdaterTest extends TestCase
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->bind(array(
             'createdAt' => array(
-                'left_date' => '2012-05-12',
-                'right_date' => array('year' => '2012', 'month' => '05', 'day' => '22'),
+                'left_date' => array('year' => '2012', 'month' => '5', 'day' => '12'),
+                'right_date' => array('year' => '2012', 'month' => '5', 'day' => '22'),
             ),
         ));
 
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.createdAt >= \'2012-05-12\' AND i.createdAt <= \'2012-05-22\'';
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.createdAt <= \'2012-05-22\' AND i.createdAt >= \'2012-05-12\'';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }

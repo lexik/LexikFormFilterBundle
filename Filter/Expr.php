@@ -362,7 +362,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
                 $date->setTime(0, 0, 0);
             }
 
-            $date = $this->literal($date->format(self::SQL_DATE_TIME));
+            $date = $this->literal($date->format(self::SQL_DATE));
         }
         return $date;
     }
