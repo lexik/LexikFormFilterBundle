@@ -22,7 +22,7 @@ $deps = array(
 
 $revs = array(
     'v2.1' => array(
-        'symfony'           => '1541fe26e4d78135ab24ae2edfb1dbc2a9b2fa40', // merged branch bschussek/fix (PR #4478)
+        'symfony'           => 'v2.1.0-BETA1',
         'doctrine-common'   => '2.2.2',
         'doctrine-dbal'     => '2.2.2',
         'doctrine'          => '2.2.2',

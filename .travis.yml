@@ -8,6 +8,7 @@ env:
 
 branches:
   only:
+    - master
     - symfony2.0
 
 before_script: php Tests/vendors.php
