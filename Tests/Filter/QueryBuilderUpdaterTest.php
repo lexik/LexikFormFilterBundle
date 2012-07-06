@@ -88,7 +88,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $form->bind(array(
             'name' => array('text' => 'blabla', 'condition_pattern' => TextFilterType::PATTERN_END_WITH),
             'position' => array('text' => 2, 'condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
-            'createdAt' => array('year' => 2012, 'month' => 09, 'day' => 27),
+            'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
         ));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'%blabla\' AND i.position <= 2 AND i.createdAt = \'2013-09-27\'';
