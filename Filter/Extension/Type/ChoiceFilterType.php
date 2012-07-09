@@ -19,7 +19,7 @@ class ChoiceFilterType extends AbstractFilterType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'field';
+        return 'choice';
     }
 
     /**
