@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
+class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
@@ -42,14 +42,6 @@ class NumberRangeFilterType extends AbstractType implements FilterTypeInterface
             'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
             'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
         ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'filter';
     }
 
     /**

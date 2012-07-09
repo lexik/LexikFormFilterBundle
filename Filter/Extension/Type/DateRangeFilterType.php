@@ -2,15 +2,13 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
 use Doctrine\ORM\QueryBuilder;
-
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DateRangeFilterType extends AbstractType implements FilterTypeInterface
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
+class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}

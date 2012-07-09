@@ -2,21 +2,19 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Filter type for numbers.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberFilterType extends NumberType implements FilterTypeInterface
+class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const OPERATOR_EQUAL              = 'eq';
     const OPERATOR_GREATER_THAN       = 'gt';
@@ -81,7 +79,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter';
+        return 'number';
     }
 
     /**
