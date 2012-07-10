@@ -2,18 +2,14 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Filter type.
+ * Abstract Filter type
  *
- * @author Roman Marintsenko <roman.marintsenko@knplabs.com>
+ * @author Cédric Girard <c.girard@lexik.fr>
  */
 abstract class AbstractFilterType extends AbstractType
 {
