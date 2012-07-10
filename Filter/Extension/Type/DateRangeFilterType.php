@@ -40,14 +40,6 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
     /**
      * {@inheritdoc}
      */
-    public function getParent()
-    {
-        return 'filter';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'filter_date_range';

@@ -17,7 +17,6 @@ class FilterExtension extends AbstractExtension
     {
         return array(
             new Type\FieldFilterType(),
-            new Type\FilterType(),
             new Type\BooleanFilterType(),
             new Type\CheckboxFilterType(),
             new Type\ChoiceFilterType(),
