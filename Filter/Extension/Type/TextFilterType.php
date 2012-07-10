@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class TextFilterType extends TextType implements FilterTypeInterface
+class TextFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const PATTERN_EQUALS     = Expr::STRING_EQ;
     const PATTERN_START_WITH = Expr::STRING_STARTS;
@@ -82,7 +82,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter';
+        return 'text';
     }
 
     /**

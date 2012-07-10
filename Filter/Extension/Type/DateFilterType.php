@@ -2,23 +2,19 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\OptionsResolver\Options;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
-use Doctrine\ORM\QueryBuilder;
-
-class DateFilterType extends DateType implements FilterTypeInterface
+class DateFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter';
+        return 'date';
     }
 
     /**

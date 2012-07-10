@@ -2,16 +2,16 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Filter type.
+ * Abstract Filter type
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterType extends FormType
+abstract class AbstractFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -36,13 +36,5 @@ class FilterType extends FormType
              'required'     => false,
              'apply_filter' => null,
         ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'filter';
     }
 }

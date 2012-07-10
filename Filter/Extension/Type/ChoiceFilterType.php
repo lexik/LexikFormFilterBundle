@@ -2,26 +2,24 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
 use Doctrine\ORM\QueryBuilder;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 /**
  * Filter type for select list.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ChoiceFilterType extends ChoiceType implements FilterTypeInterface
+class ChoiceFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter';
+        return 'choice';
     }
 
     /**

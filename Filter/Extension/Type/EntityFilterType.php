@@ -2,27 +2,25 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Filter type for related entities.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class EntityFilterType extends EntityType implements FilterTypeInterface
+class EntityFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter_choice';
+        return 'entity';
     }
 
     /**
