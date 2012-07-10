@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class BooleanFilterType extends AbstractType implements FilterTypeInterface
+class BooleanFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
@@ -31,7 +31,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter_choice';
+        return 'choice';
     }
 
     /**

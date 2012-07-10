@@ -15,14 +15,14 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FieldFilterType extends FieldType
+class FieldFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter';
+        return 'field';
     }
 
     /**
