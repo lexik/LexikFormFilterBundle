@@ -56,11 +56,7 @@ class EntityFilterType extends AbstractFilterType implements FilterTypeInterface
                 }
 
                 if (count($ids) > 0) {
-                    $alias = $value['alias'];
-                    $joinAlias = 'a' . $alias;
-                    $queryBuilder
-                        ->leftJoin($field, $joinAlias)
-                        ->andWhere($expr->in($joinAlias, $ids));
+                    $queryBuilder->andWhere($expr->in($field, $ids));
                 }
 
             } else {
