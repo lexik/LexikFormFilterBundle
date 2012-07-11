@@ -1,5 +1,5 @@
 {
-    "hash": "d5446a4f7097ffa0f4b4e54930cce4ed",
+    "hash": "6560bb39336729eac88a861f6448ad3e",
     "packages": [
         {
             "package": "doctrine/common",
@@ -98,6 +98,18 @@
             "commit-date": "1341958957"
         },
         {
+            "package": "symfony/form",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/form",
+            "version": "dev-master",
+            "source-reference": "ab7e4a777922e2a41db188192c3bc65fafa95dff",
+            "commit-date": "1342018244"
+        },
+        {
             "package": "symfony/framework-bundle",
             "version": "dev-master",
             "alias-pretty-version": "2.1.x-dev",
@@ -132,6 +144,30 @@
             "version": "dev-master",
             "source-reference": "5032709c51ac154be997d99690f80c08b0943057",
             "commit-date": "1341987182"
+        },
+        {
+            "package": "symfony/locale",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/locale",
+            "version": "dev-master",
+            "source-reference": "04a4515e6eb050a3f637b7a56c0fb942a4119c4f",
+            "commit-date": "1341993367"
+        },
+        {
+            "package": "symfony/options-resolver",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/options-resolver",
+            "version": "dev-master",
+            "source-reference": "0ad85af9ec3e1696056901fcf38bffedc683d0c4",
+            "commit-date": "1341838460"
         },
         {
             "package": "symfony/routing",
