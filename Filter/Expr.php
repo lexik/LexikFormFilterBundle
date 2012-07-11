@@ -383,9 +383,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         if($value === null) {
             $result = $this->isNull($field);
         } else if(is_array($value)) {
-            if ($literal) {
-                $value = $this->literalize($value);
-            }
+            $value = $this->normalize($value, $literal);
             $result = $this->in($field, $value);
         } else {
             if(is_string($value)) {
@@ -411,9 +409,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         if($value === null) {
             $result = $this->isNotNull($field);
         } else if(is_array($value)) {
-            if ($literal) {
-                $value = $this->literalize($value);
-            }
+            $value = $this->normalize($value, $literal);
             $result = $this->notIn($field, $value);
         } else {
             if(is_string($value)) {
@@ -426,15 +422,20 @@ class Expr extends \Doctrine\ORM\Query\Expr
     }
 
     /**
-     * Add slashes to each array elemets
+     * Add slashes to each array elemets and extract ids from object
      *
      * @param  array $value
      * @return array
      */
-    private function literalize(array $value)
+    private function normalize(array $value, $literal = false)
     {
         foreach($value as &$v) {
-            $v  = $this->literal($v);
+            if (is_object($v) && method_exists($v, 'getId')) {
+                $v = $v->getId();
+            }
+            if ($literal) {
+                $v  = $this->literal($v);
+            }
         }
 
         return $value;
