@@ -59,7 +59,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
         foreach ($form->all() as $child) {
 
             $config = $child->getConfig();
-            $types  = $config->getTypes();
+            $types  = (array) $child;
 
             /** @var $type FormTypeInterface */
             foreach (array_reverse($types) as $type) {
