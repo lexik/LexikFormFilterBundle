@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -30,34 +29,25 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
      */
     protected $transformerId;
 
-    protected $parent;
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attributes          = array();
+        parent::buildForm($builder, $options);
+
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
-        if ($options['condition_pattern'] == self::SELECT_PATTERN) {
-            $textOptions             = array_intersect_key($options, parent::getDefaultOptions(array()));
-            $textOptions['required'] = isset($options['required']) ? $options['required'] : false;
-            $textOptions['trim']     = isset($options['trim']) ? $options['trim'] : true;
-
-            $builder->add('condition_pattern', 'choice', array(
-                'choices' => self::getConditionChoices(),
-            ));
-            $builder->add('text', 'text', $textOptions);
+        if (true === $options['compound']) {
+            $builder->add('condition_pattern', 'choice', $options['choice_options']);
+            $builder->add('text', 'text', $options['text_options']);
 
             $this->transformerId = 'lexik_form_filter.transformer.text';
         } else {
-            parent::buildForm($builder, $options);
-
-            $attributes['condition_pattern'] = $options['condition_pattern'];
+            $builder->setAttribute('filter_options', array(
+                'condition_pattern' => $options['condition_pattern'],
+            ));
         }
-
-        $builder->setAttribute('filter_options', $attributes);
     }
 
     /**
@@ -73,7 +63,15 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
 
         $resolver->setDefaults(array(
             'condition_pattern' => self::PATTERN_EQUALS,
-            'compound' => $compound,
+            'compound'          => $compound,
+            'text_options'      => array(
+                'required' => false,
+                'trim'     => true,
+             ),
+            'choice_options'    => array(
+               'choices'  => self::getConditionChoices(),
+               'required' => false,
+             ),
         ));
     }
 
@@ -116,7 +114,7 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
      *
      * @return array
      */
-    static private function getConditionChoices()
+    static public function getConditionChoices()
     {
         $choices = array();
 

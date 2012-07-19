@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Doctrine\ORM\QueryBuilder;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -34,27 +35,20 @@ class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attributes = array();
+        parent::buildForm($builder, $options);
+
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
-        if ($options['condition_operator'] == self::SELECT_OPERATOR) {
+        if (true === $options['compound']) {
+            $builder->add('condition_operator', 'choice', $options['choice_options']);
+            $builder->add('text', 'number', $options['number_options']);
+
             $this->transformerId = 'lexik_form_filter.transformer.text';
-
-            $numberOptions = array_intersect_key($options, parent::getDefaultOptions());
-            $numberOptions['required'] = isset($options['required']) ? $options['required'] : false;
-            $numberOptions['trim'] = isset($options['trim']) ? $options['trim'] : true;
-
-            $builder->add('condition_operator', 'choice', array(
-                'choices' => self::getOperatorChoices(),
-            ));
-            $builder->add('text', 'number', $numberOptions);
         } else {
-            parent::buildForm($builder, $options);
-
-            $attributes['condition_operator'] = $options['condition_operator'];
+            $builder->setAttribute('filter_options', array(
+                'condition_operator' => $options['condition_operator'],
+            ));
         }
-
-        $builder->setAttribute('filter_options', $attributes);
     }
 
     /**
@@ -70,7 +64,14 @@ class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
 
         $resolver->setDefaults(array(
             'condition_operator' => self::OPERATOR_EQUAL,
-            'compound' => $compound,
+            'compound'           => $compound,
+            'number_options'     => array(
+                'required' => false,
+            ),
+            'choice_options'     => array(
+                'choices'  => self::getOperatorChoices(),
+                'required' => false,
+            ),
         ));
     }
 
@@ -114,7 +115,7 @@ class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
      *
      * @return array
      */
-    static private function getOperatorChoices()
+    static public function getOperatorChoices()
     {
         $choices = array();
 
