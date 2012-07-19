@@ -75,7 +75,7 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
 
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
-            $type = $this->getFilterType($child->getConfig());
+            $type = $this->getFilterType($child);
 
             if ($type instanceof FilterTypeInterface) {
                 $this->applyFilterCondition($child, $type, $queryBuilder, $alias);
@@ -152,23 +152,13 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
     }
 
     /**
-     * Returns the first FilterTypeInterface or FilterTypeSharedableInterface instance found among form types.
+     * Returns the filter type used to build the given form.
      *
-     * @param FormConfigInterface $config
-     * @return Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface
+     * @param FormInterface $form
+     * @return FilterTypeInterface
      */
-    protected function getFilterType(FormConfigInterface $config)
+    protected function getFilterType(FormInterface $form)
     {
-        $types = array_reverse($config->getTypes());
-
-        $type = null;
-        $i = 0;
-
-        while ($i<count($types) && null == $type) {
-            $type = ($types[$i] instanceof FilterTypeSharedableInterface || $types[$i] instanceof FilterTypeInterface) ? $types[$i] : null;
-            $i++;
-        }
-
-        return $type;
+        return $form->getConfig()->getType()->getInnerType();
     }
 }
