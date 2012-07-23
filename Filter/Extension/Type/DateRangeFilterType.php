@@ -15,6 +15,8 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder->add('left_date', 'filter_date', $options['left_date']);
         $builder->add('right_date', 'filter_date', $options['right_date']);
 

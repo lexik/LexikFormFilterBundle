@@ -22,6 +22,8 @@ class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInte
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder->add('left_number', 'filter_number', $options['left_number']);
         $builder->add('right_number', 'filter_number', $options['right_number']);
 
