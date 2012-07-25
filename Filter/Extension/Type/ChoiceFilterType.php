@@ -44,8 +44,11 @@ class ChoiceFilterType extends AbstractFilterType implements FilterTypeInterface
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($expr->eq($field, ':value'))
-                         ->setParameter('value', $values['value']);
+            // alias.field -> alias_field
+            $fieldName = str_replace('.', '_', $field);
+
+            $queryBuilder->andWhere($expr->eq($field, ':' . $fieldName))
+                         ->setParameter($fieldName, $values['value']);
         }
     }
 }
