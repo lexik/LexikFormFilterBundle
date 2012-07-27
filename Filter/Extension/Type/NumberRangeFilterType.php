@@ -68,12 +68,19 @@ class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInte
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         $value = $values['value'];
-        if (isset($value['left_number'][0], $value['right_number'][0])) {
+
+        if (isset($value['left_number'][0])) {
             $leftCond   = $value['left_number']['condition_operator'];
             $leftValue  = $value['left_number'][0];
+            
+            $queryBuilder->andWhere($expr->$leftCond($field, $leftValue));
+        }
+
+        if (isset($value['right_number'][0])) {
             $rightCond  = $value['right_number']['condition_operator'];
             $rightValue = $value['right_number'][0];
-            $queryBuilder->andWhere($expr->andX($expr->$leftCond($field, $leftValue), $expr->$rightCond($field, $rightValue)));
+
+            $queryBuilder->andWhere($expr->$rightCond($field, $rightValue));
         }
     }
 }
