@@ -429,15 +429,19 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     private function normalize(array $value, $literal = false)
     {
-        foreach($value as &$v) {
+        $result = array();
+        foreach($value as $v) {
             if (is_object($v) && method_exists($v, 'getId')) {
                 $v = $v->getId();
             }
             if ($literal) {
                 $v  = $this->literal($v);
             }
+            if (null !== $v) {
+                $result[] = $v;
+            }
         }
 
-        return $value;
+        return $result;
     }
 }
