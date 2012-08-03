@@ -18,7 +18,7 @@
             {{ form_widget(form.text, {'attr': attr}) }}
         </div>
     {% else %}
-        {{ block('filter_field_widget') }}
+        {{ block('form_widget_simple') }}
     {% endif %}
 {% endblock filter_number_widget %}
 
