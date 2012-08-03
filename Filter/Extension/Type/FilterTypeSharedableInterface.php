@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+use Millwright\ConfigurationBundle\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 /**

@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+use Millwright\ConfigurationBundle\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
