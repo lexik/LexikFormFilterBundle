@@ -10,6 +10,7 @@ use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
 
 use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\QueryBuilder;
+use Millwright\ConfigurationBundle\ORM\Expr;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
