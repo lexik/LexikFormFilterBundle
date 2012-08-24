@@ -58,29 +58,27 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
 
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
-
             $config = $child->getConfig();
-            $types  = (array) $child;
+            $type   = $child->getConfig()->getType()->getInnerType();
 
-            /** @var $type FormTypeInterface */
-            foreach (array_reverse($types) as $type) {
-                if ($type instanceof FilterTypeInterface) {
-                    $values = $this->prepareFilterValues($child, $type);
-                    $values += array('alias' => $alias);
-                    $field = $values['alias'] . '.' . $child->getName();
-                    $type->applyFilter($queryBuilder, $this->expr, $field, $values);
-                    break;
-                } else if ($type instanceof FilterTypeSharedableInterface) {
-                    $qbe = new QueryBuilderExecuter($queryBuilder, $alias, $this->expr, $parts);
-                    $type->addShared($qbe);
+            /** @var $type FilterTypeInterface */
+            if ($type instanceof FilterTypeInterface) {
+                $values = $this->prepareFilterValues($child, $type);
+                $values += array('alias' => $alias);
+                $field = $values['alias'] . '.' . $child->getName();
+                $type->applyFilter($queryBuilder, $this->expr, $field, $values);
+                break;
+            } else if ($type instanceof FilterTypeSharedableInterface) {
+                $qbe = new QueryBuilderExecuter($queryBuilder, $alias, $this->expr, $parts);
+                $type->addShared($qbe);
 
-                    if (count($parts)) {
-                        $partsKeys  = array_keys($parts);
-                        $childAlias = end($partsKeys);
-                        $this->addFilterConditions($child, $queryBuilder, $childAlias, $parts);
-                    }
-                    break;
+                if (count($parts)) {
+                    $partsKeys  = array_keys($parts);
+                    $childAlias = end($partsKeys);
+                    var_dump('1');
+                    $this->addFilterConditions($child, $queryBuilder, $childAlias, $parts);
                 }
+                break;
             }
         }
 
