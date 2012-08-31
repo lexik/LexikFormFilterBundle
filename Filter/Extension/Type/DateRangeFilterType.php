@@ -61,6 +61,8 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         $value = $values['value'];
-        $queryBuilder->andWhere($expr->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
+        if(isset($value['left_date'][0]) || $value['right_date'][0]){
+            $queryBuilder->andWhere($expr->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
+        }
     }
 }
