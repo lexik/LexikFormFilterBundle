@@ -138,36 +138,6 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
 
-    public function testNumberRangeNoLowerLimit()
-    {
-        // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
-        $filterQueryBuilder = $this->initQueryBuilder();
-
-        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('default_position' => array('right_number' => 3)));
-
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.default_position <= 3';
-        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
-
-        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
-    }
-
-    public function testNumberRangeNoUpperLimit()
-    {
-        // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
-        $filterQueryBuilder = $this->initQueryBuilder();
-
-        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('default_position' => array('left_number' => 1)));
-
-        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.default_position >= 1';
-        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
-
-        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
-    }
-
     public function testDateRange()
     {
         // use filter type options

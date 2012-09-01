@@ -2,12 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests;
 
-use Symfony\Component\Form\FormRegistry;
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
 
+use Symfony\Component\Form\FormRegistry;
+use Symfony\Component\Form\ResolvedFormTypeFactory;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 
@@ -39,12 +39,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getFormFactory()
     {
+        $resolvedFormTypeFactory = new ResolvedFormTypeFactory();
+
         $registery = new FormRegistry(array(
             new CoreExtension(),
             new FilterExtension(),
-        ));
+        ), $resolvedFormTypeFactory);
 
-        $formFactory = new FormFactory($registery);
+        $formFactory = new FormFactory($registery, $resolvedFormTypeFactory);
 
         return $formFactory;
     }
