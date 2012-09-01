@@ -40,6 +40,9 @@ class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
         $this->transformerId = 'lexik_form_filter.transformer.default';
 
         if (true === $options['compound']) {
+            // if the form is compound we don't need the NumberToLocalizedStringTransformer added in the parent type.
+            $builder->resetViewTransformers();
+
             $builder->add('condition_operator', 'choice', $options['choice_options']);
             $builder->add('text', 'number', $options['number_options']);
 
