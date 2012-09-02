@@ -160,7 +160,7 @@ Override default way to apply the filter
 All filter types have an `apply_filter` option which is a closure.
 If this option is define the `QueryBuilderUpdater` won't call the `applyFilter()` method from the type class but it will call the given closure.
 
-The closure take 4 paramerters:
+The closure take 4 parameters:
 
 * the Doctrine query builder
 * the expression class
@@ -197,8 +197,83 @@ class MySuperFilterType extends AbstractType
 }
 ```
 
-Embbed filter types
-===================
+Embed filter types
+==================
 
-TODO :p
+You can also embed some filters inside another one. 
+Let's say the entity we filter in `MySuperFilterType` is related to some options and an option has a 2 fields: label and color. 
+We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+class MySuperFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text');
+        $builder->add('rank', 'filter_number');
+        $builder->add('options', new OptionsFilterType());
+    }
+
+    public function getName()
+    {
+        return 'my_super_filter';
+    }
+}
+```
+
+The `OptionsFilterType` class is a standard form type which have to implements `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
+This interface define a `addShared()` method used to add joins (or other stuff) needed to be able to apply condition on fields from the embbed type (OptionsFilterType here).
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+use Doctrine\ORM\QueryBuilder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
+
+/**
+ * Embbed filter type.
+ */
+class OptionsFilterType extends AbstractType implements FilterTypeSharedableInterface
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('label', 'filter_text');
+        $builder->add('color', 'filter_text');
+    }
+
+    public function getName()
+    {
+        return 'options_filter';
+    }
+
+    /**
+     * This method aim to add all joins you need
+     */
+    public function addShared(QueryBuilderExecuterInterface $qbe)
+    {
+        $closure = function(QueryBuilder $queryBuilder, $alias, $joinAlias, Expr $expr) {
+            // add the join clause to the doctrine query builder
+            // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
+            $queryBuilder->leftJoin($alias . '.options', 'opt');
+        }
+    
+        // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
+        $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+    }
+}
+```
