@@ -23,10 +23,4 @@ interface FilterTypeInterface
      */
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values);
 
-    /**
-     * Return service id used to transforme values
-     *
-     * @return string
-     */
-    public function getTransformerId();
 }

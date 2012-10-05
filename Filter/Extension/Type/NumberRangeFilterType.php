@@ -40,10 +40,16 @@ class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInte
     {
         parent::setDefaultOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
-            'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
-        ));
+        $resolver
+            ->setDefaults(array(
+                'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
+                'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
+                'transformer_id' => 'lexik_form_filter.transformer.value_keys',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
+            ))                                  
+            ;
     }
 
     /**
@@ -52,14 +58,6 @@ class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInte
     public function getName()
     {
         return 'filter_number_range';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.value_keys';
     }
 
     /**

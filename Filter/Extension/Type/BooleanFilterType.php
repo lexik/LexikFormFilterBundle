@@ -20,7 +20,7 @@ class BooleanFilterType extends AbstractFilterType implements FilterTypeInterfac
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
-
+    
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
@@ -49,13 +49,19 @@ class BooleanFilterType extends AbstractFilterType implements FilterTypeInterfac
     {
         parent::setDefaultOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'choices'     => array(
-                self::VALUE_YES  => $this->trans('boolean.yes'),
-                self::VALUE_NO   => $this->trans('boolean.no'),
-            ),
-            'empty_value' => $this->trans('boolean.yes_or_no'),
-        ));
+        $resolver
+            ->setDefaults(array(
+                'choices'     => array(
+                    self::VALUE_YES  => $this->trans('boolean.yes'),
+                    self::VALUE_NO   => $this->trans('boolean.no'),
+                ),
+                'empty_value' => $this->trans('boolean.yes_or_no'),
+                'transformer_id' => 'lexik_form_filter.transformer.default',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.default'),
+            ))                
+            ;
     }
 
     /**
@@ -82,14 +88,6 @@ class BooleanFilterType extends AbstractFilterType implements FilterTypeInterfac
         return ($this->translator instanceof TranslatorInterface)
             ? $this->translator->trans($key, $parameters, $domain)
             : $key;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
     }
 
     /**
