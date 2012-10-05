@@ -138,12 +138,12 @@ class QueryBuilderUpdater implements QueryBuilderUpdaterInterface
      */
     protected function prepareFilterValues(FormInterface $form, FilterTypeInterface $type)
     {
-        $values      = array();
-        $transformer = $this->filterTransformerAggregator->get($type->getTransformerId());
-        $values      = $transformer->transform($form);
-
+        $values      = array();        
         $config = $form->getConfig();
-
+        
+        $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id'));
+        $values      = $transformer->transform($form);
+        
         if ($config->hasAttribute('filter_options')) {
             $values = array_merge($values, $config->getAttribute('filter_options'));
         }
