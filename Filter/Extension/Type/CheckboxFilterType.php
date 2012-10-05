@@ -17,6 +17,23 @@ class CheckboxFilterType extends AbstractFilterType implements FilterTypeInterfa
     /**
      * {@inheritdoc}
      */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        parent::setDefaultOptions($resolver);
+        
+        $resolver
+            ->setDefaults(array(
+                'transformer_id' => 'lexik_form_filter.transformer.default',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.default'),
+            ))
+        ;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return 'checkbox';
@@ -28,14 +45,6 @@ class CheckboxFilterType extends AbstractFilterType implements FilterTypeInterfa
     public function getName()
     {
         return 'filter_checkbox';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
     }
 
     /**

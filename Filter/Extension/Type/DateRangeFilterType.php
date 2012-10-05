@@ -33,10 +33,16 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
     {
         parent::setDefaultOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'left_date'  => array(),
-            'right_date' => array(),
-        ));
+        $resolver
+            ->setDefaults(array(
+                'left_date'  => array(),
+                'right_date' => array(),
+                'transformer_id' => 'lexik_form_filter.transformer.value_keys',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
+            ))                                
+            ;
     }
 
     /**
@@ -45,14 +51,6 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
     public function getName()
     {
         return 'filter_date_range';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.value_keys';
     }
 
     /**

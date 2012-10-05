@@ -24,29 +24,23 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
 
     const SELECT_PATTERN = 'select_pattern';
 
-    /**
-     * @var string
-     */
-    protected $transformerId;
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {       
         parent::buildForm($builder, $options);
-
-        $this->transformerId = 'lexik_form_filter.transformer.default';
+        
 
         if (true === $options['compound']) {
             $builder->add('condition_pattern', 'choice', $options['choice_options']);
             $builder->add('text', 'text', $options['text_options']);
 
-            $this->transformerId = 'lexik_form_filter.transformer.text';
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_pattern' => $options['condition_pattern'],
-            ));
+            ));               
         }
     }
 
@@ -60,19 +54,32 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
         $compound = function (Options $options) {
             return $options['condition_pattern'] == TextFilterType::SELECT_PATTERN;
         };
+        
+        
+        $transformerId = function (Options $options) {
+            return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
+        };
 
-        $resolver->setDefaults(array(
-            'condition_pattern' => self::PATTERN_EQUALS,
-            'compound'          => $compound,
-            'text_options'      => array(
-                'required' => false,
-                'trim'     => true,
-             ),
-            'choice_options'    => array(
-               'choices'  => self::getConditionChoices(),
-               'required' => false,
-             ),
-        ));
+        
+        $resolver
+            ->setDefaults(array(
+                'condition_pattern' => self::PATTERN_EQUALS,
+                'compound'          => $compound,
+                'text_options'      => array(
+                    'required' => false,
+                    'trim'     => true,
+                 ),
+                'choice_options'    => array(
+                   'choices'  => self::getConditionChoices(),
+                   'required' => false,
+                 ),
+                'transformer_id' => $transformerId,
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
+            ))
+        ;
+        
     }
 
     /**
@@ -94,16 +101,8 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return $this->transformerId;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
+    {        
         if (!empty($values['value'])) {
             $queryBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
         }
