@@ -2,12 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Doctrine\ORM\QueryBuilder;
+
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
-class DateFilterType extends AbstractFilterType implements FilterTypeInterface
+
+class DateFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -40,16 +40,5 @@ class DateFilterType extends AbstractFilterType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_date';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        if ($values['value'] instanceof \DateTime) {
-            $date = $values['value']->format(Expr::SQL_DATE);
-            $queryBuilder->andWhere($expr->eq($field, $expr->literal($date)));
-        }
     }
 }

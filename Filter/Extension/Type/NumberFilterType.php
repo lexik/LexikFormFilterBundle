@@ -2,20 +2,16 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Doctrine\ORM\QueryBuilder;
-
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 /**
  * Filter type for numbers.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
+class NumberFilterType extends AbstractFilterType
 {
     const OPERATOR_EQUAL              = 'eq';
     const OPERATOR_GREATER_THAN       = 'gt';
@@ -95,17 +91,6 @@ class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_number';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        if (!empty($values['value'])) {
-            $op = $values['condition_operator'];
-            $queryBuilder->andWhere($expr->$op($field, $values['value']));
-        }
     }
 
     /**

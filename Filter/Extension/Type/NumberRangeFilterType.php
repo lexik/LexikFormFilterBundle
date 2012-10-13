@@ -6,16 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
-
 /**
  * Filter type for numbers.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInterface
+class NumberRangeFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -58,27 +54,5 @@ class NumberRangeFilterType extends AbstractFilterType implements FilterTypeInte
     public function getName()
     {
         return 'filter_number_range';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        $value = $values['value'];
-
-        if (isset($value['left_number'][0])) {
-            $leftCond   = $value['left_number']['condition_operator'];
-            $leftValue  = $value['left_number'][0];
-            
-            $queryBuilder->andWhere($expr->$leftCond($field, $leftValue));
-        }
-
-        if (isset($value['right_number'][0])) {
-            $rightCond  = $value['right_number']['condition_operator'];
-            $rightValue = $value['right_number'][0];
-
-            $queryBuilder->andWhere($expr->$rightCond($field, $rightValue));
-        }
     }
 }

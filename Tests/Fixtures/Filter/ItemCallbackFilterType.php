@@ -18,9 +18,9 @@ class ItemCallbackFilterType extends AbstractType
             'apply_filter' => array($this, 'fieldNameCallback'),
         ));
         $builder->add('position', 'filter_number', array(
-            'apply_filter' => function($queryBuilder, $expr, $field, $values) {
+            'apply_filter' => function($filterBuilder, $expr, $field, $values) {
                 if (!empty($values['value'])) {
-                    $queryBuilder->andWhere($expr->neq($field, $values['value']));
+                    $filterBuilder->andWhere($expr->neq($field, $values['value']));
                 }
             },
         ));
@@ -31,10 +31,10 @@ class ItemCallbackFilterType extends AbstractType
         return 'item_filter';
     }
 
-    public function fieldNameCallback($queryBuilder, $expr, $field, $values)
+    public function fieldNameCallback($filterBuilder, $expr, $field, $values)
     {
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($expr->neq($field, sprintf('\'%s\'', $values['value'])));
+            $filterBuilder->andWhere($expr->neq($field, sprintf('\'%s\'', $values['value'])));
         }
     }
 }

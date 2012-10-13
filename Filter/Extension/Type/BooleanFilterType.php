@@ -7,16 +7,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
-
 /**
  * Filter to use with boolean values.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class BooleanFilterType extends AbstractFilterType implements FilterTypeInterface
+class BooleanFilterType extends AbstractFilterType
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
@@ -88,16 +84,5 @@ class BooleanFilterType extends AbstractFilterType implements FilterTypeInterfac
         return ($this->translator instanceof TranslatorInterface)
             ? $this->translator->trans($key, $parameters, $domain)
             : $key;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        if (!empty($values['value'])) {
-            $value = (int)(self::VALUE_YES == $values['value']);
-            $queryBuilder->andWhere($expr->eq($field, $value));
-        }
     }
 }
