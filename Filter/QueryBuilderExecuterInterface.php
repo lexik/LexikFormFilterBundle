@@ -4,7 +4,14 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 interface QueryBuilderExecuterInterface
 {
-    public function addOnce($tag, \Callback $callback);
+    /**
+     * Add a join.
+     *
+     * @param string $join
+     * @param string $alias
+     * @param \Closure $callback
+     */
+    public function addOnce($join, $alias, \Closure $callback);
 
     /**
      * @return string

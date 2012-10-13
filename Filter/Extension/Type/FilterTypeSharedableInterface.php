@@ -3,8 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
-use Millwright\ConfigurationBundle\ORM\Expr;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Some filter type can implement this interface to apply the filter to the query.

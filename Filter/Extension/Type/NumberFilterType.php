@@ -2,20 +2,20 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-use Millwright\ConfigurationBundle\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 /**
  * Filter type for numbers.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberFilterType extends NumberType implements FilterTypeInterface
+class NumberFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const OPERATOR_EQUAL              = 'eq';
     const OPERATOR_GREATER_THAN       = 'gt';
@@ -26,36 +26,24 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     const SELECT_OPERATOR = 'select_operator';
 
     /**
-     * @var string
-     */
-    protected $transformerId;
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attributes = array();
-        $this->transformerId = 'lexik_form_filter.transformer.default';
+        parent::buildForm($builder, $options);
 
-        if ($options['condition_operator'] == self::SELECT_OPERATOR) {
-            $this->transformerId = 'lexik_form_filter.transformer.text';
+        if (true === $options['compound']) {
+            // if the form is compound we don't need the NumberToLocalizedStringTransformer added in the parent type.
+            $builder->resetViewTransformers();
 
-            $numberOptions = array_intersect_key($options, parent::getDefaultOptions(array()));
-            $numberOptions['required'] = isset($options['required']) ? $options['required'] : false;
-            $numberOptions['trim'] = isset($options['trim']) ? $options['trim'] : true;
+            $builder->add('condition_operator', 'choice', $options['choice_options']);
+            $builder->add('text', 'number', $options['number_options']);
 
-            $builder->add('condition_operator', 'choice', array(
-                'choices' => self::getOperatorChoices(),
-            ));
-            $builder->add('text', 'number', $numberOptions);
         } else {
-            parent::buildForm($builder, $options);
-
-            $attributes['condition_operator'] = $options['condition_operator'];
+            $builder->setAttribute('filter_options', array(
+                'condition_operator' => $options['condition_operator'],
+            ));
         }
-
-        $builder->setAttribute('filter_options', $attributes);
     }
 
     /**
@@ -63,14 +51,34 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $compound = function (Options $options) {
-            return $options['condition_pattern'] != NumberFilterType::SELECT_OPERATOR;
+            return $options['condition_operator'] == NumberFilterType::SELECT_OPERATOR;
+        };
+        
+        $transformerId = function (Options $options) {
+            return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
         };
 
-        $resolver->setDefaults(array(
-            'condition_operator' => self::OPERATOR_EQUAL,
-            'compound' => $compound,
-        ));
+        $resolver
+            ->setDefaults(array(
+                'condition_operator' => self::OPERATOR_EQUAL,
+                'compound'           => $compound,
+                'number_options'     => array(
+                    'required' => false,
+                ),
+                'choice_options'     => array(
+                    'choices'  => self::getOperatorChoices(),
+                    'required' => false,
+                ),
+                'transformer_id' => $transformerId,
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
+            ))                  
+            
+            ;
     }
 
     /**
@@ -78,7 +86,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter';
+        return 'number';
     }
 
     /**
@@ -92,19 +100,11 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return $this->transformerId;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
             $op = $values['condition_operator'];
-            $queryBuilder->andWhere($e->$op($field, $values['value']));
+            $queryBuilder->andWhere($expr->$op($field, $values['value']));
         }
     }
 
@@ -113,7 +113,7 @@ class NumberFilterType extends NumberType implements FilterTypeInterface
      *
      * @return array
      */
-    static private function getOperatorChoices()
+    static public function getOperatorChoices()
     {
         $choices = array();
 

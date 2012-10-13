@@ -3,7 +3,8 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Doctrine\ORM\QueryBuilder;
-use Millwright\ConfigurationBundle\ORM\Expr;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 class QueryBuilderExecuter implements QueryBuilderExecuterInterface
 {
@@ -27,6 +28,14 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
      */
     protected $parts;
 
+    /**
+     * Construct.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     * @param Expr $expr
+     * @param array $parts
+     */
     public function __construct(QueryBuilder $queryBuilder, $alias, Expr $expr, array & $parts = array())
     {
         $this->queryBuilder = $queryBuilder;
@@ -36,27 +45,33 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getAlias()
     {
         return $this->alias;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getParts()
     {
         return $this->parts;
 
     }
 
-    public function addOnce($tag, \Callback $callback)
+    /**
+     * {@inheritdoc}
+     */
+    public function addOnce($join, $alias, \Closure $callback)
     {
-        if (isset($this->parts[$tag])) {
+        if (isset($this->parts[$join])) {
             return null;
         }
 
-        $this->parts[$tag] = true;
+        $this->parts[$join] = $alias;
 
-        return $callback($this->queryBuilder, $this->alias, $tag, $this->expr);
+        return $callback($this->queryBuilder, $this->alias, $alias, $this->expr);
     }
 }

@@ -2,25 +2,41 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-
-use Millwright\ConfigurationBundle\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 /**
  * Filter type for boolean.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
+class CheckboxFilterType extends AbstractFilterType implements FilterTypeInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        parent::setDefaultOptions($resolver);
+        
+        $resolver
+            ->setDefaults(array(
+                'transformer_id' => 'lexik_form_filter.transformer.default',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.default'),
+            ))
+        ;
+    }
+    
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter_field';
+        return 'checkbox';
     }
 
     /**
@@ -34,18 +50,10 @@ class CheckboxFilterType extends CheckboxType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($e->eq($field, $values['value']));
+            $queryBuilder->andWhere($expr->eq($field, $values['value']));
         }
     }
 }

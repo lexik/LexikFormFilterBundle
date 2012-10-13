@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Millwright\ConfigurationBundle\ORM\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -20,12 +21,6 @@ interface FilterTypeInterface
      * @param string $field
      * @param array $values
      */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values);
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values);
 
-    /**
-     * Return service id used to transforme values
-     *
-     * @return string
-     */
-    public function getTransformerId();
 }

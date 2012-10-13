@@ -2,20 +2,20 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-
-use Millwright\ConfigurationBundle\ORM\Expr;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Filter type for strings.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class TextFilterType extends TextType implements FilterTypeInterface
+class TextFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const PATTERN_EQUALS     = Expr::STRING_EQ;
     const PATTERN_START_WITH = Expr::STRING_STARTS;
@@ -24,33 +24,24 @@ class TextFilterType extends TextType implements FilterTypeInterface
 
     const SELECT_PATTERN = 'select_pattern';
 
-    protected $transformerId;
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {       
         parent::buildForm($builder, $options);
+        
 
-        $attributes          = array();
-        $this->transformerId = 'lexik_form_filter.transformer.default';
+        if (true === $options['compound']) {
+            $builder->add('condition_pattern', 'choice', $options['choice_options']);
+            $builder->add('text', 'text', $options['text_options']);
 
-        if ($options['condition_pattern'] == self::SELECT_PATTERN) {
-            $textOptions             = $options; //array_intersect_key($options, parent::getDefaultOptions(array()));
-            $textOptions['required'] = isset($options['required']) ? $options['required'] : false;
-            $textOptions['trim']     = isset($options['trim']) ? $options['trim'] : true;
-
-            $builder->add('condition_pattern', 'choice', array(
-                'choices' => self::getConditionChoices(),
-            ));
-            $builder->add('text', 'text', $textOptions);
-            $this->transformerId = 'lexik_form_filter.transformer.text';
         } else {
-            $attributes['condition_pattern'] = $options['condition_pattern'];
+            $builder->setAttribute('filter_options', array(
+                'condition_pattern' => $options['condition_pattern'],
+            ));               
         }
-
-        $builder->setAttribute('filter_options', $attributes);
     }
 
     /**
@@ -58,14 +49,37 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        parent::setDefaultOptions($resolver);
+
         $compound = function (Options $options) {
             return $options['condition_pattern'] == TextFilterType::SELECT_PATTERN;
         };
+        
+        
+        $transformerId = function (Options $options) {
+            return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
+        };
 
-        $resolver->setDefaults(array(
-            'condition_pattern' => self::PATTERN_EQUALS,
-            'compound' => $compound,
-        ));
+        
+        $resolver
+            ->setDefaults(array(
+                'condition_pattern' => self::PATTERN_EQUALS,
+                'compound'          => $compound,
+                'text_options'      => array(
+                    'required' => false,
+                    'trim'     => true,
+                 ),
+                'choice_options'    => array(
+                   'choices'  => self::getConditionChoices(),
+                   'required' => false,
+                 ),
+                'transformer_id' => $transformerId,
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
+            ))
+        ;
+        
     }
 
     /**
@@ -73,7 +87,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter_field';
+        return 'text';
     }
 
     /**
@@ -87,18 +101,10 @@ class TextFilterType extends TextType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return $this->transformerId;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
-    {
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
+    {        
         if (!empty($values['value'])) {
-            $queryBuilder->andWhere($e->stringLike($field, $values['value'], $values['condition_pattern']));
+            $queryBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
         }
     }
 
@@ -107,7 +113,7 @@ class TextFilterType extends TextType implements FilterTypeInterface
      *
      * @return array
      */
-    static private function getConditionChoices()
+    static public function getConditionChoices()
     {
         $choices = array();
 

@@ -3,24 +3,24 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
-
-use Millwright\ConfigurationBundle\ORM\Expr;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Filter to use with boolean values.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class BooleanFilterType extends AbstractType implements FilterTypeInterface
+class BooleanFilterType extends AbstractFilterType implements FilterTypeInterface
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
-
+    
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
@@ -31,7 +31,7 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     public function getParent()
     {
-        return 'filter_choice';
+        return 'choice';
     }
 
     /**
@@ -47,13 +47,21 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'choices'     => array(
-                self::VALUE_YES  => $this->trans('boolean.yes'),
-                self::VALUE_NO   => $this->trans('boolean.no'),
-            ),
-            'empty_value' => $this->trans('boolean.yes_or_no'),
-        ));
+        parent::setDefaultOptions($resolver);
+
+        $resolver
+            ->setDefaults(array(
+                'choices'     => array(
+                    self::VALUE_YES  => $this->trans('boolean.yes'),
+                    self::VALUE_NO   => $this->trans('boolean.no'),
+                ),
+                'empty_value' => $this->trans('boolean.yes_or_no'),
+                'transformer_id' => 'lexik_form_filter.transformer.default',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.default'),
+            ))                
+            ;
     }
 
     /**
@@ -85,19 +93,11 @@ class BooleanFilterType extends AbstractType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
             $value = (int)(self::VALUE_YES == $values['value']);
-            $queryBuilder->andWhere($e->eq($field, $value));
+            $queryBuilder->andWhere($expr->eq($field, $value));
         }
     }
 }

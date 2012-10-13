@@ -2,26 +2,42 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
-use Millwright\ConfigurationBundle\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
 /**
  * Filter type for related entities.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class EntityFilterType extends EntityType implements FilterTypeInterface
+class EntityFilterType extends AbstractFilterType implements FilterTypeInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        parent::setDefaultOptions($resolver);
+
+        $resolver
+            ->setDefaults(array(
+                'transformer_id' => 'lexik_form_filter.transformer.default',
+            ))
+            ->setAllowedValues(array(
+                'transformer_id' => array('lexik_form_filter.transformer.default'),
+            ))                
+            ;
+    }    
+    
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'filter_choice';
+        return 'entity';
     }
 
     /**
@@ -35,15 +51,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getTransformerId()
-    {
-        return 'lexik_form_filter.transformer.default';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $e, $field, array $values)
+    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
     {
         if (is_object($values['value'])) {
             if ($values['value'] instanceof Collection) {
@@ -57,11 +65,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                 }
 
                 if (count($ids) > 0) {
-                    $alias = $value['alias'];
-                    $joinAlias = 'a' . $alias;
-                    $queryBuilder
-                        ->leftJoin($field, $joinAlias)
-                        ->andWhere($e->in($joinAlias, $ids));
+                    $queryBuilder->andWhere($expr->in($field, $ids));
                 }
 
             } else {
@@ -69,7 +73,7 @@ class EntityFilterType extends EntityType implements FilterTypeInterface
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $queryBuilder->andWhere($e->eq($field, $values['value']->getId()));
+                $queryBuilder->andWhere($expr->eq($field, $values['value']->getId()));
             }
         }
     }
