@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-interface QueryBuilderExecuterInterface
+interface FilterBuilderExecuterInterface
 {
     /**
      * Add a join.

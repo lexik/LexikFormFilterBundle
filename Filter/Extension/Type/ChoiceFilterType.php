@@ -2,17 +2,17 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Doctrine\ORM\QueryBuilder;
+
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+
 
 /**
  * Filter type for select list.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ChoiceFilterType extends AbstractFilterType implements FilterTypeInterface
+class ChoiceFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -45,19 +45,5 @@ class ChoiceFilterType extends AbstractFilterType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_choice';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        if (!empty($values['value'])) {
-            // alias.field -> alias_field
-            $fieldName = str_replace('.', '_', $field);
-
-            $queryBuilder->andWhere($expr->eq($field, ':' . $fieldName))
-                         ->setParameter($fieldName, $values['value']);
-        }
     }
 }

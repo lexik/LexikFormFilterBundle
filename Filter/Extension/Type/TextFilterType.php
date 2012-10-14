@@ -6,16 +6,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-use Doctrine\ORM\QueryBuilder;
+//@todo remove constants this namespace
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 
 /**
  * Filter type for strings.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class TextFilterType extends AbstractFilterType implements FilterTypeInterface
+class TextFilterType extends AbstractFilterType
 {
     const PATTERN_EQUALS     = Expr::STRING_EQ;
     const PATTERN_START_WITH = Expr::STRING_STARTS;
@@ -96,16 +95,6 @@ class TextFilterType extends AbstractFilterType implements FilterTypeInterface
     public function getName()
     {
         return 'filter_text';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {        
-        if (!empty($values['value'])) {
-            $queryBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
-        }
     }
 
     /**

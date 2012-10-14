@@ -126,15 +126,15 @@ class DefaultController extends Controller
             $form->bindRequest($this->get('request'));
 
             // initliaze a query builder
-            $queryBuilder = $this->get('doctrine.orm.entity_manager')
+            $filterBuilder = $this->get('doctrine.orm.entity_manager')
                 ->getRepository('ProjectSuperBundle:MyEntity')
                 ->createQueryBuilder('e');
 
             // build the query from the given form object
-            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $queryBuilder);
+            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $filterBuilder);
 
             // now look at the DQL =)
-            var_dump($queryBuilder->getDql());
+            var_dump($filterBuilder->getDql());
         }
 
         return $this->render('ProjectSuperBundle:Default:testFilter.html.twig', array(
@@ -182,7 +182,7 @@ class MySuperFilterType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'filter_text', array(
-            'apply_filter' => function (QueryBuilder $queryBuilder, Expr $expr, $field, array $values) {
+            'apply_filter' => function (QueryBuilder $filterBuilder, Expr $expr, $field, array $values) {
             
                 // add conditions you need :)
                 
@@ -241,7 +241,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\ORM\QueryBuilder;
 
-use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
@@ -264,12 +264,12 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
     /**
      * This method aim to add all joins you need
      */
-    public function addShared(QueryBuilderExecuterInterface $qbe)
+    public function addShared(FilterBuilderExecuterInterface $qbe)
     {
-        $closure = function(QueryBuilder $queryBuilder, $alias, $joinAlias, Expr $expr) {
+        $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
             // add the join clause to the doctrine query builder
             // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
-            $queryBuilder->leftJoin($alias . '.options', 'opt');
+            $filterBuilder->leftJoin($alias . '.options', 'opt');
         }
     
         // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.

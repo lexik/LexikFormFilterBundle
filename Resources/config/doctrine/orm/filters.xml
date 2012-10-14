@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="lexik_form_filter.filter_prepare" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\PrepareListener">
+            <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
+        </service>
+
+        <service id="lexik_form_filter.text" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\TextFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.number" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.number_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberRangeFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\CheckboxFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.boolean" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\BooleanFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.choice" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\ChoiceFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.entity" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\EntityFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.date" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
+        <service id="lexik_form_filter.date_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateRangeFilterType">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+    </services>
+</container>

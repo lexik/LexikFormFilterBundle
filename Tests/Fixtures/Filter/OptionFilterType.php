@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\ORM\QueryBuilder;
 
-use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
@@ -29,10 +29,10 @@ class OptionFilterType extends AbstractType implements FilterTypeSharedableInter
         return 'options_filter';
     }
 
-    public function addShared(QueryBuilderExecuterInterface $qbe)
+    public function addShared(FilterBuilderExecuterInterface $qbe)
     {
-        $qbe->addOnce($qbe->getAlias().'.options', 'opt', function(QueryBuilder $queryBuilder, $alias, $joinAlias, Expr $expr) {
-            $queryBuilder->leftJoin($alias . '.options', 'opt');
+        $qbe->addOnce($qbe->getAlias().'.options', 'opt', function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+            $filterBuilder->leftJoin($alias . '.options', 'opt');
         });
     }
 }

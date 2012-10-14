@@ -20,7 +20,10 @@ abstract class AbstractFilterType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        if ($options['apply_filter'] instanceof \Closure || is_callable($options['apply_filter'])) {
+        if ($options['apply_filter'] instanceof \Closure
+            || is_callable($options['apply_filter'])
+            || is_string($options['apply_filter'])
+        ) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
         }
     }
@@ -33,8 +36,8 @@ abstract class AbstractFilterType extends AbstractType
         parent::setDefaultOptions($resolver);
 
         $resolver->setDefaults(array(
-             'required'     => false,
-             'apply_filter' => null,
+            'required'     => false,
+            'apply_filter' => null,
         ));
     }
 }
