@@ -9,8 +9,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
+
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
-use Lexik\Bundle\FormFilterBundle\Tests\Filter\FilterTransformerTest;
+use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
+
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
 
@@ -27,11 +29,6 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected $filterTransformerAggregator;
 
     /**
-     * @var array
-     */
-    protected $parts;
-
-    /**
      * @var EventDispatcherInterface
      */
     protected $dispatcher;
@@ -45,18 +42,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     public function __construct(TransformerAggregatorInterface $filterTransformerAggregator, EventDispatcherInterface $dispatcher)
     {
         $this->filterTransformerAggregator = $filterTransformerAggregator;
-        $this->parts                       = array();
         $this->dispatcher                  = $dispatcher;
-    }
-
-    /**
-     * Set joins aliases.
-     *
-     * @param array $parts
-     */
-    public function setParts(array $parts)
-    {
-        $this->parts = $parts;
     }
 
     /**
@@ -73,36 +59,40 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         $event = new PrepareEvent($filterBuilder);
         $this->dispatcher->dispatch('lexik_filter.prepare', $event);
 
+        $parts = array();
         if (!$alias) {
             $alias = $event->getAlias();
-            $this->parts[$alias] = '__root__';
+            $parts[$alias] = '__root__';
         }
-
         $expr = $event->getExpr();
+        $this->addFilters($form, $filterBuilder, $alias, $parts, $expr);
 
+        return $filterBuilder;
+    }
+
+    protected function addFilters(FormInterface $form, $filterBuilder, $alias = null, array &$parts = array(), $expr = null)
+    {
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
-            $type = $this->getFilterType($child, $filterBuilder);
+            $config = $child->getConfig();
+            $type   = $this->getFilterType($config, $filterBuilder);
 
             if ($type instanceof FilterTypeInterface) {
                 $this->applyFilterCondition($child, $type, $filterBuilder, $alias, $expr);
             } else if ($type instanceof FilterTypeSharedableInterface) {
-                $join = $alias.'.'.$child->getName();
+                $join = $alias . '.' . $child->getName();
 
-                if (!isset($this->parts[$join])) {
-                    $qbe = new FilterBuilderExecuter($filterBuilder, $alias, $expr, $this->parts);
+                if (!isset($parts[$join])) {
+                    $qbe = new FilterBuilderExecuter($filterBuilder, $alias, $expr, $parts);
                     $type->addShared($qbe);
                 }
 
-                if (count($this->parts)) {
-                    $childAlias = $this->parts[$join];
-                    $this->addFilterConditions($child, $filterBuilder, $childAlias, $this->parts);
+                if (count($parts)) {
+                    $this->addFilters($child, $filterBuilder, $parts[$join], $parts, $expr);
                 }
                 break;
             }
         }
-
-        return $filterBuilder;
     }
 
     /**
@@ -116,11 +106,11 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     protected function applyFilterCondition(FormInterface $form, FilterTypeInterface $type, $filterBuilder, $alias, $expr)
     {
+        $config = $form->getConfig();
         $values = $this->prepareFilterValues($form, $type);
         $values += array('alias' => $alias);
         $field = $values['alias'] . '.' . $form->getName();
 
-        $config = $form->getConfig();
 
         // apply the filter by using the closure set with the 'apply_filter' option
         if ($config->hasAttribute('apply_filter')) {
@@ -141,14 +131,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * Prepare all values needed to apply the filter
      *
      * @param  FormInterface $form
-     * @param  FilterTypeInterface $type
      * @return array
      */
-    protected function prepareFilterValues(FormInterface $form, FilterTypeInterface $type)
+    protected function prepareFilterValues(FormInterface $form)
     {
+        $config      = $form->getConfig();
         $values      = array();        
-        $config = $form->getConfig();
-        
         $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id'));
         $values      = $transformer->transform($form);
         
@@ -160,18 +148,32 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
+     * Get filter type name by form config
+     *
+     * @param FormConfigInterface $config
+     *
+     * @return string
+     */
+    protected function getFilterTypeName(FormConfigInterface $config)
+    {
+        $formType = $config->getType()->getInnerType();
+
+        return ($config->hasAttribute('apply_filter') && is_string($config->getAttribute('apply_filter')))
+            ? $config->getAttribute('apply_filter')
+            : $formType->getName();
+    }
+
+    /**
      * Returns the filter type used to build the given form.
      *
-     * @param FormInterface $form
-     * @param object        $filterBuilder
+     * @param FormConfigInterface $config
+     * @param object              $filterBuilder
      *
      * @return FilterTypeInterface|FilterTypeSharedableInterface
      */
-    protected function getFilterType(FormInterface $form, $filterBuilder)
+    protected function getFilterType(FormConfigInterface $config, $filterBuilder)
     {
-        $formType = $form->getConfig()->getType()->getInnerType();
-        $name     = $formType->getName();
-        $event    = new GetFilterEvent($filterBuilder, $name);
+        $event = new GetFilterEvent($filterBuilder, $this->getFilterTypeName($config));
         $this->dispatcher->dispatch('lexik_filter.get', $event);
 
         $filter = $event->getFilter();
