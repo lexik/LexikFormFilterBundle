@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

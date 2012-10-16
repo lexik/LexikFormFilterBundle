@@ -2,13 +2,13 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Doctrine\ORM\QueryBuilder;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 
-class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterface
+
+class DateRangeFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -51,16 +51,5 @@ class DateRangeFilterType extends AbstractFilterType implements FilterTypeInterf
     public function getName()
     {
         return 'filter_date_range';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function applyFilter(QueryBuilder $queryBuilder, Expr $expr, $field, array $values)
-    {
-        $value = $values['value'];
-        if(isset($value['left_date'][0]) || $value['right_date'][0]){
-            $queryBuilder->andWhere($expr->dateInRange($field, $value['left_date'][0], $value['right_date'][0]));
-        }
     }
 }

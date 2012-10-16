@@ -2,16 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-use Doctrine\ORM\QueryBuilder;
-
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-
-class QueryBuilderExecuter implements QueryBuilderExecuterInterface
+class FilterBuilderExecuter implements FilterBuilderExecuterInterface
 {
     /**
-     * @var QueryBuilder
+     * @var object
      */
-    protected $queryBuilder;
+    protected $filterBuilder;
 
     /**
      * @var string
@@ -19,7 +15,7 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
     protected $alias;
 
     /**
-     * @var Expr
+     * @var object
      */
     protected $expr;
 
@@ -31,14 +27,14 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
     /**
      * Construct.
      *
-     * @param QueryBuilder $queryBuilder
+     * @param object $filterBuilder
      * @param string $alias
-     * @param Expr $expr
+     * @param object $expr
      * @param array $parts
      */
-    public function __construct(QueryBuilder $queryBuilder, $alias, Expr $expr, array & $parts = array())
+    public function __construct($filterBuilder, $alias, $expr, array & $parts = array())
     {
-        $this->queryBuilder = $queryBuilder;
+        $this->filterBuilder = $filterBuilder;
         $this->alias        = $alias;
         $this->expr         = $expr;
         $this->parts        = & $parts;
@@ -58,7 +54,6 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
     public function getParts()
     {
         return $this->parts;
-
     }
 
     /**
@@ -72,6 +67,6 @@ class QueryBuilderExecuter implements QueryBuilderExecuterInterface
 
         $this->parts[$join] = $alias;
 
-        return $callback($this->queryBuilder, $this->alias, $alias, $this->expr);
+        return $callback($this->filterBuilder, $this->alias, $alias, $this->expr);
     }
 }
