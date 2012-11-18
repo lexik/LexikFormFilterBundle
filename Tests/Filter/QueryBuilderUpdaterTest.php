@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
+
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -199,6 +201,7 @@ class QueryBuilderUpdaterTest extends TestCase
     protected function initQueryBuilder()
     {
         $container = $this->getContainer();
+
         return $container->get('lexik_form_filter.query_builder_updater');
     }
 
@@ -207,11 +210,18 @@ class QueryBuilderUpdaterTest extends TestCase
         $container = new ContainerBuilder();
         $filter = new LexikFormFilterExtension();
         $container->registerExtension($filter);
+
+        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config'));
+        $loadXml->load('services.xml');
+
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../Resources/config'));
         $loadXml->load('services.xml');
+        $loadXml->load('form_types.xml');
+        $loadXml->load('doctrine/orm/filters.xml');
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
+        $container->addCompilerPass(new RegisterKernelListenersPass());
         $container->addCompilerPass(new FilterTransformerCompilerPass());
         $container->compile();
 

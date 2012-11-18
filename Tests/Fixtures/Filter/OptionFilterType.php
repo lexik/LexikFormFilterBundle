@@ -7,8 +7,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\ORM\QueryBuilder;
 
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
 /**
