@@ -2,10 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-
 
 /**
  * Filter type for select list.
@@ -27,10 +24,10 @@ class ChoiceFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.default'),
-            ))                
-            ;
+            ))
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

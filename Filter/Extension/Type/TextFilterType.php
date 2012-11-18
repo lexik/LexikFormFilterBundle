@@ -23,14 +23,13 @@ class TextFilterType extends AbstractFilterType
 
     const SELECT_PATTERN = 'select_pattern';
 
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {       
+    {
         parent::buildForm($builder, $options);
-        
+
 
         if (true === $options['compound']) {
             $builder->add('condition_pattern', 'choice', $options['choice_options']);
@@ -39,7 +38,7 @@ class TextFilterType extends AbstractFilterType
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_pattern' => $options['condition_pattern'],
-            ));               
+            ));
         }
     }
 
@@ -53,13 +52,11 @@ class TextFilterType extends AbstractFilterType
         $compound = function (Options $options) {
             return $options['condition_pattern'] == TextFilterType::SELECT_PATTERN;
         };
-        
-        
+
         $transformerId = function (Options $options) {
             return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
         };
 
-        
         $resolver
             ->setDefaults(array(
                 'condition_pattern' => self::PATTERN_EQUALS,
@@ -78,7 +75,6 @@ class TextFilterType extends AbstractFilterType
                 'transformer_id' => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
             ))
         ;
-        
     }
 
     /**

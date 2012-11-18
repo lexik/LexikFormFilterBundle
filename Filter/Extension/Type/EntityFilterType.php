@@ -2,11 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-
 
 /**
  * Filter type for related entities.
@@ -28,10 +25,10 @@ class EntityFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.default'),
-            ))                
-            ;
-    }    
-    
+            ))
+        ;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -44,8 +44,8 @@ class NumberRangeFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
-            ))                                  
-            ;
+            ))
+        ;
     }
 
     /**

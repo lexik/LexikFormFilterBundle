@@ -16,7 +16,7 @@ class BooleanFilterType extends AbstractFilterType
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
-    
+
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
@@ -56,8 +56,8 @@ class BooleanFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.default'),
-            ))                
-            ;
+            ))
+        ;
     }
 
     /**

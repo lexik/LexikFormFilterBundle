@@ -2,11 +2,13 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
-
+/**
+ * Filter type for date field.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class DateFilterType extends AbstractFilterType
 {
     /**
@@ -22,10 +24,10 @@ class DateFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.default'),
-            ))                
-            ;
+            ))
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

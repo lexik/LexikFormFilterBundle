@@ -52,7 +52,7 @@ class NumberFilterType extends AbstractFilterType
         $compound = function (Options $options) {
             return $options['condition_operator'] == NumberFilterType::SELECT_OPERATOR;
         };
-        
+
         $transformerId = function (Options $options) {
             return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
         };
@@ -72,9 +72,8 @@ class NumberFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
-            ))                  
-            
-            ;
+            ))
+        ;
     }
 
     /**

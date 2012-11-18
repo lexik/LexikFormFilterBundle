@@ -2,10 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-
 
 /**
  * Filter type for boolean.
@@ -20,7 +17,7 @@ class CheckboxFilterType extends AbstractFilterType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         parent::setDefaultOptions($resolver);
-        
+
         $resolver
             ->setDefaults(array(
                 'transformer_id' => 'lexik_form_filter.transformer.default',
@@ -30,7 +27,7 @@ class CheckboxFilterType extends AbstractFilterType
             ))
         ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

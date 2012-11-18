@@ -2,12 +2,14 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
-
+/**
+ * Filter type for date range field.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class DateRangeFilterType extends AbstractFilterType
 {
     /**
@@ -41,8 +43,8 @@ class DateRangeFilterType extends AbstractFilterType
             ))
             ->setAllowedValues(array(
                 'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
-            ))                                
-            ;
+            ))
+        ;
     }
 
     /**
