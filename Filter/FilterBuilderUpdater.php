@@ -11,6 +11,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
+use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
 
@@ -71,7 +72,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     public function addFilterConditions(FormInterface $form, $filterBuilder, $alias = null)
     {
         $event = new PrepareEvent($filterBuilder);
-        $this->dispatcher->dispatch('lexik_filter.prepare', $event);
+        $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
 
         if (!$alias) {
             $alias = $event->getAlias();
@@ -197,7 +198,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected function getFilterType(FormConfigInterface $config, $filterBuilder)
     {
         $event = new GetFilterEvent($filterBuilder, $this->getFilterTypeName($config));
-        $this->dispatcher->dispatch('lexik_filter.get', $event);
+        $this->dispatcher->dispatch(FilterEvents::GET_FILTER, $event);
 
         return $event->getFilter();
     }
