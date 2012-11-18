@@ -1,13 +1,13 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 /**
- * Some filter type can implement this interface to apply the filter to the query.
+ * Some filter can implement this interface to apply the filter condition to the query.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-interface FilterTypeInterface
+interface FilterInterface
 {
     /**
      * Add condition(s) to the query builder for the current type.

@@ -5,10 +5,10 @@ use Doctrine\ORM\QueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
-abstract class ORMFilterType implements FilterTypeInterface
+abstract class ORMFilterType implements FilterInterface
 {
     /**
      * On filter get event

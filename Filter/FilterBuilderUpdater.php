@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
@@ -112,7 +112,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             } else {
                 $type = $this->getFilterType($child->getConfig(), $filterBuilder);
 
-                if ($type instanceof FilterTypeInterface) {
+                if ($type instanceof FilterInterface) {
                     $this->applyFilterCondition($child, $type, $filterBuilder, $alias, $expr);
                 }
             }
@@ -120,15 +120,15 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * Apply the condition for one FilterTypeInterface.
+     * Apply the condition for one FilterInterface.
      *
      * @param FormInterface $form
-     * @param FilterTypeInterface $type
+     * @param FilterInterface $type
      * @param object $filterBuilder
      * @param string $alias
      * @param object $expr
      */
-    protected function applyFilterCondition(FormInterface $form, FilterTypeInterface $type, $filterBuilder, $alias, $expr)
+    protected function applyFilterCondition(FormInterface $form, FilterInterface $type, $filterBuilder, $alias, $expr)
     {
         $config = $form->getConfig();
         $values = $this->prepareFilterValues($form, $type);
@@ -145,7 +145,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 call_user_func($callable, $filterBuilder, $expr, $field, $values);
             }
         } else {
-            // if no closure we use the applyFilter() method from a FilterTypeInterface
+            // if no closure we use the applyFilter() method from a FilterInterface
             $type->applyFilter($filterBuilder, $expr, $field, $values);
         }
     }
@@ -192,7 +192,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param FormConfigInterface $config
      * @param object              $filterBuilder
      *
-     * @return FilterTypeInterface
+     * @return FilterInterface
      */
     protected function getFilterType(FormConfigInterface $config, $filterBuilder)
     {

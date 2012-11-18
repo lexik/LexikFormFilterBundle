@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
 /**
@@ -66,17 +66,17 @@ class GetFilterEvent extends Event
     /**
      * Set filter
      *
-     * @param FilterTypeInterface|FilterTypeSharedableInterface $filter
+     * @param FilterInterface $filter
      *
      * @return GetFilterEvent
      *
-     * @throws \InvalidArgumentException If filter is not instance of FilterTypeInterface|FilterTypeSharedableInterface
+     * @throws \InvalidArgumentException If filter is not instance of FilterInterface
      */
     public function setFilter($filter)
     {
-        if (!$filter instanceof FilterTypeSharedableInterface && !$filter instanceof FilterTypeInterface) {
+        if (!$filter instanceof FilterInterface) {
             throw new \InvalidArgumentException(sprintf(
-                '$filter must be an instance of FilterTypeSharedableInterface or FilterTypeInterface, %s given',
+                '$filter must be an instance of FilterTypeInterface, %s given',
                 get_class($filter)
             ));
         }
@@ -89,7 +89,7 @@ class GetFilterEvent extends Event
     /**
      * Get filter
      *
-     * @return FilterTypeInterface|FilterTypeSharedableInterface
+     * @return FilterInterface
      */
     public function getFilter()
     {
