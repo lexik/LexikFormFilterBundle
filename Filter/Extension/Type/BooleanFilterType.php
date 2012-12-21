@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

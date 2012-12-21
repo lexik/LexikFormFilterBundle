@@ -5,7 +5,6 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
 /**
  * Get filter for filter builder

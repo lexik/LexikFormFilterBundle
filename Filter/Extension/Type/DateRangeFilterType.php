@@ -37,8 +37,8 @@ class DateRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_date'  => array(),
-                'right_date' => array(),
+                'left_date'      => array(),
+                'right_date'     => array(),
                 'transformer_id' => 'lexik_form_filter.transformer.value_keys',
             ))
             ->setAllowedValues(array(

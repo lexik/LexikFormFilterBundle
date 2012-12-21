@@ -13,6 +13,9 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
  */
 class FilterExtension extends AbstractExtension
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function loadTypes()
     {
         return array(

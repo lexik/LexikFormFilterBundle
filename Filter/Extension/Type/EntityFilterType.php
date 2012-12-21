@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Doctrine\Common\Collections\Collection;
+
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
