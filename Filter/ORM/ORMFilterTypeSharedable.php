@@ -4,7 +4,6 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\ORM;
 use Doctrine\ORM\QueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
-
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 

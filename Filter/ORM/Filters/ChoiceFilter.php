@@ -3,23 +3,23 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters;
 
 use Doctrine\ORM\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilterType;
 
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilter;
 
 /**
- * Filter type for boolean.
+ * Filter type for select list.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class CheckboxFilterType extends ORMFilterType
+class ChoiceFilter extends ORMFilter
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'filter_checkbox';
+        return 'filter_choice';
     }
 
     /**
@@ -28,7 +28,11 @@ class CheckboxFilterType extends ORMFilterType
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
         if (!empty($values['value'])) {
-            $filterBuilder->andWhere($expr->eq($field, $values['value']));
+            // alias.field -> alias_field
+            $fieldName = str_replace('.', '_', $field);
+
+            $filterBuilder->andWhere($expr->eq($field, ':' . $fieldName))
+                         ->setParameter($fieldName, $values['value']);
         }
     }
 }

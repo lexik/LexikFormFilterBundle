@@ -3,11 +3,11 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters;
 
 use Doctrine\ORM\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilterType;
 
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilter;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 
-class DateRangeFilterType extends ORMFilterType
+class DateRangeFilter extends ORMFilter
 {
     /**
      * {@inheritdoc}

@@ -9,39 +9,39 @@
             <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
 
-        <service id="lexik_form_filter.text" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\TextFilterType">
+        <service id="lexik_form_filter.text" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\TextFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.number" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberFilterType">
+        <service id="lexik_form_filter.number" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.number_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberRangeFilterType">
+        <service id="lexik_form_filter.number_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\NumberRangeFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\CheckboxFilterType">
+        <service id="lexik_form_filter.checkbox" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\CheckboxFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.boolean" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\BooleanFilterType">
+        <service id="lexik_form_filter.boolean" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\BooleanFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.choice" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\ChoiceFilterType">
+        <service id="lexik_form_filter.choice" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\ChoiceFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.entity" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\EntityFilterType">
+        <service id="lexik_form_filter.entity" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\EntityFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.date" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateFilterType">
+        <service id="lexik_form_filter.date" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
-        <service id="lexik_form_filter.date_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateRangeFilterType">
+        <service id="lexik_form_filter.date_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateRangeFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
     </services>

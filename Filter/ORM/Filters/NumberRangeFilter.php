@@ -2,8 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters;
 
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilterType;
-
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilter;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 
 use Doctrine\ORM\QueryBuilder;
@@ -13,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberRangeFilterType extends ORMFilterType
+class NumberRangeFilter extends ORMFilter
 {
     /**
      * {@inheritdoc}
@@ -33,7 +32,7 @@ class NumberRangeFilterType extends ORMFilterType
         if (isset($value['left_number'][0])) {
             $leftCond   = $value['left_number']['condition_operator'];
             $leftValue  = $value['left_number'][0];
-            
+
             $filterBuilder->andWhere($expr->$leftCond($field, $leftValue));
         }
 
