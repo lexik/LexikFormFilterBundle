@@ -22,10 +22,10 @@ $deps = array(
 
 $revs = array(
     'v2.1' => array(
-        'symfony'           => 'v2.1.3',
-        'doctrine-common'   => '2.2.3',
-        'doctrine-dbal'     => '2.2.2',
-        'doctrine'          => '2.2.3',
+        'symfony'           => 'v2.1.5',
+        'doctrine-common'   => '2.3.0',
+        'doctrine-dbal'     => '2.3.1',
+        'doctrine'          => '2.3.1',
         'doctrine-fixtures' => 'origin/master',
     ),
 );
