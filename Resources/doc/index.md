@@ -55,6 +55,7 @@ Let's use the following entity:
 namespace Project\Bundle\SuperBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -70,6 +71,7 @@ class MyEntity
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
      */
     protected $name;
 
@@ -107,7 +109,8 @@ class MySuperFilterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'csrf_protection' => false
+            'csrf_protection'   => false,
+            'validation_groups' => array('filtering') // avoid NotBlank() constraint-related message
         ));
     }
 }
