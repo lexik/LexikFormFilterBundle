@@ -121,7 +121,7 @@ class DefaultController extends Controller
     {
         $form = $this->get('form.factory')->create(new MySuperFilterType());
 
-        if ($this->get('request')->getMethod() == 'POST') {
+        if ($this->get('request')->query->has('submit-filter')) {
             // bind values from the request
             $form->bindRequest($this->get('request'));
 
@@ -148,7 +148,7 @@ Basic template
 
 ```
 // testFilter.html.twig
-<form method="post">
+<form method="get" action=".">
     {{ form_rest(form) }}
     <input type="submit" name="submit-filter" value="filter" />
 </form>
