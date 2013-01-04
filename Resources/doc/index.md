@@ -89,6 +89,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MySuperFilterType extends AbstractType
 {
@@ -101,6 +102,13 @@ class MySuperFilterType extends AbstractType
     public function getName()
     {
         return 'my_super_filter';
+    }
+    
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'csrf_protection' => false
+        ));
     }
 }
 ```
