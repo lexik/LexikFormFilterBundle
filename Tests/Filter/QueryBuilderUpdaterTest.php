@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
 
 use Symfony\Component\Config\FileLocator;
@@ -88,8 +90,8 @@ class QueryBuilderUpdaterTest extends TestCase
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->bind(array(
-            'name' => array('text' => 'blabla', 'condition_pattern' => TextFilterType::PATTERN_END_WITH),
-            'position' => array('text' => 2, 'condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
+            'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
+            'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
         ));
 
