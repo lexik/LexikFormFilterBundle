@@ -1,6 +1,9 @@
 Installation
 ============
 
+Symfony 2.0
+-----------
+
 Update your `deps` and `deps.lock` files:
 
     // deps
@@ -12,6 +15,24 @@ Update your `deps` and `deps.lock` files:
     // deps.lock
     ...
     LexikFormFilterBundle <commit>
+    
+Symfony 2.1
+-----------
+
+```javascript
+require: {
+    // ...
+    "lexik/form-filter-bundle": "1.1.*"
+    // ...
+}
+```
+
+```shell
+composer.phar update 
+```
+
+Symfony *
+---------
 
 Register the namespaces with the autoloader:
 
