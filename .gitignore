@@ -5,3 +5,4 @@ phpunit.xml
 .buildpath
 .settings
 vendor
+composer.phar
