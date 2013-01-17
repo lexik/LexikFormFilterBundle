@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -38,8 +40,8 @@ class NumberRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN_EQUAL),
-                'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN_EQUAL),
+                'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
+                'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
                 'transformer_id' => 'lexik_form_filter.transformer.value_keys',
             ))
             ->setAllowedValues(array(

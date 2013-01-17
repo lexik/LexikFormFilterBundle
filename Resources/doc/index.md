@@ -19,16 +19,22 @@ Update your `deps` and `deps.lock` files:
 Symfony 2.1
 -----------
 
+Add the bunde to your `composer.json` file:
+
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "1.1.*"
+    "lexik/form-filter-bundle": "v1.1.*"
     // ...
 }
 ```
 
+Then run a composer update:
+
 ```shell
-composer.phar update 
+composer.phar update
+# OR
+composer.phar update lexik/form-filter-bundle # to only update the bundle
 ```
 
 Symfony *
@@ -36,22 +42,25 @@ Symfony *
 
 Register the namespaces with the autoloader:
 
+```php
     // app/autoload.php
      $loader->registerNamespaces(array(
         // ...
         'Lexik' => __DIR__.'/../vendor/bundles',
         // ...
     ));
+```
 
 Register the bundle with your kernel:
 
+```php
     // in AppKernel::registerBundles()
     $bundles = array(
         // ...
         new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
         // ...
     );
-
+```
 
 Usage
 =====
@@ -178,16 +187,19 @@ class DefaultController extends Controller
 
 Basic template
 
-```
-// testFilter.html.twig
+```html
+<!-- testFilter.html.twig -->
 <form method="get" action=".">
     {{ form_rest(form) }}
     <input type="submit" name="submit-filter" value="filter" />
 </form>
 ```
 
-Override default way to apply the filter
-========================================
+How to
+======
+
+Customize the way to apply the filter
+-------------------------------------
 
 All filter types have an `apply_filter` option which is a closure.
 If this option is define the `QueryBuilderUpdater` won't call the `applyFilter()` method from the type class but it will call the given closure.
@@ -229,11 +241,11 @@ class MySuperFilterType extends AbstractType
 }
 ```
 
-Embed filter types
-==================
+Filter associated entities / Embed filter types
+-----------------------------------------------
 
-You can also embed some filters inside another one. 
-Let's say the entity we filter in `MySuperFilterType` is related to some options and an option has a 2 fields: label and color. 
+You can also embed some filters inside another one. It could be a way to filter elements associated to the "root" one.
+Let's say the entity we filter with the `MySuperFilterType` is related to some options and an option has a 2 fields: label and color.
 We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
 ```php
