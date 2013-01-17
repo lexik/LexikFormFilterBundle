@@ -35,7 +35,7 @@ class FilterOperands
             self::OPERATOR_GREATER_THAN,
             self::OPERATOR_GREATER_THAN_EQUAL,
             self::OPERATOR_LOWER_THAN,
-            self::OPERATOR_LOWER_THAN,
+            self::OPERATOR_LOWER_THAN_EQUAL,
         );
 
         if ($includeSelector) {
