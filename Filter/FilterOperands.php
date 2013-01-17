@@ -7,7 +7,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class FilterOperands
+final class FilterOperands
 {
     const OPERATOR_EQUAL              = 'eq';
     const OPERATOR_GREATER_THAN       = 'gt';
@@ -21,6 +21,10 @@ class FilterOperands
     const STRING_BOTH   = 4;
 
     const OPERAND_SELECTOR = 'selection';
+
+    private function __construct()
+    {
+    }
 
     /**
      * Returns all available number operands.
