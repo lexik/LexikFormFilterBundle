@@ -2,19 +2,13 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\ORM;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 
 class Expr extends \Doctrine\ORM\Query\Expr
 {
-    /**
-     * @see Expr::stringLike()
-     */
-    const STRING_STARTS = 1;
-    const STRING_ENDS   = 2;
-    const STRING_EQ     = 3;
-    const STRING_BOTH   = 4;
-
     const SQL_DATE      = 'Y-m-d';
     const SQL_DATE_TIME = 'Y-m-d H:i:s';
 
@@ -141,26 +135,26 @@ class Expr extends \Doctrine\ORM\Query\Expr
      * Prepare value for like operation
      *
      * @param string $value
-     * @param int $type one of Expr::STRING_*
+     * @param int $type one of FilterOperands::STRING_*
      * @throws \InvalidArgumentException
      * @return string
      */
     protected function _convertTypeToMask($value, $type)
     {
         switch($type) {
-            case self::STRING_STARTS:
+            case FilterOperands::STRING_STARTS:
                 $value .= '%';
                 break;
 
-            case self::STRING_ENDS:
+            case FilterOperands::STRING_ENDS:
                 $value = '%' . $value;
                 break;
 
-            case self::STRING_BOTH:
+            case FilterOperands::STRING_BOTH:
                 $value = '%' . $value . '%';
                 break;
 
-            case self::STRING_EQ:
+            case FilterOperands::STRING_EQUALS:
                 //return $e->eq($field, $e->literal($value));
                 break;
 
@@ -176,10 +170,10 @@ class Expr extends \Doctrine\ORM\Query\Expr
      *
      * @param  string $field field name
      * @param  string $value string value
-     * @param  int    $type one of Expr::STRING_* constant
+     * @param  int    $type one of FilterOperands::STRING_* constant
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function stringLike($field, $value, $type = self::STRING_BOTH)
+    public function stringLike($field, $value, $type = FilterOperands::STRING_BOTH)
     {
         $value = $this->_convertTypeToMask($value, $type);
 
@@ -196,7 +190,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringStarts($field, $value)
     {
-        return $this->stringLike($field, $value, self::STRING_STARTS);
+        return $this->stringLike($field, $value, FilterOperands::STRING_STARTS);
     }
 
     /**
@@ -209,7 +203,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringEnds($field, $value)
     {
-        return $this->stringLike($field, $value, self::STRING_ENDS);
+        return $this->stringLike($field, $value, FilterOperands::STRING_ENDS);
     }
 
     /**
@@ -222,7 +216,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringBoth($field, $value)
     {
-        return $this->stringLike($field, $value, self::STRING_BOTH);
+        return $this->stringLike($field, $value, FilterOperands::STRING_BOTH);
     }
 
     /**
@@ -235,7 +229,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringEq($field, $value)
     {
-        return $this->stringLike($field, $value, self::STRING_EQ);
+        return $this->stringLike($field, $value, FilterOperands::STRING_EQUALS);
     }
 
     /**
@@ -246,7 +240,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      * @param  int $type one of self::STRING_*
      * @return Orx
      */
-    public function stringLikeAnyWord($field, $values, $type = self::STRING_BOTH)
+    public function stringLikeAnyWord($field, $values, $type = FilterOperands::STRING_BOTH)
     {
         if (!is_array($values)) {
             $values = explode(' ', $values);
@@ -271,7 +265,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
     */
     public function stringEndsAnyWord($field, $value)
     {
-        return $this->stringLikeAnyWord($field, $value, self::STRING_ENDS);
+        return $this->stringLikeAnyWord($field, $value, FilterOperands::STRING_ENDS);
     }
 
     /**
@@ -284,7 +278,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringBothAnyWord($field, $value)
     {
-        return $this->stringLikeAnyWord($field, $value, self::STRING_BOTH);
+        return $this->stringLikeAnyWord($field, $value, FilterOperands::STRING_BOTH);
     }
 
     /**
@@ -297,7 +291,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringEqAnyWord($field, $value)
     {
-        return $this->stringLikeAnyWord($field, $value, self::STRING_EQ);
+        return $this->stringLikeAnyWord($field, $value, FilterOperands::STRING_EQUALS);
     }
 
     /**

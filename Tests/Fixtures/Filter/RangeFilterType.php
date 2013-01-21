@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -18,8 +20,8 @@ class RangeFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('position', 'filter_number_range', array(
-                    'left_number' => array('condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN),
-                    'right_number' => array('condition_operator' => NumberFilterType::OPERATOR_LOWER_THAN)
+                    'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
+                    'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
                 ))
                 ->add('default_position', 'filter_number_range')
                 ->add('createdAt', 'filter_date_range', array(

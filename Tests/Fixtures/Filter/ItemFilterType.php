@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -29,14 +31,14 @@ class ItemFilterType extends AbstractType
         if (!$this->withSelector) {
             $builder->add('name', 'filter_text');
             $builder->add('position', 'filter_number', array(
-                'condition_operator' => NumberFilterType::OPERATOR_GREATER_THAN,
+                'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN,
             ));
         } else {
             $builder->add('name', 'filter_text', array(
-                'condition_pattern' => TextFilterType::SELECT_PATTERN,
+                'condition_pattern' => FilterOperands::OPERAND_SELECTOR,
             ));
             $builder->add('position', 'filter_number', array(
-                'condition_operator' => NumberFilterType::SELECT_OPERATOR,
+                'condition_operator' => FilterOperands::OPERAND_SELECTOR,
             ));
         }
 
