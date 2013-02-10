@@ -23,18 +23,6 @@ class PrepareEvent extends Event
      */
     private $filterQuery;
 
-//     /**
-//      * Alias
-//      *
-//      * @var string
-//      */
-//     protected $alias;
-
-//     /**
-//      * @var object
-//      */
-//     protected $expr;
-
     /**
      * Construct
      *
@@ -54,30 +42,6 @@ class PrepareEvent extends Event
     {
         return $this->queryBuilder;
     }
-
-//     /**
-//      * Set alias
-//      *
-//      * @param string $alias
-//      *
-//      * @return PrepareEvent
-//      */
-//     public function setAlias($alias)
-//     {
-//         $this->alias = $alias;
-
-//         return $this;
-//     }
-
-//     /**
-//      * Get alias
-//      *
-//      * @return string
-//      */
-//     public function getAlias()
-//     {
-//         return $this->alias;
-//     }
 
     /**
      * Set filter query

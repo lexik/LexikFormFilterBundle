@@ -29,17 +29,16 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * Construct.
      *
-     * @param object $filterBuilder
-     * @param string $alias
-     * @param object $expr
-     * @param array $parts
+     * @param QueryInterface $filterBuilder
+     * @param string         $alias
+     * @param array          $parts
      */
     public function __construct(QueryInterface $filterQuery, $alias, array & $parts = array())
     {
         $this->filterQuery = $filterQuery;
-        $this->alias        = $alias;
-        $this->expr         = $filterQuery->getExpr();
-        $this->parts        = & $parts;
+        $this->expr        = $filterQuery->getExpr();
+        $this->alias       = $alias;
+        $this->parts       = & $parts;
     }
 
     /**

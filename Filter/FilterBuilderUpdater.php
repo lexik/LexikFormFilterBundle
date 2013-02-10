@@ -66,8 +66,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * Build a filter query.
      *
      * @param  FormInterface $form
-     * @param  object $queryBuilder
-     * @param  string|null $alias
+     * @param  object        $queryBuilder
+     * @param  string|null   $alias
      *
      * @return object filter builder
      */
@@ -91,12 +91,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * Add conditions on the filter builder instance.
+     * Add conditions on the query builder instance.
      *
-     * @param FormInterface $form
+     * @param FormInterface  $form
      * @param QueryInterface $filterQuery
-     * @param string $alias
-     * @param array $parts
+     * @param string         $alias
+     * @param array          $parts
      */
     protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null, array &$parts = array())
     {
