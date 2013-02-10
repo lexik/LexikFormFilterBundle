@@ -4,93 +4,98 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
 /**
  * Get alias and expression builder for filter builder
+ *
+ * @author Jeremy Barthe <j.barthe@lexik.fr>
  */
 class PrepareEvent extends Event
 {
     /**
-     * @var object
+     * @var object $queryBuilder
      */
-    protected $filterBuilder;
+    private $queryBuilder;
 
     /**
-     * Alias
-     *
-     * @var string
+     * @var object $filterQuery
      */
-    protected $alias;
+    private $filterQuery;
 
-    /**
-     * @var object
-     */
-    protected $expr;
+//     /**
+//      * Alias
+//      *
+//      * @var string
+//      */
+//     protected $alias;
+
+//     /**
+//      * @var object
+//      */
+//     protected $expr;
 
     /**
      * Construct
      *
-     * @param object $filterBuilder
+     * @param object $queryBuilder
      */
-    public function __construct($filterBuilder)
+    public function __construct($queryBuilder)
     {
-        $this->filterBuilder = $filterBuilder;
+        $this->queryBuilder = $queryBuilder;
     }
 
     /**
-     * Get filter builder
+     * Get query builder
      *
      * @return object
      */
-    public function getFilterBuilder()
+    public function getQueryBuilder()
     {
-        return $this->filterBuilder;
+        return $this->queryBuilder;
+    }
+
+//     /**
+//      * Set alias
+//      *
+//      * @param string $alias
+//      *
+//      * @return PrepareEvent
+//      */
+//     public function setAlias($alias)
+//     {
+//         $this->alias = $alias;
+
+//         return $this;
+//     }
+
+//     /**
+//      * Get alias
+//      *
+//      * @return string
+//      */
+//     public function getAlias()
+//     {
+//         return $this->alias;
+//     }
+
+    /**
+     * Set filter query
+     *
+     * @param QueryInterface $filterQuery
+     */
+    public function setFilterQuery(QueryInterface $filterQuery)
+    {
+        $this->filterQuery = $filterQuery;
     }
 
     /**
-     * Set alias
+     * Get filter query
      *
-     * @param string $alias
-     *
-     * @return PrepareEvent
+     * @return QueryInterface
      */
-    public function setAlias($alias)
+    public function getFilterQuery()
     {
-        $this->alias = $alias;
-
-        return $this;
-    }
-
-    /**
-     * Get alias
-     *
-     * @return string
-     */
-    public function getAlias()
-    {
-        return $this->alias;
-    }
-
-    /**
-     * Set expr
-     *
-     * @param object $expr
-     *
-     * @return PrepareEvent
-     */
-    public function setExpr($expr)
-    {
-        $this->expr = $expr;
-
-        return $this;
-    }
-
-    /**
-     * Get expr
-     *
-     * @return object
-     */
-    public function getExpr()
-    {
-        return $this->expr;
+        return $this->filterQuery;
     }
 }

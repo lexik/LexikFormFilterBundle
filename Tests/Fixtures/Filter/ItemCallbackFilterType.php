@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -18,9 +20,9 @@ class ItemCallbackFilterType extends AbstractType
             'apply_filter' => array($this, 'fieldNameCallback'),
         ));
         $builder->add('position', 'filter_number', array(
-            'apply_filter' => function($filterBuilder, $expr, $field, $values) {
+            'apply_filter' => function(QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    $filterBuilder->andWhere($expr->neq($field, $values['value']));
+                    $filterQuery->getQueryBuilder()->andWhere($filterQuery->getExpr()->neq($field, $values['value']));
                 }
             },
         ));
@@ -31,10 +33,10 @@ class ItemCallbackFilterType extends AbstractType
         return 'item_filter';
     }
 
-    public function fieldNameCallback($filterBuilder, $expr, $field, $values)
+    public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)
     {
         if (!empty($values['value'])) {
-            $filterBuilder->andWhere($expr->neq($field, sprintf('\'%s\'', $values['value'])));
+            $filterQuery->getQueryBuilder()->andWhere($filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value'])));
         }
     }
 }
