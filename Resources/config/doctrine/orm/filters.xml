@@ -9,7 +9,7 @@
             <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
 
-        <service id="lexik_form_filter.doctrine_orm_subscriber" class="Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineORMSubscriber">
+        <service id="lexik_form_filter.doctrine_subscriber" class="Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineSubscriber">
             <tag name="kernel.event_subscriber" />
         </service>
     </services>

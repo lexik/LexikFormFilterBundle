@@ -1,10 +1,11 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Query;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ORMExpressionBuilder;
 
 use Doctrine\ORM\QueryBuilder;
-
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -17,9 +18,9 @@ class ORMQuery implements QueryInterface
     private $queryBuilder;
 
     /**
-     * @var Expr $expr
+     * @var ORMExpressionBuilder $expr
      */
-    private $expr;
+    private $expressionBuilder;
 
     /**
      * Constructor.
@@ -28,8 +29,8 @@ class ORMQuery implements QueryInterface
      */
     public function __construct(QueryBuilder $queryBuilder)
     {
-        $this->queryBuilder = $queryBuilder;
-        $this->expr         = new Expr();
+        $this->queryBuilder      = $queryBuilder;
+        $this->expressionBuilder = new ORMExpressionBuilder($this->queryBuilder->expr());
     }
 
     /**
@@ -49,6 +50,16 @@ class ORMQuery implements QueryInterface
     }
 
     /**
+     * Get QueryBuilder expr.
+     *
+     * @return \Doctrine\ORM\Query\Expr
+     */
+    public function getExpr()
+    {
+        return $this->queryBuilder->expr();
+    }
+
+    /**
      * Get root alias.
      *
      * @return string
@@ -63,10 +74,10 @@ class ORMQuery implements QueryInterface
     /**
      * Get expr class.
      *
-     * @return \Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr
+     * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
      */
-    public function getExpr()
+    public function getExpressionBuilder()
     {
-        return $this->expr;
+        return $this->expressionBuilder;
     }
 }

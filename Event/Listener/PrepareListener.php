@@ -5,8 +5,8 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 use Symfony\Component\EventDispatcher\Event;
 
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\ORMQuery;
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
 
 /**
  * Prepare listener event
@@ -30,7 +30,10 @@ class PrepareListener
         }
 
         if (class_exists('\Doctrine\DBAL\Query\QueryBuilder') && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
-            throw new \RuntimeException('not supported yet...');
+            $event->setFilterQuery(new DBALQuery($qb));
+            $event->stopPropagation();
+
+            return;
         }
     }
 }

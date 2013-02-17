@@ -21,6 +21,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected $em;
 
     /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $conn;
+
+    /**
      * @var Symfony\Component\Form\FormFactory
      */
     protected $formFactory;
@@ -28,7 +33,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMockSqliteEntityManager();
+        $this->em          = $this->getMockSqliteEntityManager();
+        $this->conn        = $this->em->getConnection();
         $this->formFactory = $this->getFormFactory();
     }
 
