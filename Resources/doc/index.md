@@ -1,24 +1,6 @@
 Installation
 ============
 
-Symfony 2.0
------------
-
-Update your `deps` and `deps.lock` files:
-
-    // deps
-    ...
-    [LexikFormFilterBundle]
-        git=https://github.com/lexik/LexikFormFilterBundle.git
-        target=/bundles/Lexik/Bundle/FormFilterBundle
-
-    // deps.lock
-    ...
-    LexikFormFilterBundle <commit>
-    
-Symfony 2.1
------------
-
 Add the bunde to your `composer.json` file:
 
 ```javascript
@@ -36,9 +18,6 @@ composer.phar update
 # OR
 composer.phar update lexik/form-filter-bundle # to only update the bundle
 ```
-
-Symfony *
----------
 
 Register the namespaces with the autoloader:
 
@@ -61,6 +40,25 @@ Register the bundle with your kernel:
         // ...
     );
 ```
+
+Provided filter types
+=====================
+
+The bundle provide the following form types:
+
+* filter_boolean
+* filter_checkbox
+* filter_choice
+* filter_date
+* filter_date_range
+* filter_entity
+* filter_number
+* filter_number_range
+* filter_text
+
+By default the `required` option is set to `false` for all filter_xxx types. 
+All filter_xxx types also have a `apply_filter` option. By default this options is set to `null` and take a closure or a string as value. By using this options you can change the way to apply the condition on the query builder.
+
 
 Usage
 =====
