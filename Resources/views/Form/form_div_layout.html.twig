@@ -1,7 +1,6 @@
 {% block filter_text_widget %}
     {% if compound %}
         <div class="filter-pattern-selector">
-            {{ form_label(form, label_attr) }}
             {{ form_widget(form.condition_pattern, {'attr': {'class': 'pattern-selector'} }) }}
             {{ form_widget(form.text, {'attr': attr}) }}
         </div>
@@ -13,7 +12,6 @@
 {% block filter_number_widget %}
     {% if compound %}
         <div class="filter-operator-selector">
-            {{ form_label(form, label_attr) }}
             {{ form_widget(form.condition_operator, {'attr': {'class': 'operator-selector'} }) }}
             {{ form_widget(form.text, {'attr': attr}) }}
         </div>
