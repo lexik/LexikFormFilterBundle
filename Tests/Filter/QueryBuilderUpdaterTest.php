@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderUpdater;
+
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
@@ -18,7 +20,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\EmbedFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
@@ -35,7 +37,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
 
-        // without binding the form
+        // without any params
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i';
@@ -43,7 +45,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
 
-        // bind a request to the form - 1 params
+        // 1 params
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->bind(array('name' => 'blabla', 'position' => ''));
 
@@ -52,7 +54,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
 
-        // bind a request to the form - 2 params
+        // 2 params
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -63,7 +65,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
 
-        // bind a request to the form - 3 params
+        // 3 params
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -74,7 +76,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
 
-        // bind a request to the form - 3 params (use checkbox for enabled field)
+        // 3 params (use checkbox for enabled field)
         $form = $this->formFactory->create(new ItemFilterType(false, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -85,7 +87,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
 
-        // bind a request to the form - date + pattern selector
+        // date + pattern selector
         $form = $this->formFactory->create(new ItemFilterType(true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -96,6 +98,24 @@ class QueryBuilderUpdaterTest extends TestCase
         ));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'%blabla\' AND i.position <= 2 AND i.createdAt = \'2013-09-27\'';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+
+
+        // datetime + pattern selector
+        $form = $this->formFactory->create(new ItemFilterType(true, false, true));
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
+            'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+            'createdAt' => array(
+                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
+                'time' => array('hour' => 13, 'minute' => 21),
+            ),
+        ));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.name LIKE \'%blabla\' AND i.position <= 2 AND i.createdAt = \'2013-09-27 13:21:00\'';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
@@ -164,7 +184,7 @@ class QueryBuilderUpdaterTest extends TestCase
     public function testEmbedFormFilter()
     {
         // doctrine query builder without any joins
-        $form = $this->formFactory->create(new EmbedFilterType());
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -177,7 +197,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
 
         // doctrine query builder with joins
-        $form = $this->formFactory->create(new EmbedFilterType());
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -193,6 +213,11 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
 
+    /**
+     * Initialize a doctrine query builder.
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     protected function createDoctrineQueryBuilder()
     {
         return $this->em->createQueryBuilder()
@@ -200,6 +225,11 @@ class QueryBuilderUpdaterTest extends TestCase
             ->from('Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity', 'i');
     }
 
+    /**
+     * Returns query builder updater.
+     *
+     * @return FilterBuilderUpdater
+     */
     protected function initQueryBuilder()
     {
         $container = $this->getContainer();
@@ -207,6 +237,11 @@ class QueryBuilderUpdaterTest extends TestCase
         return $container->get('lexik_form_filter.query_builder_updater');
     }
 
+    /**
+     * Create a container instance with required element for run tests.
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
     protected function getContainer()
     {
         $container = new ContainerBuilder();

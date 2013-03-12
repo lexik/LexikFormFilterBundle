@@ -19,15 +19,16 @@ class RangeFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('position', 'filter_number_range', array(
-                    'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
-                    'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
-                ))
-                ->add('default_position', 'filter_number_range')
-                ->add('createdAt', 'filter_date_range', array(
-                    'left_date' => array('widget' => 'choice'), // @todo try with 'single_text'
-                    'right_date' => array('widget' => 'choice'),
-                ))
+        $builder
+            ->add('position', 'filter_number_range', array(
+                'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
+                'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
+            ))
+            ->add('default_position', 'filter_number_range')
+            ->add('createdAt', 'filter_date_range', array(
+                'left_date' => array('widget' => 'choice'), // @todo try with 'single_text'
+                'right_date' => array('widget' => 'choice'),
+            ))
         ;
     }
 
