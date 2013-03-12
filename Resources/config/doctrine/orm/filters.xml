@@ -44,5 +44,9 @@
         <service id="lexik_form_filter.date_range" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateRangeFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
+        
+        <service id="lexik_form_filter.datetime" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateTimeFilter">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
     </services>
 </container>
