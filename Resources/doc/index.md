@@ -6,7 +6,7 @@ Add the bunde to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "v1.1.*"
+    "lexik/form-filter-bundle": "v1.2.*"
     // ...
 }
 ```
@@ -51,6 +51,8 @@ The bundle provide the following form types:
 * filter_choice
 * filter_date
 * filter_date_range
+* filter_datetime
+* filter_datetime_range
 * filter_entity
 * filter_number
 * filter_number_range
