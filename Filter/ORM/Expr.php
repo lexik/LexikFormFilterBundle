@@ -130,6 +130,44 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return $findExpression;
     }
 
+    /**
+     * Returns between expression if min and max not null
+     * Returns lte expression if max is null
+     * Returns gte expression if min is null
+     *
+     * @param  string|DateTime $value alias.fieldName or mysql date string format or  DateTime
+     * @param  string|DateTime $min alias.fieldName or mysql date string format or  DateTime
+     * @param  string|DateTime $max alias.fieldName or mysql date string format or  DateTime
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     */
+    public function dateTimeInRange($value, $min = null, $max = null)
+    {
+        if (!$min && !$max) {
+            return null;
+        }
+
+        $value = $this->convertToSqlDateTime($value);
+        $min   = $this->convertToSqlDateTime($min);
+        $max   = $this->convertToSqlDateTime($max);
+
+        if (!$max && !$min) {
+            return null;
+        }
+
+        if ($min === null) {
+            $findExpression = $this->lte($value, $max);
+        } else if ($max === null) {
+            $findExpression = $this->gte($value,  $min);
+        } else {
+            $findExpression = $this->andX(
+                $this->lte($value, $max),
+                $this->gte($value,  $min)
+            );
+        }
+
+        return $findExpression;
+    }
+
 
     /**
      * Prepare value for like operation
@@ -341,7 +379,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
     }
 
     /**
-     * Normalize date time boundary
+     * Normalize date boundary
      *
      * @param  DateTime|string $date
      * @param  bool $isMax
@@ -358,6 +396,21 @@ class Expr extends \Doctrine\ORM\Query\Expr
 
             $date = $this->literal($date->format(self::SQL_DATE));
         }
+        return $date;
+    }
+
+    /**
+     * Normalize date time boundary
+     *
+     * @param DateTime|string $date
+     * @return \Doctrine\ORM\Query\Expr\Literal
+     */
+    protected function convertToSqlDateTime($date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $this->literal($date->format(self::SQL_DATE_TIME));
+        }
+
         return $date;
     }
 

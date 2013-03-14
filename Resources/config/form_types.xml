@@ -58,5 +58,9 @@
         <service id="lexik_form_filter.type.filter_datetime" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeFilterType">
             <tag name="form.type" alias="filter_datetime" />
         </service>
+        
+        <service id="lexik_form_filter.type.filter_datetime_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeRangeFilterType">
+            <tag name="form.type" alias="filter_datetime_range" />
+        </service>
     </services>
 </container>
