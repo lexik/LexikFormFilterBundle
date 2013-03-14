@@ -181,6 +181,31 @@ class QueryBuilderUpdaterTest extends TestCase
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
     }
 
+    public function testDateTimeRange()
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'updatedAt' => array(
+                'left_datetime' => array(
+                    'date' => '2012-05-12',
+                    'time' => '14:55',
+                 ),
+                'right_datetime' => array(
+                    'date' => array('year' => '2012', 'month' => '6', 'day' => '10'),
+                    'time' => array('hour' => 22, 'minute' => 12)
+                 ),
+            ),
+        ));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity i WHERE i.updatedAt <= \'2012-06-10 22:12:00\' AND i.updatedAt >= \'2012-05-12 14:55:00\'';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+    }
+
     public function testEmbedFormFilter()
     {
         // doctrine query builder without any joins
