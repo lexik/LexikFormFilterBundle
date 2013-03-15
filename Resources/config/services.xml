@@ -26,9 +26,9 @@
             <tag name="lexik_form_filter.transformer" alias="filter_transformer_default" />
         </service>
 
-        <service id="lexik_form_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
-            <tag name="lexik_form_filter.transformer" alias="filter_transformer_date" />
-        </service>
+<!--         <service id="lexik_form_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer"> -->
+<!--             <tag name="lexik_form_filter.transformer" alias="filter_transformer_date" /> -->
+<!--         </service> -->
 
         <service id="lexik_form_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
             <tag name="lexik_form_filter.transformer" alias="filter_transformer_text" />
