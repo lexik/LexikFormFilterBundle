@@ -8,6 +8,8 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 
 /**
  * Get filter for filter builder
+ *
+ * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
  */
 class GetFilterEvent extends Event
 {

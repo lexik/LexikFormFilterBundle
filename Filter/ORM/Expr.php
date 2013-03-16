@@ -7,6 +7,9 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 
+/**
+ * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use ExpressionBuilder class on Doctrine namespace.
+ */
 class Expr extends \Doctrine\ORM\Query\Expr
 {
     const SQL_DATE      = 'Y-m-d';

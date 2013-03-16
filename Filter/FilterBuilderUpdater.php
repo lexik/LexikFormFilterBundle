@@ -16,6 +16,10 @@ use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
+
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
  *
@@ -147,6 +151,14 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
             $event = new ApplyFilterEvent($filterQuery, $field, $values);
             $this->dispatcher->dispatch($eventName, $event);
+
+            if ($this->dispatcher->hasListeners('lexik_filter.get')) {
+                $type = $this->getFilterType($form->getConfig(), $filterQuery->getQueryBuilder());
+
+                if ($type instanceof FilterInterface) {
+                    $type->applyFilter($filterQuery->getQueryBuilder(), new Expr(), $field, $values);
+                }
+            }
         }
     }
 
@@ -167,5 +179,41 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         }
 
         return $values;
+    }
+
+    /**
+     * Get filter type name by form config
+     *
+     * @param FormConfigInterface $config
+     *
+     * @return string
+     *
+     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
+     */
+    protected function getFilterTypeName(FormConfigInterface $config)
+    {
+        $formType = $config->getType()->getInnerType();
+
+        return ($config->hasAttribute('apply_filter') && is_string($config->getAttribute('apply_filter')))
+            ? $config->getAttribute('apply_filter')
+            : $formType->getName();
+    }
+
+    /**
+     * Returns the filter type used to build the given form.
+     *
+     * @param FormConfigInterface $config
+     * @param object              $filterBuilder
+     *
+     * @return FilterInterface
+     *
+     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
+     */
+    protected function getFilterType(FormConfigInterface $config, $filterBuilder)
+    {
+        $event = new GetFilterEvent($filterBuilder, $this->getFilterTypeName($config));
+        $this->dispatcher->dispatch(FilterEvents::GET_FILTER, $event);
+
+        return $event->getFilter();
     }
 }

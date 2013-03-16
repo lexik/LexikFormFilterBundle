@@ -13,6 +13,8 @@ abstract class ORMFilterTypeSharedable implements FilterTypeSharedableInterface
      * On filter get event
      *
      * @param GetFilterEvent $event
+     *
+     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
      */
     public function onFilterGet(GetFilterEvent $event)
     {
@@ -26,6 +28,8 @@ abstract class ORMFilterTypeSharedable implements FilterTypeSharedableInterface
      * Get filter type name
      *
      * @return string
+     *
+     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
      */
     abstract public function getName();
 }
