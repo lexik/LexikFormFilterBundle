@@ -167,7 +167,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../../Resources/config'));
         $loadXml->load('services.xml');
         $loadXml->load('form_types.xml');
-        $loadXml->load('doctrine/orm/filters.xml');
+        $loadXml->load('doctrine/filters.xml');
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
