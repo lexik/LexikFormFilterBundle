@@ -159,8 +159,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected function prepareFilterValues(FormInterface $form)
     {
         $config      = $form->getConfig();
-        $values      = array();
-        $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id'));
+        $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id', 'lexik_form_filter.transformer.default'));
         $values      = $transformer->transform($form);
 
         if ($config->hasAttribute('filter_options')) {

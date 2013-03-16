@@ -25,27 +25,83 @@ class DoctrineSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            // Doctrine ORM
-            'lexik_form_filter.apply.orm.filter_boolean'      => array('filterBoolean'),
-            'lexik_form_filter.apply.orm.filter_checkbox'     => array('filterCheckbox'),
-            'lexik_form_filter.apply.orm.filter_choice'       => array('filterChoice'),
-            'lexik_form_filter.apply.orm.filter_date'         => array('filterDate'),
-            'lexik_form_filter.apply.orm.filter_date_range'   => array('filterDateRange'),
-            'lexik_form_filter.apply.orm.filter_entity'       => array('filterEntity'),
-            'lexik_form_filter.apply.orm.filter_number'       => array('filterNumber'),
-            'lexik_form_filter.apply.orm.filter_number_range' => array('filterNumberRange'),
-            'lexik_form_filter.apply.orm.filter_text'         => array('filterText'),
+            // Doctrine ORM - filter field types
+            'lexik_form_filter.apply.orm.filter_boolean'       => array('filterBoolean'),
+            'lexik_form_filter.apply.orm.filter_checkbox'      => array('filterCheckbox'),
+            'lexik_form_filter.apply.orm.filter_choice'        => array('filterValue'),
+            'lexik_form_filter.apply.orm.filter_date'          => array('filterDate'),
+            'lexik_form_filter.apply.orm.filter_date_range'    => array('filterDateRange'),
+            'lexik_form_filter.apply.orm.filter_entity'        => array('filterEntity'),
+            'lexik_form_filter.apply.orm.filter_number'        => array('filterNumber'),
+            'lexik_form_filter.apply.orm.filter_number_range'  => array('filterNumberRange'),
+            'lexik_form_filter.apply.orm.filter_text'          => array('filterText'),
+
+            // Doctrine ORM - Symfony2 field types
+            'lexik_form_filter.apply.orm.text'                 => array('filterText'),
+            'lexik_form_filter.apply.orm.email'                => array('filterValue'),
+            'lexik_form_filter.apply.orm.integer'              => array('filterValue'),
+            'lexik_form_filter.apply.orm.money'                => array('filterValue'),
+            'lexik_form_filter.apply.orm.number'               => array('filterValue'),
+            'lexik_form_filter.apply.orm.percent'              => array('filterValue'),
+            'lexik_form_filter.apply.orm.search'               => array('filterValue'),
+            'lexik_form_filter.apply.orm.url'                  => array('filterValue'),
+            'lexik_form_filter.apply.orm.choice'               => array('filterValue'),
+            'lexik_form_filter.apply.orm.entity'               => array('filterEntity'),
+            'lexik_form_filter.apply.orm.country'              => array('filterValue'),
+            'lexik_form_filter.apply.orm.language'             => array('filterValue'),
+            'lexik_form_filter.apply.orm.locale'               => array('filterValue'),
+            'lexik_form_filter.apply.orm.timezone'             => array('filterValue'),
+            'lexik_form_filter.apply.orm.date'                 => array('filterDate'),
+            'lexik_form_filter.apply.orm.datetime'             => array('filterDate'),
+            'lexik_form_filter.apply.orm.birthday'             => array('filterDate'),
+            'lexik_form_filter.apply.orm.checkbox'             => array('filterValue'),
+            'lexik_form_filter.apply.orm.radio'                => array('filterValue'),
 
             // Doctrine DBAL
             'lexik_form_filter.apply.dbal.filter_boolean'      => array('filterBoolean'),
             'lexik_form_filter.apply.dbal.filter_checkbox'     => array('filterCheckbox'),
-            'lexik_form_filter.apply.dbal.filter_choice'       => array('filterChoice'),
+            'lexik_form_filter.apply.dbal.filter_choice'       => array('filterValue'),
             'lexik_form_filter.apply.dbal.filter_date'         => array('filterDate'),
             'lexik_form_filter.apply.dbal.filter_date_range'   => array('filterDateRange'),
             'lexik_form_filter.apply.dbal.filter_number'       => array('filterNumber'),
             'lexik_form_filter.apply.dbal.filter_number_range' => array('filterNumberRange'),
             'lexik_form_filter.apply.dbal.filter_text'         => array('filterText'),
+
+            // Doctrine DBAL - Symfony2 field types
+            'lexik_form_filter.apply.dbal.text'                => array('filterText'),
+            'lexik_form_filter.apply.dbal.email'               => array('filterValue'),
+            'lexik_form_filter.apply.dbal.integer'             => array('filterValue'),
+            'lexik_form_filter.apply.dbal.money'               => array('filterValue'),
+            'lexik_form_filter.apply.dbal.number'              => array('filterValue'),
+            'lexik_form_filter.apply.dbal.percent'             => array('filterValue'),
+            'lexik_form_filter.apply.dbal.search'              => array('filterValue'),
+            'lexik_form_filter.apply.dbal.url'                 => array('filterValue'),
+            'lexik_form_filter.apply.dbal.choice'              => array('filterValue'),
+            'lexik_form_filter.apply.dbal.country'             => array('filterValue'),
+            'lexik_form_filter.apply.dbal.language'            => array('filterValue'),
+            'lexik_form_filter.apply.dbal.locale'              => array('filterValue'),
+            'lexik_form_filter.apply.dbal.timezone'            => array('filterValue'),
+            'lexik_form_filter.apply.dbal.date'                => array('filterDate'),
+            'lexik_form_filter.apply.dbal.datetime'            => array('filterDate'),
+            'lexik_form_filter.apply.dbal.birthday'            => array('filterDate'),
+            'lexik_form_filter.apply.dbal.checkbox'            => array('filterValue'),
+            'lexik_form_filter.apply.dbal.radio'               => array('filterValue'),
         );
+    }
+
+    public function filterValue(ApplyFilterEvent $event)
+    {
+        $qb     = $event->getQueryBuilder();
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (!empty($values['value'])) {
+            // alias.field -> alias_field
+            $fieldName = str_replace('.', '_', $event->getField());
+
+            $qb->andWhere($expr->eq($event->getField(), ':' . $fieldName))
+                ->setParameter($fieldName, $values['value']);
+        }
     }
 
     public function filterBoolean(ApplyFilterEvent $event)
@@ -68,21 +124,6 @@ class DoctrineSubscriber implements EventSubscriberInterface
 
         if (!empty($values['value'])) {
             $qb->andWhere($expr->eq($event->getField(), $values['value']));
-        }
-    }
-
-    public function filterChoice(ApplyFilterEvent $event)
-    {
-        $qb     = $event->getQueryBuilder();
-        $expr   = $event->getFilterQuery()->getExpr();
-        $values = $event->getValues();
-
-        if (!empty($values['value'])) {
-            // alias.field -> alias_field
-            $fieldName = str_replace('.', '_', $event->getField());
-
-            $qb->andWhere($expr->eq($event->getField(), ':' . $fieldName))
-               ->setParameter($fieldName, $values['value']);
         }
     }
 
@@ -186,7 +227,11 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
-            $qb->andWhere($expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']));
+            if (isset($values['condition_pattern'])) {
+                $qb->andWhere($expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']));
+            } else {
+                $qb->andWhere($expr->stringLike($event->getField(), $values['value']));
+            }
         }
     }
 }
