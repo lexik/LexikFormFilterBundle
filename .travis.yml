@@ -6,10 +6,10 @@ php:
 env:
   - SYMFONY_VERSION=v2.1
 
-branches:
-  only:
-    - master
-    - symfony2.0
+#branches:
+#  only:
+#    - master
+#    - symfony2.0
 
 before_script: php Tests/vendors.php
 script: phpunit

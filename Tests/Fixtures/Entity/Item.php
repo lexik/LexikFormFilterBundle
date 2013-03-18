@@ -39,6 +39,11 @@ class Item
     protected $createdAt;
 
     /**
+     * @ORM\Column(type="datetime", name="updated_at", nullable="true")
+     */
+    protected $updatedAt;
+
+    /**
      * Get id
      *
      * @return integer
@@ -126,5 +131,25 @@ class Item
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

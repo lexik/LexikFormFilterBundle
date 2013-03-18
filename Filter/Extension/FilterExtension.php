@@ -24,10 +24,12 @@ class FilterExtension extends AbstractExtension
             new Type\CheckboxFilterType(),
             new Type\ChoiceFilterType(),
             new Type\DateFilterType(),
+            new Type\DateRangeFilterType(),
+            new Type\DateTimeFilterType(),
+            new Type\DateTimeRangeFilterType(),
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
             new Type\TextFilterType(),
-            new Type\DateRangeFilterType()
         );
     }
 }

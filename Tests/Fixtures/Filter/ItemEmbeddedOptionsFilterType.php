@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class EmbedFilterType extends AbstractType
+class ItemEmbeddedOptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
