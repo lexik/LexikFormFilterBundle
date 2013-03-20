@@ -40,12 +40,12 @@ class NumberRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
-                'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
-                'transformer_id' => 'lexik_form_filter.transformer.value_keys',
+                'left_number'            => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
+                'right_number'           => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+                'data_extraction_method' => 'value_keys',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
+                'data_extraction_method' => array('value_keys'),
             ))
         ;
     }

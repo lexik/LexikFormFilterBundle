@@ -2,20 +2,17 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
-use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FilterTransformerCompilerPass;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\EmbedFilterType;
@@ -172,7 +169,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
         $container->addCompilerPass(new RegisterKernelListenersPass());
-        $container->addCompilerPass(new FilterTransformerCompilerPass());
+        $container->addCompilerPass(new FormDataExtractorPass());
         $container->compile();
 
         return $container;

@@ -8,16 +8,14 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
-
-use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
 
 /**
@@ -29,9 +27,9 @@ use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
 class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 {
     /**
-     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface
+     * @var FormDataExtractorInterface
      */
-    protected $filterTransformerAggregator;
+    protected $dataExtractor;
 
     /**
      * @var EventDispatcherInterface
@@ -46,14 +44,14 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     /**
      * Constructor
      *
-     * @param TransformerAggregatorInterface $filterTransformerAggregator
-     * @param EventDispatcherInterface       $dispatcher
+     * @param FormDataExtractorInterface $dataExtractor
+     * @param EventDispatcherInterface   $dispatcher
      */
-    public function __construct(TransformerAggregatorInterface $filterTransformerAggregator, EventDispatcherInterface $dispatcher)
+    public function __construct(FormDataExtractorInterface $dataExtractor, EventDispatcherInterface $dispatcher)
     {
-        $this->filterTransformerAggregator = $filterTransformerAggregator;
-        $this->dispatcher                  = $dispatcher;
-        $this->parts                       = array();
+        $this->dataExtractor = $dataExtractor;
+        $this->dispatcher    = $dispatcher;
+        $this->parts         = array();
     }
 
     /**
@@ -170,9 +168,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     protected function prepareFilterValues(FormInterface $form)
     {
-        $config      = $form->getConfig();
-        $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id', 'lexik_form_filter.transformer.default'));
-        $values      = $transformer->transform($form);
+        $config = $form->getConfig();
+        $values = $this->dataExtractor->extractData($form, $config->getOption('data_extraction_method', 'default'));
 
         if ($config->hasAttribute('filter_options')) {
             $values = array_merge($values, $config->getAttribute('filter_options'));

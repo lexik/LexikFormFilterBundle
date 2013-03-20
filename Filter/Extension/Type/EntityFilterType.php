@@ -22,10 +22,10 @@ class EntityFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'transformer_id' => 'lexik_form_filter.transformer.default',
+                'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.default'),
+                'data_extraction_method' => array('default'),
             ))
         ;
     }

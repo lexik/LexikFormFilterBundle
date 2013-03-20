@@ -146,7 +146,7 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
         $value  = $values['value'];
 
-        if (isset($value['left_date'][0]) || $value['right_date'][0]) {
+        if (isset($value['left_date'][0]) || isset($value['right_date'][0])) {
             $qb->andWhere($expr->dateInRange($event->getField(), $value['left_date'][0], $value['right_date'][0]));
         }
     }

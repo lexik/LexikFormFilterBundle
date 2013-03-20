@@ -40,31 +40,27 @@ class TextFilterType extends AbstractFilterType
     {
         parent::setDefaultOptions($resolver);
 
-        $compound = function (Options $options) {
-            return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
-        };
-
-        $transformerId = function (Options $options) {
-            return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
-        };
-
         $resolver
             ->setDefaults(array(
-                'condition_pattern' => FilterOperands::STRING_EQUALS,
-                'compound'          => $compound,
-                'text_options'      => array(
+                'condition_pattern'      => FilterOperands::STRING_EQUALS,
+                'compound'               => function (Options $options) {
+                    return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
+                },
+                'text_options'           => array(
                     'required' => false,
                     'trim'     => true,
-                 ),
-                'choice_options'    => array(
+                ),
+                'choice_options'         => array(
                    'choices'  => FilterOperands::getStringOperandsChoices(),
                    'required' => false,
-                 ),
-                'transformer_id' => $transformerId,
+                ),
+                'data_extraction_method' => function (Options $options) {
+                    return $options['compound'] ? 'text' : 'default';
+                },
             ))
             ->setAllowedValues(array(
-                'transformer_id'    => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
-                'condition_pattern' => FilterOperands::getStringOperands(true),
+                'data_extraction_method' => array('text','default'),
+                'condition_pattern'      => FilterOperands::getStringOperands(true),
             ))
         ;
     }

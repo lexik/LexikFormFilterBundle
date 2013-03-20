@@ -36,8 +36,9 @@ abstract class AbstractFilterType extends AbstractType
         parent::setDefaultOptions($resolver);
 
         $resolver->setDefaults(array(
-            'required'     => false,
-            'apply_filter' => null,
+            'required'          => false,
+            'apply_filter'      => null,
+            'extraction_method' => 'default',
         ));
     }
 }

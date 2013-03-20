@@ -10,28 +10,23 @@
 
     <services>
         <service id="lexik_form_filter.query_builder_updater" class="%lexik_form_filter.query_builder_updater.class%">
-            <argument type="service" id="lexik_form_filter.transformer_aggregator" />
+            <argument type="service" id="lexik_form_filter.form_data_extractor" />
             <argument type="service" id="event_dispatcher" />
         </service>
 
-        <!-- Filter transformer agggregator -->
-        <service id="lexik_form_filter.transformer_aggregator" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregator" />
+        <!-- form data extraction -->
+        <service id="lexik_form_filter.form_data_extractor" class="Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractor" />
 
-        <!-- Tag filter transformer -->
-        <service id="lexik_form_filter.transformer.value_keys" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterValueKeysTransformer">
-            <tag name="lexik_form_filter.transformer" alias="filter_transformer_value_key" />
+        <service id="lexik_form_filter.data_extraction_method.default" class="Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DefaultExtractionMethod">
+            <tag name="lexik_form_filter.data_extraction_method" />
         </service>
 
-        <service id="lexik_form_filter.transformer.default" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDefaultTransformer">
-            <tag name="lexik_form_filter.transformer" alias="filter_transformer_default" />
+        <service id="lexik_form_filter.data_extraction_method.text" class="Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\TextExtractionMethod">
+            <tag name="lexik_form_filter.data_extraction_method" />
         </service>
 
-        <service id="lexik_form_filter.transformer.date" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterDateTransformer">
-            <tag name="lexik_form_filter.transformer" alias="filter_transformer_date" />
-        </service>
-
-        <service id="lexik_form_filter.transformer.text" class="Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTextTransformer">
-            <tag name="lexik_form_filter.transformer" alias="filter_transformer_text" />
+        <service id="lexik_form_filter.data_extraction_method.key_values" class="Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\ValueKeysExtractionMethod">
+            <tag name="lexik_form_filter.data_extraction_method" />
         </service>
     </services>
 </container>

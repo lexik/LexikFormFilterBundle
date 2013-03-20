@@ -46,15 +46,15 @@ class BooleanFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'choices'     => array(
+                'choices'                => array(
                     self::VALUE_YES  => $this->trans('boolean.yes'),
                     self::VALUE_NO   => $this->trans('boolean.no'),
                 ),
-                'empty_value' => $this->trans('boolean.yes_or_no'),
-                'transformer_id' => 'lexik_form_filter.transformer.default',
+                'empty_value'            => $this->trans('boolean.yes_or_no'),
+                'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.default'),
+                'data_extraction_method' => array('default'),
             ))
         ;
     }
