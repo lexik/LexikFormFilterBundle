@@ -1,0 +1,4 @@
+boolean:
+    yes_or_no: "Sì o no"
+    yes:       "Sì"
+    no:        "No"
