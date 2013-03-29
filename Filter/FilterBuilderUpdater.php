@@ -146,7 +146,20 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         } else if (is_callable($callable)) {
             call_user_func($callable, $filterQuery, $field, $values);
         } else {
-            $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
+            // build specific event name including all form parent names
+            $name = $form->getName();
+            $parentForm = $form;
+            do {
+                $parentForm = $parentForm->getParent();
+                $name = $parentForm->getName() . '.' . $name;
+            } while ( ! $parentForm->isRoot());
+
+            // trigger specific or global event name
+            $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $name);
+            if ( ! $this->dispatcher->hasListeners($eventName)) {
+                $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
+            }
+
             $event = new ApplyFilterEvent($filterQuery, $field, $values);
             $this->dispatcher->dispatch($eventName, $event);
 
