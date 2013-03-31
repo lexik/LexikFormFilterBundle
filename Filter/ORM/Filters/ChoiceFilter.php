@@ -27,7 +27,7 @@ class ChoiceFilter extends ORMFilter
      */
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             // alias.field -> alias_field
             $fieldName = str_replace('.', '_', $field);
 

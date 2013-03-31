@@ -27,7 +27,7 @@ class NumberFilter extends ORMFilter
      */
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             $op = $values['condition_operator'];
             $filterBuilder->andWhere($expr->$op($field, $values['value']));
         }

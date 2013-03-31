@@ -26,7 +26,7 @@ class TextFilter extends ORMFilter
      */
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             $filterBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
         }
     }
