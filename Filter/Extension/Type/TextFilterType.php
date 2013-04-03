@@ -53,6 +53,7 @@ class TextFilterType extends AbstractFilterType
                 'choice_options'         => array(
                    'choices'  => FilterOperands::getStringOperandsChoices(),
                    'required' => false,
+                   'translation_domain' => 'LexikFormFilterBundle'
                 ),
                 'data_extraction_method' => function (Options $options) {
                     return $options['compound'] ? 'text' : 'default';
