@@ -59,6 +59,7 @@ class TextFilterType extends AbstractFilterType
                 'choice_options'    => array(
                    'choices'  => FilterOperands::getStringOperandsChoices(),
                    'required' => false,
+                   'translation_domain' => 'LexikFormFilterBundle'
                  ),
                 'transformer_id' => $transformerId,
             ))

@@ -61,6 +61,7 @@ class NumberFilterType extends AbstractFilterType
                 'choice_options'     => array(
                     'choices'  => FilterOperands::getNumberOperandsChoices(),
                     'required' => false,
+                    'translation_domain' => 'LexikFormFilterBundle'
                 ),
                 'transformer_id' => $transformerId,
             ))
