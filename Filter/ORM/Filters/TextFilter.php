@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilter;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * Filter type for strings.
@@ -27,7 +28,8 @@ class TextFilter extends ORMFilter
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
         if ('' !== $values['value'] && null !== $values['value']) {
-            $filterBuilder->andWhere($expr->stringLike($field, $values['value'], $values['condition_pattern']));
+            $pattern = empty($values['condition_pattern']) ? FilterOperands::STRING_EQUALS : $values['condition_pattern'];
+            $filterBuilder->andWhere($expr->stringLike($field, $values['value'], $pattern));
         }
     }
 }

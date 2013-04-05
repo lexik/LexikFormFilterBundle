@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\ORMFilter;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * Filter type for numbers.
@@ -28,7 +29,7 @@ class NumberFilter extends ORMFilter
     protected function apply(QueryBuilder $filterBuilder, Expr $expr, $field, array $values)
     {
         if ('' !== $values['value'] && null !== $values['value']) {
-            $op = $values['condition_operator'];
+            $op = empty($values['condition_operator']) ? FilterOperands::OPERATOR_EQUAL : $values['condition_operator'];
             $filterBuilder->andWhere($expr->$op($field, $values['value']));
         }
     }
