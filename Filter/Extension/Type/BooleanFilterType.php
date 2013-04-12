@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -15,11 +14,6 @@ class BooleanFilterType extends AbstractFilterType
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
-
-    /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
-    protected $translator;
 
     /**
      * {@inheritdoc}
@@ -47,41 +41,16 @@ class BooleanFilterType extends AbstractFilterType
         $resolver
             ->setDefaults(array(
                 'choices'                => array(
-                    self::VALUE_YES  => $this->trans('boolean.yes'),
-                    self::VALUE_NO   => $this->trans('boolean.no'),
+                    self::VALUE_YES  => 'boolean.yes',
+                    self::VALUE_NO   => 'boolean.no',
                 ),
-                'empty_value'            => $this->trans('boolean.yes_or_no'),
+                'empty_value'            => 'boolean.yes_or_no',
+                'translation_domain'     => 'LexikFormFilterBundle',
                 'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(
                 'data_extraction_method' => array('default'),
             ))
         ;
-    }
-
-    /**
-     * Set Translator
-     *
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
-     * Translate a key for a domain
-     *
-     * @param string $key
-     * @param array  $parameters
-     * @param string $domain
-     *
-     * @return string
-     */
-    private function trans($key, array $parameters = array(), $domain = 'LexikFormFilterBundle')
-    {
-        return ($this->translator instanceof TranslatorInterface)
-            ? $this->translator->trans($key, $parameters, $domain)
-            : $key;
     }
 }

@@ -7,7 +7,6 @@
     <services>
          <!-- FilterExtension -->
         <service id="lexik_form_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
-            <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_field" />
         </service>
 
@@ -32,9 +31,6 @@
         </service>
 
         <service id="lexik_form_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
-            <call method="setTranslator">
-                <argument type="service" id="translator" />
-            </call>
             <tag name="form.type" alias="filter_boolean" />
         </service>
 
