@@ -1,4 +1,17 @@
 boolean:
-    yes_or_no: "Sí o No"
-    yes:       "Sí"
-    no:        "No"
+    yes_or_no:          "Sí o No"
+    yes:                "Sí"
+    no:                 "No"
+
+number:
+    equal:              "Igual"
+    greater_than:       "Más que"
+    greater_than_equal: "Más que o Igual"
+    lower_than:         "Menor que"
+    lower_than_equal:   "Menor que o Igual"
+
+text:
+    starts:             "Comienza con"
+    ends:               "Termina con"
+    equals:             "Igual"
+    both:               "Contiene"

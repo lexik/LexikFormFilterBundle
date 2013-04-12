@@ -1,13 +1,17 @@
 boolean:
-    yes_or_no: "Indifférent"
-    yes:       "Oui"
-    no:        "Non"
-equal:              "Égal à"
-greater than:       "Plus grand que"
-greater than equal: "Plus grand ou égal à"
-lower than:         "Plus petit que"
-lower than equal:   "Plus petit ou égale à"
-starts:             "Commence par"
-ends:               "Termine par"
-equals:             "Égal à"
-both:               "Contient"
+    yes_or_no:          "Indifférent"
+    yes:                "Oui"
+    no:                 "Non"
+
+number:
+    equal:              "Égal à"
+    greater_than:       "Plus grand que"
+    greater_than_equal: "Plus grand ou égal à"
+    lower_than:         "Plus petit que"
+    lower_than_equal:   "Plus petit ou égale à"
+
+text:
+    starts:             "Commence par"
+    ends:               "Termine par"
+    equals:             "Égal à"
+    both:               "Contient"
