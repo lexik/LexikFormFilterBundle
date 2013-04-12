@@ -4,9 +4,10 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder;
-use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
@@ -95,7 +96,7 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             // alias.field -> alias_field
             $fieldName = str_replace('.', '_', $event->getField());
 
@@ -192,8 +193,8 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
-            $op = $values['condition_operator'];
+        if ('' !== $values['value'] && null !== $values['value']) {
+            $op = empty($values['condition_operator']) ? FilterOperands::OPERATOR_EQUAL : $values['condition_operator'];
             $qb->andWhere($expr->$op($event->getField(), $values['value']));
         }
     }
@@ -226,7 +227,7 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             if (isset($values['condition_pattern'])) {
                 $qb->andWhere($expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']));
             } else {
