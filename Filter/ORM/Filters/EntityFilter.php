@@ -48,7 +48,8 @@ class EntityFilter extends ORMFilter
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $filterBuilder->andWhere($expr->eq($field, $values['value']->getId()));
+                $fieldAlias = substr($field, strpos($field, '.') + 1);
+                $filterBuilder->andWhere($expr->eq($field, ':' . $fieldAlias))->setParameter($fieldAlias, $values['value']->getId());
             }
         }
     }
