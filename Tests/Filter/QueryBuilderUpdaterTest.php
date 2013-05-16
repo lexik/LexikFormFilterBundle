@@ -269,7 +269,7 @@ class QueryBuilderUpdaterTest extends TestCase
         $filter = new LexikFormFilterExtension();
         $container->registerExtension($filter);
 
-        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config'));
+        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config'));
         $loadXml->load('services.xml');
 
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../Resources/config'));
