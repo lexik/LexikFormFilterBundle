@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter;
 
-use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
+use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -279,7 +279,7 @@ class QueryBuilderUpdaterTest extends TestCase
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
-        $container->addCompilerPass(new RegisterKernelListenersPass());
+        $container->addCompilerPass(new RegisterListenersPass());
         $container->addCompilerPass(new FilterTransformerCompilerPass());
         $container->compile();
 
