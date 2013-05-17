@@ -182,7 +182,10 @@ class DoctrineSubscriber implements EventSubscriberInterface
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $qb->andWhere($expr->eq($event->getField(), $values['value']->getId()));
+                $fieldAlias = 'p_'.substr($event->getField(), strpos($event->getField(), '.') + 1);
+
+                $qb->andWhere($expr->eq($event->getField(), ':'.$fieldAlias));
+                $qb->setParameter($fieldAlias, $values['value']->getId());
             }
         }
     }
