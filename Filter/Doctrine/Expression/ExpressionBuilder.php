@@ -101,6 +101,44 @@ abstract class ExpressionBuilder
     }
 
     /**
+     * Returns between expression if min and max not null
+     * Returns lte expression if max is null
+     * Returns gte expression if min is null
+     *
+     * @param  string|DateTime $value alias.fieldName or mysql date string format or DateTime
+     * @param  string|DateTime $min alias.fieldName or mysql date string format or DateTime
+     * @param  string|DateTime $max alias.fieldName or mysql date string format or DateTime
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     */
+    public function dateTimeInRange($value, $min = null, $max = null)
+    {
+        if (!$min && !$max) {
+            return null;
+        }
+
+        $value = $this->_convertToSqlDateTime($value);
+        $min   = $this->_convertToSqlDateTime($min);
+        $max   = $this->_convertToSqlDateTime($max);
+
+        if (!$max && !$min) {
+            return null;
+        }
+
+        if ($min === null) {
+            $findExpression = $this->expr()->lte($value, $max);
+        } else if ($max === null) {
+            $findExpression = $this->expr()->gte($value,  $min);
+        } else {
+            $findExpression = $this->expr()->andX(
+                $this->expr()->lte($value, $max),
+                $this->expr()->gte($value,  $min)
+            );
+        }
+
+        return $findExpression;
+    }
+
+    /**
      * Get string like expression
      *
      * @param  string $field field name
@@ -137,6 +175,21 @@ abstract class ExpressionBuilder
         }
 
         return $this->expr()->literal($date->format(self::SQL_DATE));
+    }
+
+    /**
+     * Normalize date time boundary
+     *
+     * @param DateTime|string $date
+     * @return \Doctrine\ORM\Query\Expr\Literal
+     */
+    protected function _convertToSqlDateTime($date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $this->expr()->literal($date->format(self::SQL_DATE_TIME));
+        }
+
+        return $date;
     }
 
     /**

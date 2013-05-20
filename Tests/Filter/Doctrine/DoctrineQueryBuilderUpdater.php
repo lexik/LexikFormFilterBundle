@@ -15,7 +15,6 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\EmbedFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
@@ -87,6 +86,23 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
+
+
+        // bind a request to the form - datetime + pattern selector
+        $form = $this->formFactory->create(new ItemFilterType(true, false, true));
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
+            'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+            'createdAt' => array(
+                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
+                'time' => array('hour' => 13, 'minute' => 21),
+            ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
     }
 
     protected function createApplyFilterOptionTest($method, array $dqls)
@@ -138,6 +154,30 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
             'createdAt' => array(
                 'left_date' => array('year' => '2012', 'month' => '5', 'day' => '12'),
                 'right_date' => array('year' => '2012', 'month' => '5', 'day' => '22'),
+            ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
+    public function createDateTimeRange($method, array $dqls)
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'updatedAt' => array(
+                'left_datetime' => array(
+                    'date' => '2012-05-12',
+                    'time' => '14:55',
+                 ),
+                'right_datetime' => array(
+                    'date' => array('year' => '2012', 'month' => '6', 'day' => '10'),
+                    'time' => array('hour' => 22, 'minute' => 12)
+                 ),
             ),
         ));
 
