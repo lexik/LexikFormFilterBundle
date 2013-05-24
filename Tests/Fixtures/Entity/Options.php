@@ -29,6 +29,12 @@ class Options
     protected $rank;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Item", inversedBy="options")
+     * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
+     */
+    private $item;
+
+    /**
      * Get id
      *
      * @return integer
