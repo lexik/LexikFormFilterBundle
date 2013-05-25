@@ -4,6 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberFilterType extends AbstractFilterType
+class NumberFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -45,6 +46,7 @@ class NumberFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
+                'required'               => false,
                 'condition_operator'     => FilterOperands::OPERATOR_EQUAL,
                 'compound'               => function (Options $options) {
                     return $options['condition_operator'] == FilterOperands::OPERAND_SELECTOR;

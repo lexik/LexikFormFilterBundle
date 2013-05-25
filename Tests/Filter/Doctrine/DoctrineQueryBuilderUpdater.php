@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
+
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -161,7 +163,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
 
-    public function createDateTimeRange($method, array $dqls)
+    public function createDateTimeRangeTest($method, array $dqls)
     {
         // use filter type options
         $form = $this->formFactory->create(new RangeFilterType());
@@ -179,6 +181,21 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
                     'time' => array('hour' => 22, 'minute' => 12)
                  ),
             ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
+    public function createFilterStandardTypeTest($method, array $dqls)
+    {
+        $form = $this->formFactory->create(new FormType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'name'     => 'hey dude',
+            'position' => 99,
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);

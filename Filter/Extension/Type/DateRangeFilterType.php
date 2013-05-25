@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -10,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateRangeFilterType extends AbstractFilterType
+class DateRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -37,6 +38,7 @@ class DateRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
+                'required'               => false,
                 'left_date'              => array(),
                 'right_date'             => array(),
                 'data_extraction_method' => 'value_keys',

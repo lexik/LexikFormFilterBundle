@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -9,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateTimeFilterType extends AbstractFilterType
+class DateTimeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -20,6 +21,7 @@ class DateTimeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
+                'required'               => false,
                 'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(

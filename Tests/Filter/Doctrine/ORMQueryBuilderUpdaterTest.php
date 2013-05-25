@@ -54,8 +54,15 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
     public function testDateTimeRange()
     {
-        parent::createDateTimeRange('getDQL', array(
+        parent::createDateTimeRangeTest('getDQL', array(
             'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.updatedAt <= \'2012-06-10 22:12:00\' AND i.updatedAt >= \'2012-05-12 14:55:00\'',
+        ));
+    }
+
+    public function testFilterStandardType()
+    {
+        parent::createFilterStandardTypeTest('getDQL', array(
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%hey dude%\' AND i.position = 99',
         ));
     }
 

@@ -19,7 +19,6 @@ class FilterExtension extends AbstractExtension
     protected function loadTypes()
     {
         return array(
-            new Type\FieldFilterType(),
             new Type\BooleanFilterType(),
             new Type\CheckboxFilterType(),
             new Type\ChoiceFilterType(),
@@ -30,6 +29,16 @@ class FilterExtension extends AbstractExtension
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
             new Type\TextFilterType(),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadTypeExtensions()
+    {
+        return array(
+            new FilterTypeExtension(),
         );
     }
 }

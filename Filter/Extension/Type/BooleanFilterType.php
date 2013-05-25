@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class BooleanFilterType extends AbstractFilterType
+class BooleanFilterType extends AbstractType
 {
     const VALUE_YES = 'y';
     const VALUE_NO  = 'n';
@@ -40,6 +40,7 @@ class BooleanFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
+                'required'               => false,
                 'choices'                => array(
                     self::VALUE_YES  => 'boolean.yes',
                     self::VALUE_NO   => 'boolean.no',

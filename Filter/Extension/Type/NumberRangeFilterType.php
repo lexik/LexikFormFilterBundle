@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberRangeFilterType extends AbstractFilterType
+class NumberRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -40,6 +40,7 @@ class NumberRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
+                'required'               => false,
                 'left_number'            => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
                 'right_number'           => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
                 'data_extraction_method' => 'value_keys',

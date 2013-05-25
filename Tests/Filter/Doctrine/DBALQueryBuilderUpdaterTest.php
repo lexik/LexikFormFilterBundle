@@ -52,8 +52,15 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
     public function testDateTimeRange()
     {
-        parent::createDateTimeRange('getSQL', array(
+        parent::createDateTimeRangeTest('getSQL', array(
             'SELECT i FROM item i WHERE (i.updatedAt <= \'2012-06-10 22:12:00\') AND (i.updatedAt >= \'2012-05-12 14:55:00\')',
+        ));
+    }
+
+    public function testFilterStandardType()
+    {
+        parent::createFilterStandardTypeTest('getSQL', array(
+            'SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = 99)',
         ));
     }
 
