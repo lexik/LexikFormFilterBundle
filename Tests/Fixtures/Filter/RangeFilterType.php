@@ -18,17 +18,17 @@ class RangeFilterType extends AbstractType
     {
         $builder
             ->add('position', 'filter_number_range', array(
-                'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
-                'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
+                'left_number_options' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
+                'right_number_options' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
             ))
             ->add('default_position', 'filter_number_range')
             ->add('createdAt', 'filter_date_range', array(
-                'left_date' => array('widget' => 'choice'),
-                'right_date' => array('widget' => 'choice'),
+                'left_date_options' => array('widget' => 'choice'),
+                'right_date_options' => array('widget' => 'choice'),
             ))
             ->add('updatedAt', 'filter_datetime_range', array(
-                'left_datetime' => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
-                'right_datetime' => array(),
+                'left_datetime_options' => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
+                'right_datetime_options' => array(),
             ))
         ;
     }
