@@ -1,11 +1,11 @@
 1. Installation
 2. Configuration
 3. Provided form types
-4. Working with the bundle
+4. Working with the filters
     * Simple example
-    * How does a filter is applied ?
-    * How to customize the way to apply the filter ?
-    * How to filter associated entities / embedded filter types ?
+    * Inner workings
+    * Filter customization
+    * Working with entity associations and embeddeding filters
 5. The FilterTypeExtension
 
 1. Installation
@@ -43,7 +43,7 @@ Register the bundle with your kernel:
 2. Configuration
 ================
 
-You only need to add the following lines in your `app/config/config.yml`. This file contains some template blocks for some filter_xxx types.
+You only need to add the following lines in your `app/config/config.yml`. This file contains the template blocks for the filter_xxx types.
 
 ```yaml
 # app/config/config.yml
@@ -56,7 +56,7 @@ twig:
 3. Provided types 
 =================
 
-The bundle provides some form types dedicated to filtering. Here the list of these types with their parent type and their specific options.
+The bundle provides form types dedicated to filtering. Here the list of these types with their parent type and their specific options.
 
 Notes: by default the `required` option is set to `false` for all filter_xxx types.
 
@@ -123,8 +123,8 @@ Parent type: _number_
 
 Options:
 
-* `condition_operator`: this option allow to define the operator you want to use, the default operator is FilterOperands::OPERATOR_EQUAL. See FilterOperands::OPERATOR_xxx constants for all available operators.
-You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available operator in addition to the input text.
+* `condition_operator`: this option allows you to configure the operator you want to use, the default operator is FilterOperands::OPERATOR_EQUAL. See the FilterOperands::OPERATOR_xxx constants for all available operators.
+You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with the available operators in addition to the input text.
 
 ---
 **filter_number_range:**
@@ -145,7 +145,7 @@ Parent type: _text_
 
 Options:
 
-* `condition_pattern`: this option allows you to define the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. See FilterOperands::STRING_xxx constants for all available patterns.
+* `condition_pattern`: this option allows you to configure the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. See the FilterOperands::STRING_xxx constants for all available patterns.
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text. 
 
 
@@ -272,14 +272,14 @@ Basic template
 </form>
 ```
 
-How does a filter is applied ?
-------------------------------
+Inner workings
+--------------
 
-A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type name, then a listner will apply the filter. We provide a subcriber which support Doctrine ORM and DBAL.
+A filter is applied using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter. We provide a subcriber that supports Doctrine ORM and DBAL.
 
 The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
 
-Example, let say I use a form type with a name field:
+For example, let's say I use a form type with a name field:
 
 ```php
 public function buildForm(FormBuilder $builder, array $options)
@@ -288,25 +288,25 @@ public function buildForm(FormBuilder $builder, array $options)
 }
 ```
 
-The event name that will be trigger will be:
+The event name that will be triggerered will be:
 
-* `lexik_form_filter.apply.orm.filter_text` in case of you provide a `Doctrine\ORM\QueryBuilder`
+* `lexik_form_filter.apply.orm.filter_text` in the case you provide a `Doctrine\ORM\QueryBuilder`
 
-* `lexik_form_filter.apply.dbal.filter_text` in case of you provide a `Doctrine\DBAL\Query\QueryBuilder`
+* `lexik_form_filter.apply.dbal.filter_text` in the case you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
 
-How to customize the way to apply the filter ?
-----------------------------------------------
+Filter customization
+--------------------
 
 
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
-If this option is defined the `QueryBuilderUpdater` won't trigger any events but it will call the given closure.
+If this option is defined the `QueryBuilderUpdater` won't trigger any event,  but instead will call the given closure.
 
-The closure take 3 parameters:
+The closure takes 3 parameters:
 
-* an object that implements `Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface` on which you can get the query bilder and the expression class.
+* an object that implements `Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface` from which you can get the query builder and the expression class.
 * the expression class
 * the field name
 * an array of values containing the field value and some other data
@@ -347,7 +347,7 @@ Aonther way to override the default way to apply the filter is to listen a custo
 
 `lexik_form_filter.apply.<query_builder_type>.<parents_field_name>.<field_name>`
 
-Example, if I use the following form type:
+For example, if I use the following form type:
 
 ```php
 <?php
@@ -377,14 +377,14 @@ The custom event name will be:
 
 `lexik_form_filter.apply.orm.my_super_filter.position`
 
-Before triggering the default event name the `lexik_form_filter.query_builder_updater` service check if this custom event has some listeners, if yes this event will be triggered instead of the default one.
+Before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
 
-How to filter associated entities / embedded filter types ?
------------------------------------------------------------
+Working with entity associations and embeddeding filters
+--------------------------------------------------------
 
-You can also embed some filters inside another one. It could be a way to filter elements associated to the "root" one.
-Let's say the entity we filter with the `MySuperFilterType` is related to some options and an option has a 2 fields: label and color.
+You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
+Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has a 2 fields: label and color.
 We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
 ```php
@@ -411,8 +411,8 @@ class MySuperFilterType extends AbstractType
 }
 ```
 
-The `OptionsFilterType` class is a standard form type which have to implements `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
-This interface define a `addShared()` method used to add joins (or other stuff) needed to be able to apply condition on fields from the embbed type (OptionsFilterType here).
+The `OptionsFilterType` class is a standard form that has to implement `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
+This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embeded type (OptionsFilterType here).
 
 ```php
 <?php
@@ -464,13 +464,13 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
 5. The FilterTypeExtension
 ==========================
 
-The bundle load a custom type extension to add the `apply_filter` and the `data_extraction_method` options to **all form types**. These options are used when a filter condition is applied to the query builder.
+The bundle loads a custom type extension to add the `apply_filter` and the `data_extraction_method` options to **all form types**. These options are used when a filter condition is applied to the query builder.
 
 ##### The `apply_filter` option:
 
-This option is set to `null` by default and aim to override the default way the apply the filter on the query builder. So you can use it if the default way to apply a filter does match to your needs.
+This option is set to `null` by default and aims to override the default way to apply the filter on the query builder. So you can use it if the default way to apply a filter does match to your needs.
 
-You can pass a Closure or a valid callback to this option, here a simple example:
+You can pass a Closure or a valid callback to this option, here is a simple example:
 
 ```php
 <?php
@@ -514,15 +514,15 @@ class CallbackFilterType extends AbstractType
 
 ##### The `data_extraction_method` option:
 
-This option replace the `translaformer_id` option. This option define the way we extract some data from the form before the filter is applied.
+This option replaces the `translaformer_id` option. This option defines the way we extract some data from the form before the filter is applied.
 
 Available extration methods:
 
 * default: simply get the form data.
-* text: used with filter_text and filter_number types if you choose to display the combo box of available patterns/operator, it get the data from the combo box and the text field.
+* text: used with filter_text and filter_number types if you choose to display the combo box of available patterns/operator, it has the data from the combo box and the text field.
 * value_keys: used with filter_xxx_range type to get values form each form child.
 
-Create a custom extration methods:
+Create a custom extraction method:
 
 ```php
 <?php
