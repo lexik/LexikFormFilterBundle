@@ -6,7 +6,7 @@ Add the bunde to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "v1.2.*"
+    "lexik/form-filter-bundle": "1.2.*"
     // ...
 }
 ```
