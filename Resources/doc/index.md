@@ -218,7 +218,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 class MySuperFilterType extends AbstractType
