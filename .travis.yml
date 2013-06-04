@@ -4,12 +4,7 @@ php:
   - 5.3
   
 env:
-  - SYMFONY_VERSION=v2.1
-
-branches:
-  only:
-    - master
-    - symfony2.0
+  - SYMFONY_VERSION=v2.3
 
 before_script: php Tests/vendors.php
 script: phpunit
