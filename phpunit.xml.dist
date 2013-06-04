@@ -28,6 +28,6 @@
     </filter>
     
     <php>
-        <server name="ROOT_DIR" value="../../../../.." />
+        <server name="VENDORS_DIR" value="./vendor" />
     </php>
 </phpunit>
