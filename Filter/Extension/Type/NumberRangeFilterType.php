@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class NumberRangeFilterType extends AbstractFilterType
+class NumberRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -22,12 +22,12 @@ class NumberRangeFilterType extends AbstractFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('left_number', 'filter_number', $options['left_number']);
-        $builder->add('right_number', 'filter_number', $options['right_number']);
+        $builder->add('left_number', 'filter_number', $options['left_number_options']);
+        $builder->add('right_number', 'filter_number', $options['right_number_options']);
 
         $builder->setAttribute('filter_value_keys', array(
-            'left_number'  => $options['left_number'],
-            'right_number' => $options['right_number']
+            'left_number'  => $options['left_number_options'],
+            'right_number' => $options['right_number_options']
         ));
     }
 
@@ -40,8 +40,9 @@ class NumberRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_number'            => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
-                'right_number'           => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+                'required'               => false,
+                'left_number_options'    => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN_EQUAL),
+                'right_number_options'   => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
                 'data_extraction_method' => 'value_keys',
             ))
             ->setAllowedValues(array(

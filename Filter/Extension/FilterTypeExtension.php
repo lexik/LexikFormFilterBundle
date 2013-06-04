@@ -1,25 +1,24 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Extension;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractTypeExtension;
 
 /**
- * Abstract Filter type
+ * Define filtering options.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-abstract class AbstractFilterType extends AbstractType
+class FilterTypeExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         if ($options['apply_filter'] instanceof \Closure
             || is_callable($options['apply_filter'])
             || is_string($options['apply_filter'])
@@ -36,9 +35,16 @@ abstract class AbstractFilterType extends AbstractType
         parent::setDefaultOptions($resolver);
 
         $resolver->setDefaults(array(
-            'required'          => false,
             'apply_filter'      => null,
             'extraction_method' => 'default',
         ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType()
+    {
+        return 'form';
     }
 }

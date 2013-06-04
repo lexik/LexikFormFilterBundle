@@ -4,9 +4,10 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder;
-use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
@@ -26,15 +27,17 @@ class DoctrineSubscriber implements EventSubscriberInterface
     {
         return array(
             // Doctrine ORM - filter field types
-            'lexik_form_filter.apply.orm.filter_boolean'       => array('filterBoolean'),
-            'lexik_form_filter.apply.orm.filter_checkbox'      => array('filterCheckbox'),
-            'lexik_form_filter.apply.orm.filter_choice'        => array('filterValue'),
-            'lexik_form_filter.apply.orm.filter_date'          => array('filterDate'),
-            'lexik_form_filter.apply.orm.filter_date_range'    => array('filterDateRange'),
-            'lexik_form_filter.apply.orm.filter_entity'        => array('filterEntity'),
-            'lexik_form_filter.apply.orm.filter_number'        => array('filterNumber'),
-            'lexik_form_filter.apply.orm.filter_number_range'  => array('filterNumberRange'),
-            'lexik_form_filter.apply.orm.filter_text'          => array('filterText'),
+            'lexik_form_filter.apply.orm.filter_boolean'        => array('filterBoolean'),
+            'lexik_form_filter.apply.orm.filter_checkbox'       => array('filterCheckbox'),
+            'lexik_form_filter.apply.orm.filter_choice'         => array('filterValue'),
+            'lexik_form_filter.apply.orm.filter_date'           => array('filterDate'),
+            'lexik_form_filter.apply.orm.filter_date_range'     => array('filterDateRange'),
+            'lexik_form_filter.apply.orm.filter_datetime'       => array('filterDateTime'),
+            'lexik_form_filter.apply.orm.filter_datetime_range' => array('filterDateTimeRange'),
+            'lexik_form_filter.apply.orm.filter_entity'         => array('filterEntity'),
+            'lexik_form_filter.apply.orm.filter_number'         => array('filterNumber'),
+            'lexik_form_filter.apply.orm.filter_number_range'   => array('filterNumberRange'),
+            'lexik_form_filter.apply.orm.filter_text'           => array('filterText'),
 
             // Doctrine ORM - Symfony2 field types
             'lexik_form_filter.apply.orm.text'                 => array('filterText'),
@@ -58,14 +61,16 @@ class DoctrineSubscriber implements EventSubscriberInterface
             'lexik_form_filter.apply.orm.radio'                => array('filterValue'),
 
             // Doctrine DBAL
-            'lexik_form_filter.apply.dbal.filter_boolean'      => array('filterBoolean'),
-            'lexik_form_filter.apply.dbal.filter_checkbox'     => array('filterCheckbox'),
-            'lexik_form_filter.apply.dbal.filter_choice'       => array('filterValue'),
-            'lexik_form_filter.apply.dbal.filter_date'         => array('filterDate'),
-            'lexik_form_filter.apply.dbal.filter_date_range'   => array('filterDateRange'),
-            'lexik_form_filter.apply.dbal.filter_number'       => array('filterNumber'),
-            'lexik_form_filter.apply.dbal.filter_number_range' => array('filterNumberRange'),
-            'lexik_form_filter.apply.dbal.filter_text'         => array('filterText'),
+            'lexik_form_filter.apply.dbal.filter_boolean'        => array('filterBoolean'),
+            'lexik_form_filter.apply.dbal.filter_checkbox'       => array('filterCheckbox'),
+            'lexik_form_filter.apply.dbal.filter_choice'         => array('filterValue'),
+            'lexik_form_filter.apply.dbal.filter_date'           => array('filterDate'),
+            'lexik_form_filter.apply.dbal.filter_date_range'     => array('filterDateRange'),
+            'lexik_form_filter.apply.dbal.filter_datetime'       => array('filterDateTime'),
+            'lexik_form_filter.apply.dbal.filter_datetime_range' => array('filterDateTimeRange'),
+            'lexik_form_filter.apply.dbal.filter_number'         => array('filterNumber'),
+            'lexik_form_filter.apply.dbal.filter_number_range'   => array('filterNumberRange'),
+            'lexik_form_filter.apply.dbal.filter_text'           => array('filterText'),
 
             // Doctrine DBAL - Symfony2 field types
             'lexik_form_filter.apply.dbal.text'                => array('filterText'),
@@ -95,7 +100,7 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             // alias.field -> alias_field
             $fieldName = str_replace('.', '_', $event->getField());
 
@@ -151,6 +156,31 @@ class DoctrineSubscriber implements EventSubscriberInterface
         }
     }
 
+    public function filterDateTime(ApplyFilterEvent $event)
+    {
+        $qb     = $event->getQueryBuilder();
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if ($values['value'] instanceof \DateTime) {
+            $date = $values['value']->format(ExpressionBuilder::SQL_DATE_TIME);
+            $qb->andWhere($expr->eq($event->getField(), $expr->literal($date)));
+        }
+    }
+
+    public function filterDateTimeRange(ApplyFilterEvent $event)
+    {
+        $qb     = $event->getQueryBuilder();
+        $expr   = $event->getFilterQuery()->getExpressionBuilder();
+        $values = $event->getValues();
+
+        $value = $values['value'];
+
+        if (isset($value['left_datetime'][0]) || $value['right_datetime'][0]) {
+            $qb->andWhere($expr->datetimeInRange($event->getField(), $value['left_datetime'][0], $value['right_datetime'][0]));
+        }
+    }
+
     public function filterEntity(ApplyFilterEvent $event)
     {
         $qb = $event->getQueryBuilder();
@@ -181,7 +211,10 @@ class DoctrineSubscriber implements EventSubscriberInterface
                     throw new \Exception(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $qb->andWhere($expr->eq($event->getField(), $values['value']->getId()));
+                $fieldAlias = 'p_'.substr($event->getField(), strpos($event->getField(), '.') + 1);
+
+                $qb->andWhere($expr->eq($event->getField(), ':'.$fieldAlias));
+                $qb->setParameter($fieldAlias, $values['value']->getId());
             }
         }
     }
@@ -192,8 +225,8 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
-            $op = $values['condition_operator'];
+        if ('' !== $values['value'] && null !== $values['value']) {
+            $op = empty($values['condition_operator']) ? FilterOperands::OPERATOR_EQUAL : $values['condition_operator'];
             $qb->andWhere($expr->$op($event->getField(), $values['value']));
         }
     }
@@ -226,7 +259,7 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $expr   = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
 
-        if (!empty($values['value'])) {
+        if ('' !== $values['value'] && null !== $values['value']) {
             if (isset($values['condition_pattern'])) {
                 $qb->andWhere($expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']));
             } else {

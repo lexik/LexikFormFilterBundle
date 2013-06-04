@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Sì o no"
+    yes:                "Sì"
+    no:                 "No"
+
+number:
+    equal:              "Uguale a"
+    greater_than:       "Maggiore"
+    greater_than_equal: "Maggiore o Uguale"
+    lower_than:         "Inferiore"
+    lower_than_equal:   "Inferiore o Uguale"
+
+text:
+    starts:             Inizia con"
+    ends:               "Si conclude"
+    equals:             "Uguale a"
+    both:               "Contiene"

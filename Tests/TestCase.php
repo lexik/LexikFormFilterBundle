@@ -75,7 +75,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader($cache);
         //$reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
         $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
-            __DIR__.'/../../../../../../vendor/doctrine/lib',
             __DIR__.'/Fixtures/Entity',
         ));
 
@@ -101,6 +100,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $config->expects($this->any())
             ->method('getClassMetadataFactoryName')
             ->will($this->returnValue('Doctrine\\ORM\Mapping\\ClassMetadataFactory'));
+        $config->expects($this->any())
+            ->method('getDefaultRepositoryClassName')
+            ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'));
 
         $em = EntityManager::create($conn, $config);
 

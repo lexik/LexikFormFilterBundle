@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateRangeFilterType extends AbstractType
+class DateTimeRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -20,12 +20,12 @@ class DateRangeFilterType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('left_date', 'filter_date', $options['left_date_options']);
-        $builder->add('right_date', 'filter_date', $options['right_date_options']);
+        $builder->add('left_datetime', 'filter_datetime', $options['left_datetime_options']);
+        $builder->add('right_datetime', 'filter_datetime', $options['right_datetime_options']);
 
         $builder->setAttribute('filter_value_keys', array(
-            'left_date'  => $options['left_date_options'],
-            'right_date' => $options['right_date_options'],
+            'left_datetime'  => $options['left_datetime_options'],
+            'right_datetime' => $options['right_datetime_options'],
         ));
     }
 
@@ -39,8 +39,8 @@ class DateRangeFilterType extends AbstractType
         $resolver
             ->setDefaults(array(
                 'required'               => false,
-                'left_date_options'      => array(),
-                'right_date_options'     => array(),
+                'left_datetime_options'  => array(),
+                'right_datetime_options' => array(),
                 'data_extraction_method' => 'value_keys',
             ))
             ->setAllowedValues(array(
@@ -54,6 +54,6 @@ class DateRangeFilterType extends AbstractType
      */
     public function getName()
     {
-        return 'filter_date_range';
+        return 'filter_datetime_range';
     }
 }

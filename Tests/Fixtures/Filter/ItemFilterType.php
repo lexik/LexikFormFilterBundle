@@ -2,13 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * Form filter for tests.
@@ -19,11 +16,13 @@ class ItemFilterType extends AbstractType
 {
     protected $withSelector;
     protected $checkbox;
+    protected $datetime;
 
-    public function __construct($withSelector = false, $checkbox = false)
+    public function __construct($withSelector = false, $checkbox = false, $datetime = false)
     {
         $this->withSelector = $withSelector;
         $this->checkbox = $checkbox;
+        $this->datetime = $datetime;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -44,6 +43,7 @@ class ItemFilterType extends AbstractType
 
         $builder->add('enabled', $this->checkbox ? 'filter_checkbox' : 'filter_boolean');
         $builder->add('createdAt', 'filter_date');
+        $builder->add('createdAt', $this->datetime ? 'filter_datetime' : 'filter_date');
     }
 
     public function getName()

@@ -19,15 +19,26 @@ class FilterExtension extends AbstractExtension
     protected function loadTypes()
     {
         return array(
-            new Type\FieldFilterType(),
             new Type\BooleanFilterType(),
             new Type\CheckboxFilterType(),
             new Type\ChoiceFilterType(),
             new Type\DateFilterType(),
+            new Type\DateRangeFilterType(),
+            new Type\DateTimeFilterType(),
+            new Type\DateTimeRangeFilterType(),
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
             new Type\TextFilterType(),
-            new Type\DateRangeFilterType()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadTypeExtensions()
+    {
+        return array(
+            new FilterTypeExtension(),
         );
     }
 }

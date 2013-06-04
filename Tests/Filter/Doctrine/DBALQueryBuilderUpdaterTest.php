@@ -18,6 +18,7 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
             'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > 2) AND (i.enabled = 1)',
             'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > 2) AND (i.enabled = 1)',
             'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= 2) AND (i.createdAt = \'2013-09-27\')',
+            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= 2) AND (i.createdAt = \'2013-09-27 13:21:00\')',
         ));
     }
 
@@ -46,6 +47,20 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     {
         parent::createDateRangeTest('getSQL', array(
             'SELECT i FROM item i WHERE (i.createdAt <= \'2012-05-22\') AND (i.createdAt >= \'2012-05-12\')',
+        ));
+    }
+
+    public function testDateTimeRange()
+    {
+        parent::createDateTimeRangeTest('getSQL', array(
+            'SELECT i FROM item i WHERE (i.updatedAt <= \'2012-06-10 22:12:00\') AND (i.updatedAt >= \'2012-05-12 14:55:00\')',
+        ));
+    }
+
+    public function testFilterStandardType()
+    {
+        parent::createFilterStandardTypeTest('getSQL', array(
+            'SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = 99)',
         ));
     }
 

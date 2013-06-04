@@ -6,11 +6,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Filter type for select list.
+ * Filter type for datetime field.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ChoiceFilterType extends AbstractType
+class DateTimeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -35,7 +35,7 @@ class ChoiceFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return 'datetime';
     }
 
     /**
@@ -43,6 +43,6 @@ class ChoiceFilterType extends AbstractType
      */
     public function getName()
     {
-        return 'filter_choice';
+        return 'filter_datetime';
     }
 }

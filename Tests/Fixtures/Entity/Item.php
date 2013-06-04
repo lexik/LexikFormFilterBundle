@@ -34,9 +34,19 @@ class Item
     protected $enabled;
 
     /**
-     * @ORM\Column(type="datetime", name="created_at", nullable="true")
+     * @ORM\Column(type="datetime", name="created_at", nullable=true)
      */
     protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", name="updated_at", nullable=true)
+     */
+    protected $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Options", mappedBy="item")
+     */
+    private $options;
 
     /**
      * Get id
@@ -126,5 +136,25 @@ class Item
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

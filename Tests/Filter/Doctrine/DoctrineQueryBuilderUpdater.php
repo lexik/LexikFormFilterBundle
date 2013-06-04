@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
+
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,7 +16,6 @@ use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\EmbedFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
@@ -87,6 +87,23 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
+
+
+        // bind a request to the form - datetime + pattern selector
+        $form = $this->formFactory->create(new ItemFilterType(true, false, true));
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
+            'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+            'createdAt' => array(
+                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
+                'time' => array('hour' => 13, 'minute' => 21),
+            ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
     }
 
     protected function createApplyFilterOptionTest($method, array $dqls)
@@ -145,6 +162,45 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
 
+    public function createDateTimeRangeTest($method, array $dqls)
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'updatedAt' => array(
+                'left_datetime' => array(
+                    'date' => '2012-05-12',
+                    'time' => '14:55',
+                 ),
+                'right_datetime' => array(
+                    'date' => array('year' => '2012', 'month' => '6', 'day' => '10'),
+                    'time' => array('hour' => 22, 'minute' => 12)
+                 ),
+            ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
+    public function createFilterStandardTypeTest($method, array $dqls)
+    {
+        $form = $this->formFactory->create(new FormType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array(
+            'name'     => 'hey dude',
+            'position' => 99,
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
     protected function initQueryBuilder()
     {
         $container = $this->getContainer();
@@ -168,8 +224,14 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
-        $container->addCompilerPass(new RegisterKernelListenersPass());
         $container->addCompilerPass(new FormDataExtractorPass());
+
+        if (class_exists('Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass')) {
+            $container->addCompilerPass(new \Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass()); // SF < 2.3
+        } else {
+            $container->addCompilerPass(new \Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass()); // SF 2.3
+        }
+
         $container->compile();
 
         return $container;
