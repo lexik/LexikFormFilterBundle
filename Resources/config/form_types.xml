@@ -50,5 +50,10 @@
         <service id="lexik_form_filter.type.filter_date_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType">
             <tag name="form.type" alias="filter_date_range" />
         </service>
+        
+        <!-- Type extension -->
+        <service id="lexik_form_filter.type_extension.filter_extension" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterTypeExtension">
+            <tag name="form.type_extension" alias="form"></tag>
+        </service>
     </services>
 </container>
