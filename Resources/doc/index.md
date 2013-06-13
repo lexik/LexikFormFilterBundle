@@ -6,6 +6,7 @@
     * Inner workings
     * Filter customization
     * Working with entity associations and embeddeding filters
+    * Create your own filter type
 5. The FilterTypeExtension
 
 1. Installation
@@ -460,6 +461,141 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
     }
 }
 ```
+
+Create your own filter type
+---------------------------
+
+Let's see that through a simple example, we suppose I want to create a `LocaleFilterType` class to filter fields which contain a locale as value.
+
+A filter type is basicaly a standard form type and Symfony provide a LocaleType that display a combox of locales.
+So we can start by creating a form type, with the `locale` type as parent. We will also define a default value for the `data_extraction_method`, this options will define how the the `lexik_form_filter.query_builder_updater` service will get infos from the form before the filter is applied.
+
+So the `LocaleFilterType` class would look like:
+
+```php
+namespace Super\Namespace\Type;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class LocaleFilterType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults(array(
+                'data_extraction_method' => 'default',
+            ))
+            ->setAllowedValues(array(
+                'data_extraction_method' => array('default'),
+            ))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return 'locale';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'filter_locale';
+    }
+}
+```
+
+Then defined the `LocaleFilterType` as a service and don't forget to add the `form.type` tag:
+
+```xml
+<service id="something.type.filter_locale" class="Super\Namespace\Type\LocaleFilterType">
+    <tag name="form.type" alias="filter_locale" />
+</service>
+```
+
+Now we can use the `filter_locale` type, but no filter will be applied. To apply a filter we need to listen some event, so let's create a subscriber:
+
+```php
+namespace Super\Namespace\Listener;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
+
+class FilterSubscriber implements EventSubscriberInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            // if a Doctrine\ORM\QueryBuilder is passed to the lexik_form_filter.query_builder_updater service
+            'lexik_form_filter.apply.orm.filter_locale' => array('filterLocale'),
+            
+            // if a Doctrine\DBAL\Query\QueryBuilder is passed to the lexik_form_filter.query_builder_updater service
+            'lexik_form_filter.apply.dbal.filter_locale' => array('filterLocale'),
+        );
+    }
+    
+    /**
+     * Apply a filter for a filter_locale type.
+     *
+     * This method should work whih both ORM and DBAL query builder.
+     */
+    public function filterLocale(ApplyFilterEvent $event)
+    {       
+        $qb     = $event->getQueryBuilder();
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if ('' !== $values['value'] && null !== $values['value']) {
+            $paramName = str_replace('.', '_', $event->getField());
+
+            $qb->andWhere($expr->eq($event->getField(), ':'.$paramName));
+            $qb->setParameter($paramName, $values['value']);
+        }
+    }
+}
+```
+
+Don't forget to defined the subscriber as a service.
+
+```xml
+<service id="lexik_form_filter.doctrine_subscriber" class="Super\Namespace\Listener\FilterSubscriber">
+    <tag name="kernel.event_subscriber" />
+</service>
+```
+
+Now the `lexik_form_filter.query_builder_updater` service is able to add filter condition for a locale field.
+
+__Tip__: As you can see the `LocaleFilterType` class is very simple, we use the `default` data extraction method and we don't add any additional field to the form builder, we only use the parent form. In this case we could only create the listener and listen to `lexik_form_filter.apply.xxx.locale` instead of `lexik_form_filter.apply.xxx.filter_locale` and use the provided `locale` type:
+
+```php
+[...]
+class FilterSubscriber implements EventSubscriberInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'lexik_form_filter.apply.orm.locale' => array('filterLocale'),
+            'lexik_form_filter.apply.dbal.locale' => array('filterLocale'),
+        );
+    }
+    [...]
+}
+```
+
 
 5. The FilterTypeExtension
 ==========================
