@@ -53,7 +53,7 @@
         
         <!-- Type extension -->
         <service id="lexik_form_filter.type_extension.filter_extension" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterTypeExtension">
-            <tag name="form.type_extension" alias="form"></tag>
+            <tag name="form.type_extension" alias="form" />
         </service>
     </services>
 </container>
