@@ -224,7 +224,7 @@ class MySuperFilterType extends AbstractType
 }
 ```
 
-Then in an action, create a form object from the MySuperFilterType. Let's say we filter when the form is submitted with a post method.
+Then in an action, create a form object from the MySuperFilterType. Let's say we filter when the form is submitted with a GET method.
 
 ```php
 <?php
@@ -244,7 +244,7 @@ class DefaultController extends Controller
             // bind values from the request
             $form->bindRequest($this->get('request'));
 
-            // initliaze a query builder
+            // initialize a query builder
             $filterBuilder = $this->get('doctrine.orm.entity_manager')
                 ->getRepository('ProjectSuperBundle:MyEntity')
                 ->createQueryBuilder('e');
@@ -276,7 +276,8 @@ Basic template
 Inner workings
 --------------
 
-A filter is applied using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter. We provide a subcriber that supports Doctrine ORM and DBAL.
+A filter is applied using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter.
+We provide a subscriber that supports Doctrine ORM and DBAL.
 
 The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
 
@@ -344,7 +345,7 @@ class MySuperFilterType extends AbstractType
 
 #### B. By listening an event
 
-Aonther way to override the default way to apply the filter is to listen a custom event name composed of the form type name plus the form type's parent names, so the custom event name is like:
+Another way to override the default way to apply the filter is to listen a custom event name composed of the form type name plus the form type's parent names, so the custom event name is like:
 
 `lexik_form_filter.apply.<query_builder_type>.<parents_field_name>.<field_name>`
 
@@ -468,7 +469,7 @@ Create your own filter type
 Let's see that through a simple example, we suppose I want to create a `LocaleFilterType` class to filter fields which contain a locale as value.
 
 A filter type is basicaly a standard form type and Symfony provide a LocaleType that display a combox of locales.
-So we can start by creating a form type, with the `locale` type as parent. We will also define a default value for the `data_extraction_method`, this options will define how the the `lexik_form_filter.query_builder_updater` service will get infos from the form before the filter is applied.
+So we can start by creating a form type, with the `locale` type as parent. We will also define a default value for the `data_extraction_method`, this options will define how the `lexik_form_filter.query_builder_updater` service will get infos from the form before the filter is applied.
 
 So the `LocaleFilterType` class would look like:
 
