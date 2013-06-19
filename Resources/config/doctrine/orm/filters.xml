@@ -37,6 +37,10 @@
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
 
+        <service id="lexik_form_filter.entity_field" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\EntityFieldFilter">
+            <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
+        </service>
+
         <service id="lexik_form_filter.date" class="Lexik\Bundle\FormFilterBundle\Filter\ORM\Filters\DateFilter">
             <tag name="kernel.event_listener" event="lexik_filter.get" method="onFilterGet" />
         </service>
