@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -10,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateTimeRangeFilterType extends AbstractFilterType
+class DateTimeRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -19,12 +20,12 @@ class DateTimeRangeFilterType extends AbstractFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('left_datetime', 'filter_datetime', $options['left_datetime']);
-        $builder->add('right_datetime', 'filter_datetime', $options['right_datetime']);
+        $builder->add('left_datetime', 'filter_datetime', $options['left_datetime_options']);
+        $builder->add('right_datetime', 'filter_datetime', $options['right_datetime_options']);
 
         $builder->setAttribute('filter_value_keys', array(
-            'left_datetime'  => $options['left_datetime'],
-            'right_datetime' => $options['right_datetime'],
+            'left_datetime'  => $options['left_datetime_options'],
+            'right_datetime' => $options['right_datetime_options'],
         ));
     }
 
@@ -37,12 +38,13 @@ class DateTimeRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_datetime'  => array(),
-                'right_datetime' => array(),
-                'transformer_id' => 'lexik_form_filter.transformer.value_keys',
+                'required'               => false,
+                'left_datetime_options'  => array(),
+                'right_datetime_options' => array(),
+                'data_extraction_method' => 'value_keys',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
+                'data_extraction_method' => array('value_keys'),
             ))
         ;
     }

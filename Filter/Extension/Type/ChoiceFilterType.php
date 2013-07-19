@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -9,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ChoiceFilterType extends AbstractFilterType
+class ChoiceFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -20,10 +21,11 @@ class ChoiceFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'transformer_id' => 'lexik_form_filter.transformer.default',
+                'required'               => false,
+                'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.default'),
+                'data_extraction_method' => array('default'),
             ))
         ;
     }

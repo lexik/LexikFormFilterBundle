@@ -83,7 +83,7 @@ final class FilterOperands
         $reflection = new \ReflectionClass(__CLASS__);
         foreach ($reflection->getConstants() as $name => $value) {
             if ('OPERATOR_' === substr($name, 0, 9)) {
-                $choices[$value] = strtolower(str_replace(array('OPERATOR_', '_'), array('', ' '), $name));
+                $choices[$value] = strtolower(str_replace('OPERATOR_', 'number.', $name));
             }
         }
 
@@ -102,7 +102,7 @@ final class FilterOperands
         $reflection = new \ReflectionClass(__CLASS__);
         foreach ($reflection->getConstants() as $name => $value) {
             if ('STRING_' === substr($name, 0, 7)) {
-                $choices[$value] = strtolower(str_replace(array('STRING_', '_'), array('', ' '), $name));
+                $choices[$value] = strtolower(str_replace('STRING_', 'text.', $name));
             }
         }
 

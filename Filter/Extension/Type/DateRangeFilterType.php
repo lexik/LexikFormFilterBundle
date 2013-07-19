@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -10,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateRangeFilterType extends AbstractFilterType
+class DateRangeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -19,12 +20,12 @@ class DateRangeFilterType extends AbstractFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('left_date', 'filter_date', $options['left_date']);
-        $builder->add('right_date', 'filter_date', $options['right_date']);
+        $builder->add('left_date', 'filter_date', $options['left_date_options']);
+        $builder->add('right_date', 'filter_date', $options['right_date_options']);
 
         $builder->setAttribute('filter_value_keys', array(
-            'left_date'  => $options['left_date'],
-            'right_date' => $options['right_date'],
+            'left_date'  => $options['left_date_options'],
+            'right_date' => $options['right_date_options'],
         ));
     }
 
@@ -37,12 +38,13 @@ class DateRangeFilterType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'left_date'      => array(),
-                'right_date'     => array(),
-                'transformer_id' => 'lexik_form_filter.transformer.value_keys',
+                'required'               => false,
+                'left_date_options'      => array(),
+                'right_date_options'     => array(),
+                'data_extraction_method' => 'value_keys',
             ))
             ->setAllowedValues(array(
-                'transformer_id' => array('lexik_form_filter.transformer.value_keys'),
+                'data_extraction_method' => array('value_keys'),
             ))
         ;
     }

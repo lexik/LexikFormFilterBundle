@@ -1,22 +1,29 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Transformer;
+namespace Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method;
 
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Transform data with filter_value_key's attributes into a right format
+ * Extract data needed to apply a filter condition.
  *
- * @author <g.gauthier@lexik.com>
- *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ * @author Gilles Gauthier <g.gauthier@lexik.fr>
  */
-class FilterValueKeysTransformer implements FilterTransformerInterface
+class ValueKeysExtractionMethod implements DataExtractionMethodInterface
 {
     /**
-     * {@inheritDoc}
-     * @see Lexik\Bundle\FormFilterBundle\Filter\Transformer.FilterTransformerInterface::transform()
+     * {@inheritdoc}
      */
-    public function transform(FormInterface $form)
+    public function getName()
+    {
+        return 'value_keys';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function extract(FormInterface $form)
     {
         $data   = $form->getData();
         $keys   = array();
@@ -25,6 +32,7 @@ class FilterValueKeysTransformer implements FilterTransformerInterface
         if ($config->hasAttribute('filter_value_keys')) {
             $keys = array_merge($data, $config->getAttribute('filter_value_keys'));
         }
+
         $values = array('value' => array());
 
         foreach ($keys as $key => $value) {

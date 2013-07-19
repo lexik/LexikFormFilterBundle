@@ -2,13 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * Form filter for tests.
@@ -21,17 +18,17 @@ class RangeFilterType extends AbstractType
     {
         $builder
             ->add('position', 'filter_number_range', array(
-                'left_number' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
-                'right_number' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
+                'left_number_options' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
+                'right_number_options' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
             ))
             ->add('default_position', 'filter_number_range')
             ->add('createdAt', 'filter_date_range', array(
-                'left_date' => array('widget' => 'choice'),
-                'right_date' => array('widget' => 'choice'),
+                'left_date_options' => array('widget' => 'choice'),
+                'right_date_options' => array('widget' => 'choice'),
             ))
             ->add('updatedAt', 'filter_datetime_range', array(
-                'left_datetime' => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
-                'right_datetime' => array(),
+                'left_datetime_options' => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
+                'right_datetime_options' => array(),
             ))
         ;
     }

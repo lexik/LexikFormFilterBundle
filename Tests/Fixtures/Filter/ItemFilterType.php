@@ -2,13 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * Form filter for tests.

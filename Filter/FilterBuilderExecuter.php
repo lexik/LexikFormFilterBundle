@@ -2,12 +2,14 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
 class FilterBuilderExecuter implements FilterBuilderExecuterInterface
 {
     /**
-     * @var object
+     * @var QueryInterface
      */
-    protected $filterBuilder;
+    protected $filterQuery;
 
     /**
      * @var string
@@ -27,17 +29,16 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * Construct.
      *
-     * @param object $filterBuilder
-     * @param string $alias
-     * @param object $expr
-     * @param array $parts
+     * @param QueryInterface $filterBuilder
+     * @param string         $alias
+     * @param array          $parts
      */
-    public function __construct($filterBuilder, $alias, $expr, array & $parts = array())
+    public function __construct(QueryInterface $filterQuery, $alias, array & $parts = array())
     {
-        $this->filterBuilder = $filterBuilder;
-        $this->alias        = $alias;
-        $this->expr         = $expr;
-        $this->parts        = & $parts;
+        $this->filterQuery = $filterQuery;
+        $this->expr        = $filterQuery->getExpr();
+        $this->alias       = $alias;
+        $this->parts       = & $parts;
     }
 
     /**
@@ -67,6 +68,6 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
 
         $this->parts[$join] = $alias;
 
-        return $callback($this->filterBuilder, $this->alias, $alias, $this->expr);
+        return $callback($this->filterQuery->getQueryBuilder(), $this->alias, $alias, $this->filterQuery->getExpr());
     }
 }

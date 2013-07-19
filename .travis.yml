@@ -7,10 +7,5 @@ env:
   - SYMFONY_VERSION=v2.2
   - SYMFONY_VERSION=v2.3
 
-#branches:
-#  only:
-#    - master
-#    - symfony2.0
-
 before_script: php Tests/vendors.php
 script: phpunit

@@ -4,6 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -13,7 +14,7 @@ use Symfony\Component\OptionsResolver\Options;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class TextFilterType extends AbstractFilterType
+class TextFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -40,32 +41,29 @@ class TextFilterType extends AbstractFilterType
     {
         parent::setDefaultOptions($resolver);
 
-        $compound = function (Options $options) {
-            return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
-        };
-
-        $transformerId = function (Options $options) {
-            return $options['compound'] ? 'lexik_form_filter.transformer.text' : 'lexik_form_filter.transformer.default';
-        };
-
         $resolver
             ->setDefaults(array(
-                'condition_pattern' => FilterOperands::STRING_EQUALS,
-                'compound'          => $compound,
-                'text_options'      => array(
+                'required'               => false,
+                'condition_pattern'      => FilterOperands::STRING_EQUALS,
+                'compound'               => function (Options $options) {
+                    return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
+                },
+                'text_options'           => array(
                     'required' => false,
                     'trim'     => true,
-                 ),
-                'choice_options'    => array(
+                ),
+                'choice_options'         => array(
                    'choices'  => FilterOperands::getStringOperandsChoices(),
                    'required' => false,
                    'translation_domain' => 'LexikFormFilterBundle'
-                 ),
-                'transformer_id' => $transformerId,
+                ),
+                'data_extraction_method' => function (Options $options) {
+                    return $options['compound'] ? 'text' : 'default';
+                },
             ))
             ->setAllowedValues(array(
-                'transformer_id'    => array('lexik_form_filter.transformer.text','lexik_form_filter.transformer.default'),
-                'condition_pattern' => FilterOperands::getStringOperands(true),
+                'data_extraction_method' => array('text','default'),
+                'condition_pattern'      => FilterOperands::getStringOperands(true),
             ))
         ;
     }

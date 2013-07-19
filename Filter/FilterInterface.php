@@ -16,6 +16,8 @@ interface FilterInterface
      * @param object $expr
      * @param string $field
      * @param array  $values
+     *
+     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
      */
     public function applyFilter($filterBuilder, $expr, $field, array $values);
 }

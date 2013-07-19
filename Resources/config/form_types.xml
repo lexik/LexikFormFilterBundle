@@ -5,9 +5,8 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-         <!-- FilterExtension -->
+        <!-- Filter Types -->
         <service id="lexik_form_filter.type.filter_field" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType">
-            <argument type="service" id="validator" />
             <tag name="form.type" alias="filter_field" />
         </service>
 
@@ -32,9 +31,6 @@
         </service>
 
         <service id="lexik_form_filter.type.filter_boolean" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType">
-            <call method="setTranslator">
-                <argument type="service" id="translator" />
-            </call>
             <tag name="form.type" alias="filter_boolean" />
         </service>
 
@@ -61,6 +57,11 @@
         
         <service id="lexik_form_filter.type.filter_datetime_range" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeRangeFilterType">
             <tag name="form.type" alias="filter_datetime_range" />
+        </service>
+
+        <!-- Type extension -->
+        <service id="lexik_form_filter.type_extension.filter_extension" class="Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterTypeExtension">
+            <tag name="form.type_extension" alias="form" />
         </service>
     </services>
 </container>
