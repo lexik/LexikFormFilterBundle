@@ -1,17 +1,17 @@
 boolean:
-    yes_or_no:          "Ja of Niet"
+    yes_or_no:          "Ja oder Nein"
     yes:                "Ja"
-    no:                 "Niet"
+    no:                 "Nein"
 
 number:
-    equal:              "Gelijk"
-    greater_than:       "Groter dan"
-    greater_than_equal: "Groter dan of Gelijk"
-    lower_than:         "Lager dan"
-    lower_than_equal:   "Lager dan of Gelijk"
+    equal:              "Ist gleich"
+    greater_than:       "Größer als"
+    greater_than_equal: "Größer oder gleich"
+    lower_than:         "Kleiner als"
+    lower_than_equal:   "Kleiner oder gleich"
 
 text:
-    starts:             "Begint met"
-    ends:               "Eindigt op"
-    equals:             "Gelijk"
-    both:               "Bevat"
+    starts:             "Beginnt mit"
+    ends:               "Endet mit"
+    equals:             "Ist gleich"
+    both:               "Enthält"
