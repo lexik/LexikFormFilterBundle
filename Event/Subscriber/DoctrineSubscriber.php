@@ -103,9 +103,14 @@ class DoctrineSubscriber implements EventSubscriberInterface
         if ('' !== $values['value'] && null !== $values['value']) {
             // alias.field -> alias_field
             $fieldName = str_replace('.', '_', $event->getField());
-
-            $qb->andWhere($expr->eq($event->getField(), ':' . $fieldName))
-                ->setParameter($fieldName, $values['value']);
+            if(is_array($values['value']) && sizeof($values['value']) > 0) {
+                $qb->andWhere($expr->in($event->getField(), $values['value']));
+            } elseif(is_array($values['value']) && sizeof($values['value']) == 0) {
+                // Multiselect is Empty - Don't Filter
+            } else {
+                $qb->andWhere($expr->eq($event->getField(), ':' . $fieldName))
+                    ->setParameter($fieldName, $values['value']);
+            }
         }
     }
 
