@@ -238,16 +238,16 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
         $value  = $values['value'];
 
-        if (isset($value['left_number'][0])) {
-            $leftCond   = $value['left_number']['condition_operator'];
-            $leftValue  = $value['left_number'][0];
+        if (isset($value['left_number'][0]) && isset($value['left_number'][0]['condition_operator'])) {
+            $leftCond   = $value['left_number'][0]['condition_operator'];
+            $leftValue  = $value['left_number'][0]['text'];
 
             $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
         }
 
-        if (isset($value['right_number'][0])) {
-            $rightCond  = $value['right_number']['condition_operator'];
-            $rightValue = $value['right_number'][0];
+        if (isset($value['right_number'][0]) && isset($value['right_number'][0]['condition_operator'])) {
+        $rightCond  = $value['right_number'][0]['condition_operator'];
+        $rightValue = $value['right_number'][0]['text'];
 
             $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
         }
