@@ -40,8 +40,8 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
     public function testNumberRangeWithSelector()
     {
-        parent::createNumberRangeCompoundTest('getSQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE (i.position_selector > 4) AND (i.position_selector <= 8)',
+        parent::createNumberRangeCompoundTest('getDQL', array(
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position_selector > 4 AND i.position_selector <= 8',
         ));
     }
 
