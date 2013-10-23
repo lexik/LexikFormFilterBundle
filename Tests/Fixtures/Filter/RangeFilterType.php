@@ -21,6 +21,10 @@ class RangeFilterType extends AbstractType
                 'left_number_options' => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
                 'right_number_options' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN)
             ))
+            ->add('position_selector', 'filter_number_range', array(
+                'left_number_options' => array('condition_operator' => FilterOperands::OPERAND_SELECTOR),
+                'right_number_options' => array('condition_operator' => FilterOperands::OPERAND_SELECTOR)
+            ))
             ->add('default_position', 'filter_number_range')
             ->add('createdAt', 'filter_date_range', array(
                 'left_date_options' => array('widget' => 'choice'),

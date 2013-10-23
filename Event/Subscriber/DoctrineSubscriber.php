@@ -103,11 +103,11 @@ class DoctrineSubscriber implements EventSubscriberInterface
         if ('' !== $values['value'] && null !== $values['value']) {
             // alias.field -> alias_field
             $fieldName = str_replace('.', '_', $event->getField());
-            if(is_array($values['value']) && sizeof($values['value']) > 0) {
+
+            if (is_array($values['value']) && sizeof($values['value']) > 0) {
                 $qb->andWhere($expr->in($event->getField(), $values['value']));
-            } elseif(is_array($values['value']) && sizeof($values['value']) == 0) {
-                // Multiselect is Empty - Don't Filter
-            } else {
+
+            } elseif (!is_array($values['value'])) {
                 $qb->andWhere($expr->eq($event->getField(), ':' . $fieldName))
                     ->setParameter($fieldName, $values['value']);
             }
@@ -243,18 +243,38 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
         $value  = $values['value'];
 
-        if (isset($value['left_number'][0]) && isset($value['left_number'][0]['condition_operator'])) {
-            $leftCond   = $value['left_number'][0]['condition_operator'];
-            $leftValue  = $value['left_number'][0]['text'];
+        if (isset($value['left_number'][0])) {
+            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator'] );
 
-            $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
+            if (!$hasSelector && isset($value['left_number'][0])) {
+                $leftValue = $value['left_number'][0];
+                $leftCond  = $value['left_number']['condition_operator'];
+
+                $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
+
+            } else if ($hasSelector && isset($value['left_number'][0]['text'])) {
+                $leftValue = $value['left_number'][0]['text'];
+                $leftCond  = $value['left_number'][0]['condition_operator'];
+
+                $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
+            }
         }
 
-        if (isset($value['right_number'][0]) && isset($value['right_number'][0]['condition_operator'])) {
-        $rightCond  = $value['right_number'][0]['condition_operator'];
-        $rightValue = $value['right_number'][0]['text'];
+        if (isset($value['right_number'][0])) {
+            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator'] );
 
-            $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
+            if (!$hasSelector && isset($value['right_number'][0])) {
+                $rightValue = $value['right_number'][0];
+                $rightCond  = $value['right_number']['condition_operator'];
+
+                $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
+
+            } else if ($hasSelector && isset($value['right_number'][0]['text'])) {
+                $rightValue = $value['right_number'][0]['text'];
+                $rightCond  = $value['right_number'][0]['condition_operator'];
+
+                $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
+            }
         }
     }
 

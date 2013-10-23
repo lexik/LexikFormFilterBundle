@@ -131,6 +131,22 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
 
+    protected function createNumberRangeCompoundTest($method, array $dqls)
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array('position_selector' => array(
+            'left_number' => array('text' => 4, 'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
+            'right_number' => array('text' => 8, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
+        )));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
     protected function createNumberRangeDefaultValuesTest($method, array $dqls)
     {
         // use filter type options

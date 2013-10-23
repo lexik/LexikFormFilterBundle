@@ -36,6 +36,13 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         ));
     }
 
+    public function testNumberRangeWithSelector()
+    {
+        parent::createNumberRangeCompoundTest('getSQL', array(
+                'SELECT i FROM item i WHERE (i.position_selector > 4) AND (i.position_selector <= 8)',
+        ));
+    }
+
     public function testNumberRangeDefaultValues()
     {
         parent::createNumberRangeDefaultValuesTest('getSQL', array(
