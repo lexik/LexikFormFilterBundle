@@ -17,7 +17,7 @@ In version 2 it has been replaced by a data extrator service that use data extra
 
 So in your custom types:
 
-Before: 
+Before:
 ```php
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
@@ -66,7 +66,7 @@ $builder->add('name', 'filter_text', array(
 
 After:
 
-You can get still the Expr object from the QueryInterface object.
+You can still get the Expr object from the QueryInterface object.
 
 ```php
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
