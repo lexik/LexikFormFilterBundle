@@ -11,7 +11,7 @@ number:
     lower_than_equal:   "Inferiore o Uguale"
 
 text:
-    starts:             Inizia con"
+    starts:             "Inizia con"
     ends:               "Si conclude"
     equals:             "Uguale a"
     both:               "Contiene"
