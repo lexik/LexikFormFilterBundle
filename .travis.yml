@@ -4,8 +4,14 @@ php:
   - 5.3
   
 env:
-  - SYMFONY_VERSION=v2.2
-  - SYMFONY_VERSION=v2.3
+  - SYMFONY_VERSION=2.2.*
+  - SYMFONY_VERSION=2.3.*
 
-before_script: php Tests/vendors.php
+before_script:
+  - composer self-update
+  - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
+  - composer require symfony/form:${SYMFONY_VERSION} --no-update
+  - composer require doctrine/orm:${SYMFONY_VERSION} --no-update
+  - composer update --dev
+
 script: phpunit
