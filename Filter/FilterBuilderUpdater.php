@@ -87,7 +87,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             $this->parts[$alias] = '__root__';
         }
 
-        $this->addFilters($form, $event->getFilterQuery(), $event->getFilterQuery()->getAlias(), $this->parts);
+        $this->addFilters($form, $event->getFilterQuery(), $alias, $this->parts);
 
         return $queryBuilder;
     }
