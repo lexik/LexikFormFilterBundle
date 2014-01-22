@@ -198,12 +198,12 @@ Create a type extended from AbstractType, add `name` and `rank` and use the filt
 namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MySuperFilterType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'filter_text');
         $builder->add('rank', 'filter_number');
