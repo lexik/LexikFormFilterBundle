@@ -1,7 +1,7 @@
 boolean:
-    yes_or_no:          "Ja of Niet"
+    yes_or_no:          "Ja of Nee"
     yes:                "Ja"
-    no:                 "Niet"
+    no:                 "Nee"
 
 number:
     equal:              "Gelijk"
