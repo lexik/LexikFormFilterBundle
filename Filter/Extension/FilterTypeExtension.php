@@ -35,8 +35,8 @@ class FilterTypeExtension extends AbstractTypeExtension
         parent::setDefaultOptions($resolver);
 
         $resolver->setDefaults(array(
-            'apply_filter'      => null,
-            'extraction_method' => 'default',
+            'apply_filter'           => null,
+            'data_extraction_method' => 'default',
         ));
     }
 
