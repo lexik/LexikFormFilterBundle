@@ -4,8 +4,8 @@ php:
   - 5.3
   
 env:
-  - SYMFONY_VERSION=2.2.* DOCTRINE_ORM_VERSION=2.3.2
   - SYMFONY_VERSION=2.3.* DOCTRINE_ORM_VERSION=2.3.4
+  - SYMFONY_VERSION=2.4.* DOCTRINE_ORM_VERSION=2.3.4
 
 before_script:
   - composer self-update
