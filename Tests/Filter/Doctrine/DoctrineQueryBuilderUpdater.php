@@ -169,7 +169,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->bind(array(
             'createdAt' => array(
-                'left_date' => array('year' => '2012', 'month' => '5', 'day' => '12'),
+                'left_date' => '2012-5-12',
                 'right_date' => array('year' => '2012', 'month' => '5', 'day' => '22'),
             ),
         ));

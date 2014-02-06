@@ -27,7 +27,7 @@ class RangeFilterType extends AbstractType
             ))
             ->add('default_position', 'filter_number_range')
             ->add('createdAt', 'filter_date_range', array(
-                'left_date_options' => array('widget' => 'choice'),
+                'left_date_options' => array('widget' => 'single_text'),
                 'right_date_options' => array('widget' => 'choice'),
             ))
             ->add('updatedAt', 'filter_datetime_range', array(
