@@ -4,7 +4,6 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\ORM;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
-use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 
 /**
@@ -180,7 +179,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      * @throws \InvalidArgumentException
      * @return string
      */
-    protected function _convertTypeToMask($value, $type)
+    protected function convertTypeToMask($value, $type)
     {
         switch($type) {
             case FilterOperands::STRING_STARTS:
@@ -196,7 +195,6 @@ class Expr extends \Doctrine\ORM\Query\Expr
                 break;
 
             case FilterOperands::STRING_EQUALS:
-                //return $e->eq($field, $e->literal($value));
                 break;
 
             default:
@@ -216,7 +214,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      */
     public function stringLike($field, $value, $type = FilterOperands::STRING_BOTH)
     {
-        $value = $this->_convertTypeToMask($value, $type);
+        $value = $this->convertTypeToMask($value, $type);
 
         return $this->like($field, $this->literal($value));
     }

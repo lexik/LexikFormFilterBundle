@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

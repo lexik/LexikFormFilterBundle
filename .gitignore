@@ -1,9 +1,5 @@
 phpunit.xml
 .directory
-.idea
-.project
-.buildpath
-.settings
 vendor
 composer.phar
 composer.lock

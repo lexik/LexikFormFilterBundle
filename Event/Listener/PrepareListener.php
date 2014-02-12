@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Symfony\Component\EventDispatcher\Event;
-
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;

@@ -82,8 +82,8 @@ abstract class ExpressionBuilder
             return;
         }
 
-        $min = $this->_convertToSqlDate($min);
-        $max = $this->_convertToSqlDate($max, true);
+        $min = $this->convertToSqlDate($min);
+        $max = $this->convertToSqlDate($max, true);
 
         if (null === $min) {
             // $max exists
@@ -116,9 +116,9 @@ abstract class ExpressionBuilder
             return null;
         }
 
-        $value = $this->_convertToSqlDateTime($value);
-        $min   = $this->_convertToSqlDateTime($min);
-        $max   = $this->_convertToSqlDateTime($max);
+        $value = $this->convertToSqlDateTime($value);
+        $min   = $this->convertToSqlDateTime($min);
+        $max   = $this->convertToSqlDateTime($max);
 
         if (!$max && !$min) {
             return null;
@@ -149,7 +149,7 @@ abstract class ExpressionBuilder
      */
     public function stringLike($field, $value, $type = FilterOperands::STRING_BOTH)
     {
-        $value = $this->_convertTypeToMask($value, $type);
+        $value = $this->convertTypeToMask($value, $type);
 
         return $this->expr()->like($field, $this->expr()->literal($value));
     }
@@ -162,7 +162,7 @@ abstract class ExpressionBuilder
      *
      * @return \Doctrine\ORM\Query\Expr\Literal|string
      */
-    protected function _convertToSqlDate($date, $isMax = false)
+    protected function convertToSqlDate($date, $isMax = false)
     {
         if ( ! $date instanceof \DateTime) {
             return;
@@ -183,7 +183,7 @@ abstract class ExpressionBuilder
      * @param DateTime|string $date
      * @return \Doctrine\ORM\Query\Expr\Literal
      */
-    protected function _convertToSqlDateTime($date)
+    protected function convertToSqlDateTime($date)
     {
         if ($date instanceof \DateTime) {
             $date = $this->expr()->literal($date->format(self::SQL_DATE_TIME));
@@ -202,7 +202,7 @@ abstract class ExpressionBuilder
      *
      * @throws \InvalidArgumentException
      */
-    protected function _convertTypeToMask($value, $type)
+    protected function convertTypeToMask($value, $type)
     {
         switch($type) {
             case FilterOperands::STRING_STARTS:
