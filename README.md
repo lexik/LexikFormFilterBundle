@@ -5,6 +5,8 @@ This Symfony2 bundle aims to provide classes to build a form filter and then bui
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c/big.png)](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c)
+
 The idea is:
 
 1. Create a form type extending from `Symfony\Component\Form\AbstractType` as usual.
