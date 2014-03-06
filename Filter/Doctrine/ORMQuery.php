@@ -27,10 +27,15 @@ class ORMQuery implements QueryInterface
      *
      * @param QueryBuilder $queryBuilder
      */
-    public function __construct(QueryBuilder $queryBuilder)
+    public function __construct(
+        QueryBuilder $queryBuilder,
+        $forceCaseInsensitivity = false)
     {
         $this->queryBuilder      = $queryBuilder;
-        $this->expressionBuilder = new ORMExpressionBuilder($this->queryBuilder->expr());
+        $this->expressionBuilder = new ORMExpressionBuilder(
+            $this->queryBuilder->expr(),
+            $forceCaseInsensitivity
+        );
     }
 
     /**

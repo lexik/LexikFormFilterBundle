@@ -11,8 +11,9 @@ class ORMExpressionBuilder extends ExpressionBuilder
      *
      * @param Expr $expr
      */
-    public function __construct(Expr $expr)
+    public function __construct(Expr $expr, $forceCaseInsensitivity)
     {
         $this->expr = $expr;
+        parent::__construct($forceCaseInsensitivity);
     }
 }

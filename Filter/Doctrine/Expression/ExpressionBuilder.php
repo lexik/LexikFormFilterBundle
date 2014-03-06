@@ -14,12 +14,19 @@ abstract class ExpressionBuilder
      */
     protected $expr;
 
+    protected $forceCaseInsensitivity;
+
     /**
      * Get expression object.
      */
     public function expr()
     {
         return $this->expr;
+    }
+
+    public function __construct($forceCaseInsensitivity)
+    {
+        $this->forceCaseInsensitivity = $forceCaseInsensitivity;
     }
 
     /**
@@ -151,7 +158,10 @@ abstract class ExpressionBuilder
     {
         $value = $this->convertTypeToMask($value, $type);
 
-        return $this->expr()->like($field, $this->expr()->literal($value));
+        return $this->expr()->like(
+            $this->forceCaseInsensitivity ? $this->expr()->lower($field) : $field,
+            $this->expr()->literal($value)
+        );
     }
 
     /**
@@ -204,6 +214,10 @@ abstract class ExpressionBuilder
      */
     protected function convertTypeToMask($value, $type)
     {
+        if ($this->forceCaseInsensitivity) {
+            $value = strtolower($value);
+        }
+
         switch($type) {
             case FilterOperands::STRING_STARTS:
                 $value .= '%';
