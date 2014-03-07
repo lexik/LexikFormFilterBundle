@@ -21,3 +21,9 @@ Documentation
 The `master` branch is now compatible with Symfony 2.1, if you are using Symfony 2.0.x use the `symfony2.0` branch.
 
 For installation and how to use the bundle refer to [Resources/doc/index.md](https://github.com/lexik/LexikFormFilterBundle/blob/master/Resources/doc/index.md)
+
+Running the test suite
+======================
+
+    composer install
+    bin/phpunit
