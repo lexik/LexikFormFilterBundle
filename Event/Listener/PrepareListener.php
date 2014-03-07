@@ -13,6 +13,37 @@ use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 class PrepareListener
 {
     /**
+     * @var boolean
+     */
+    protected $forceCaseInsensitivity = null;
+
+    public function setForceCaseInsensitivity($value)
+    {
+        if (!is_bool($value)) {
+            throw new \InvalidArgumentException("Expected a boolean");
+        }
+        $this->forceCaseInsensitivity = $value;
+
+        return $this;
+    }
+
+    public function getForceCaseInsensitivity($qb)
+    {
+        if (isset($this->forceCaseInsensitivity)) {
+            return $this->forceCaseInsensitivity;
+        }
+
+        if (class_exists('\Doctrine\ORM\QueryBuilder') && $qb instanceof \Doctrine\ORM\QueryBuilder) {
+            return $qb->getEntityManager()->getConnection()->getDatabasePlatform()
+                instanceof PostgreSqlPlatform;
+        }
+
+        if (class_exists('\Doctrine\DBAL\Query\QueryBuilder') && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
+            return  $qb->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform;
+        }
+    }
+
+    /**
      * Filter builder prepare event
      *
      * @param PrepareEvent $event
@@ -22,10 +53,9 @@ class PrepareListener
         $qb = $event->getQueryBuilder();
 
         if (class_exists('\Doctrine\ORM\QueryBuilder') && $qb instanceof \Doctrine\ORM\QueryBuilder) {
-            $platform = $qb->getEntityManager()->getConnection()->getDatabasePlatform();
             $event->setFilterQuery(new ORMQuery(
                 $qb,
-                $platform instanceof PostgreSqlPlatform
+                $this->getForceCaseInsensitivity($qb)
             ));
             $event->stopPropagation();
 
@@ -33,10 +63,10 @@ class PrepareListener
         }
 
         if (class_exists('\Doctrine\DBAL\Query\QueryBuilder') && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
-            $platform = $qb->getConnection()->getDatabasePlatform();
             $event->setFilterQuery(new DBALQuery(
                 $qb,
-                $platform instanceof PostgreSqlPlatform));
+                $this->getForceCaseInsensitivity($qb)
+            ));
             $event->stopPropagation();
 
             return;
