@@ -20,6 +20,14 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('lexik_form_filter');
+        $rootNode
+            ->children()
+                ->booleanNode('force_case_insensitivity')
+                    ->info('whether to do case insensitive LIKE comparisons')
+                    ->defaultNull()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

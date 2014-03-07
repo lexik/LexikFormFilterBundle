@@ -54,6 +54,18 @@ twig:
             - LexikFormFilterBundle:Form:form_div_layout.html.twig
 ```
 
+If your RDBMS is Postgres, case insensitivity will be forced for LIKE comparisons.
+If you want to avoid that, there is a configuration option:
+
+```yaml
+# app/config/config.yml
+lexik_form_filter:
+    force_case_insensitivity: false
+```
+
+If you use Postgres and you want your LIKE comparisons to be case sensitive
+anyway, set it to `true`.
+
 3. Provided types 
 =================
 

@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Lexik\Bundle\FormFilterBundle\DependencyInjection\Configuration;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -25,5 +26,16 @@ class LexikFormFilterExtension extends Extension
         $loader->load('services.xml');
         $loader->load('form_types.xml');
         $loader->load('doctrine/filters.xml');
+
+        $configuration = new Configuration();
+        $config        = $this->processConfiguration($configuration, $configs);
+
+        if (isset($config['force_case_insensitivity'])) {
+            $filterPrepareDef = $container->getDefinition('lexik_form_filter.filter_prepare');
+            $filterPrepareDef->addMethodCall(
+                'setForceCaseInsensitivity',
+                array($config['force_case_insensitivity'])
+            );
+        }
     }
 }

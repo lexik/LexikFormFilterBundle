@@ -27,10 +27,15 @@ class DBALQuery implements QueryInterface
      *
      * @param QueryBuilder $queryBuilder
      */
-    public function __construct(QueryBuilder $queryBuilder)
+    public function __construct(
+        QueryBuilder $queryBuilder,
+        $forceCaseInsensitivity = false)
     {
         $this->queryBuilder      = $queryBuilder;
-        $this->expressionBuilder = new DBALExpressionBuilder($this->queryBuilder->expr());
+        $this->expressionBuilder = new DBALExpressionBuilder(
+            $this->queryBuilder->expr(),
+            $forceCaseInsensitivity
+        );
     }
 
     /**
