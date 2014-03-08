@@ -33,5 +33,10 @@
     "config": {
         "bin-dir": "bin"
     },
-    "target-dir": "Lexik/Bundle/FormFilterBundle"
+    "target-dir": "Lexik/Bundle/FormFilterBundle",
+    "extra": {
+        "branch-aliases": {
+            "dev-master": "2.x.x-dev"
+        }
+    }
 }
