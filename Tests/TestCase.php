@@ -33,7 +33,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em          = $this->getMockSqliteEntityManager();
+        $this->em          = $this->getSqliteEntityManager();
         $this->conn        = $this->em->getConnection();
         $this->formFactory = $this->getFormFactory();
     }
@@ -63,46 +63,30 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return EntityManager
      */
-    public function getMockSqliteEntityManager()
+    public function getSqliteEntityManager()
     {
-        $conn = array(
-            'driver' => 'pdo_sqlite',
-            'memory' => true,
-        );
-
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
         $reader = new AnnotationReader($cache);
-        //$reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
         $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Entity',
         ));
 
-        $config = $this->getMock('Doctrine\\ORM\\Configuration');
-        $config->expects($this->any())
-            ->method('getMetadataCacheImpl')
-            ->will($this->returnValue($cache));
-        $config->expects($this->any())
-            ->method('getQueryCacheImpl')
-            ->will($this->returnValue($cache));
-        $config->expects($this->once())
-            ->method('getProxyDir')
-            ->will($this->returnValue(sys_get_temp_dir()));
-        $config->expects($this->once())
-            ->method('getProxyNamespace')
-            ->will($this->returnValue('Proxy'));
-        $config->expects($this->once())
-            ->method('getAutoGenerateProxyClasses')
-            ->will($this->returnValue(true));
-        $config->expects($this->any())
-            ->method('getMetadataDriverImpl')
-            ->will($this->returnValue($mappingDriver));
-        $config->expects($this->any())
-            ->method('getClassMetadataFactoryName')
-            ->will($this->returnValue('Doctrine\\ORM\Mapping\\ClassMetadataFactory'));
-        $config->expects($this->any())
-            ->method('getDefaultRepositoryClassName')
-            ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'));
+        $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(array());
+
+        $config->setMetadataDriverImpl($mappingDriver);
+        $config->setMetadataCacheImpl($cache);
+        $config->setQueryCacheImpl($cache);
+        $config->setProxyDir(sys_get_temp_dir());
+        $config->setProxyNamespace('Proxy');
+        $config->setAutoGenerateProxyClasses(true);
+        $config->setClassMetadataFactoryName('Doctrine\ORM\Mapping\ClassMetadataFactory');
+        $config->setDefaultRepositoryClassName('Doctrine\ORM\EntityRepository');
+
+        $conn = array(
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        );
 
         $em = EntityManager::create($conn, $config);
 
