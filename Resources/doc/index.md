@@ -399,7 +399,7 @@ Working with entity associations and embeddeding filters
 --------------------------------------------------------
 
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
-Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has a 2 fields: label and color.
+Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has 2 fields: label and color.
 We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
 ```php
@@ -427,7 +427,7 @@ class MySuperFilterType extends AbstractType
 ```
 
 The `OptionsFilterType` class is a standard form that has to implement `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
-This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embeded type (OptionsFilterType here).
+This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
 
 ```php
 <?php
@@ -444,7 +444,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 
 /**
- * Embbed filter type.
+ * Embed filter type.
  */
 class OptionsFilterType extends AbstractType implements FilterTypeSharedableInterface
 {
@@ -460,7 +460,7 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
     }
 
     /**
-     * This method aim to add all joins you need
+     * This method aims to add all joins you need
      */
     public function addShared(FilterBuilderExecuterInterface $qbe)
     {
