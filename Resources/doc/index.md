@@ -460,7 +460,7 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
     }
 
     /**
-     * This method aim to add all joins you need
+     * This method aims to add all joins you need
      */
     public function addShared(FilterBuilderExecuterInterface $qbe)
     {
