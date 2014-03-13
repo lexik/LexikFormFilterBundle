@@ -399,7 +399,7 @@ Working with entity associations and embeddeding filters
 --------------------------------------------------------
 
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
-Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has a 2 fields: label and color.
+Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has 2 fields: label and color.
 We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
 ```php
