@@ -427,7 +427,7 @@ class MySuperFilterType extends AbstractType
 ```
 
 The `OptionsFilterType` class is a standard form that has to implement `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
-This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embedded type (OptionsFilterType here).
+This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
 
 ```php
 <?php
