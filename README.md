@@ -4,6 +4,7 @@ Overview
 This Symfony2 bundle aims to provide classes to build a form filter and then build a doctrine query from this form filter.
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
+![Project Status](http://stillmaintained.com/lexik/LexikFormFilterBundle.png)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c/big.png)](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c)
 
