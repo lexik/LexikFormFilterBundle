@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
@@ -116,6 +117,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 if (count($parts)) {
                     $this->addFilters($child, $filterQuery, $parts[$join]);
                 }
+            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
+
+                $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
+
             } else {
                 $this->applyFilterCondition($child, $formType, $filterQuery, $alias);
             }
