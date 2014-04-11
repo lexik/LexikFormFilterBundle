@@ -6,6 +6,7 @@
     * Inner workings
     * Filter customization
     * Working with entity associations and embeddeding filters
+    * Doctrine embeddables
     * Create your own filter type
 5. The FilterTypeExtension
 
@@ -66,7 +67,7 @@ lexik_form_filter:
 If you use Postgres and you want your LIKE comparisons to be case sensitive
 anyway, set it to `true`.
 
-3. Provided types 
+3. Provided types
 =================
 
 The bundle provides form types dedicated to filtering. Here the list of these types with their parent type and their specific options.
@@ -159,7 +160,7 @@ Parent type: _text_
 Options:
 
 * `condition_pattern`: this option allows you to configure the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. See the FilterOperands::STRING_xxx constants for all available patterns.
-You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text. 
+You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text.
 
 
 4. Working with the bundle
@@ -225,7 +226,7 @@ class MySuperFilterType extends AbstractType
     {
         return 'my_super_filter';
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -342,9 +343,9 @@ class MySuperFilterType extends AbstractType
     {
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
-            
+
                 // add conditions you need :)
-                
+
             },
         ));
     }
@@ -469,9 +470,55 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
             // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
             $filterBuilder->leftJoin($alias . '.options', 'opt');
         }
-    
+
         // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
         $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+    }
+}
+```
+
+Doctrine embeddables
+--------------------
+
+Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
+In the following code we suppose we use entities defined in the [doctine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
+
+The `UserFilterType` is a standard type and simply embed the `AddressFilterType`.
+
+```php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class UserFilterType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        // ...
+        $builder->add('address', new AddressFilterTyle());
+        // ...
+    }
+}
+```
+Then in the `AddressFilterType` wee will have to implements the `EmbeddedFilterTypeInterface`.
+This interface does not define any methods, it's just used by the `lexik_form_filter.query_builder_updater` service to differentiate it from an embedded type with relations.
+
+```php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
+
+class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterface
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('street', 'filter_text');
+        $builder->add('postalCode', 'filter_text');
+        // ...
     }
 }
 ```
@@ -553,19 +600,19 @@ class FilterSubscriber implements EventSubscriberInterface
         return array(
             // if a Doctrine\ORM\QueryBuilder is passed to the lexik_form_filter.query_builder_updater service
             'lexik_form_filter.apply.orm.filter_locale' => array('filterLocale'),
-            
+
             // if a Doctrine\DBAL\Query\QueryBuilder is passed to the lexik_form_filter.query_builder_updater service
             'lexik_form_filter.apply.dbal.filter_locale' => array('filterLocale'),
         );
     }
-    
+
     /**
      * Apply a filter for a filter_locale type.
      *
      * This method should work whih both ORM and DBAL query builder.
      */
     public function filterLocale(ApplyFilterEvent $event)
-    {       
+    {
         $qb     = $event->getQueryBuilder();
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
@@ -636,7 +683,7 @@ class CallbackFilterType extends AbstractType
         $builder->add('my_text_field', 'filter_text', array(
             'apply_filter' => array($this, 'textFieldCallback'),
         ));
-        
+
         $builder->add('my_number_field', 'filter_number', array(
             'apply_filter' => function(QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
@@ -700,9 +747,9 @@ class RainbowExtractionMethod implements DataExtractionMethodInterface
         $values = array(
             'value' => $form->getData(), // The value used to filter, most of time the form value.
         );
-        
+
         // add other stuff into $values
-    
+
         return $values;
     }
 }
