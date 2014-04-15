@@ -8,8 +8,8 @@ use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
@@ -106,19 +106,25 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            if ($formType instanceof FilterTypeSharedableInterface) {
+            if ($formType instanceof CollectionAdapterFilterType) {
                 $join = $alias . '.' . $child->getName();
 
                 if (!isset($parts[$join])) {
+                    $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
+
+                    if (!$addSharedClosure instanceof \Closure) {
+                        throw new \RuntimeException('Please provide a closure to the "add_shared" option of "filter_collection_adapter".');
+                    }
+
                     $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
-                    $formType->addShared($qbe);
+                    $addSharedClosure($qbe);
                 }
 
                 if (count($parts)) {
-                    $this->addFilters($child, $filterQuery, $parts[$join]);
+                    $this->addFilters($child->get(0), $filterQuery, $parts[$join]);
                 }
-            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
 
+            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
                 $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
 
             } else {
@@ -155,7 +161,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             $parentForm = $form;
             do {
                 $parentForm = $parentForm->getParent();
-                $name = $parentForm->getName() . '.' . $name;
+                if (!is_numeric($parentForm->getName())) { // skip collection numeric index
+                    $name = $parentForm->getName() . '.' . $name;
+                }
             } while ( ! $parentForm->isRoot());
 
             // trigger specific or global event name
@@ -167,6 +175,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             $event = new ApplyFilterEvent($filterQuery, $field, $values);
             $this->dispatcher->dispatch($eventName, $event);
 
+            // support the old way to apply filters
             if ($this->dispatcher->hasListeners('lexik_filter.get')) {
                 $type = $this->getFilterType($form->getConfig(), $filterQuery->getQueryBuilder());
 
