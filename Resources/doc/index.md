@@ -481,9 +481,9 @@ Doctrine embeddables
 --------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
-In the following code we suppose we use entities defined in the [doctine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
+In the following code we suppose we use entities defined in the [doctrine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
 
-The `UserFilterType` is a standard type and simply embed the `AddressFilterType`.
+The `UserFilterType` is a standard type and simply embeds the `AddressFilterType`.
 
 ```php
 namespace Project\Bundle\SuperBundle\Filter;
@@ -501,7 +501,7 @@ class UserFilterType extends AbstractType
     }
 }
 ```
-Then in the `AddressFilterType` wee will have to implements the `EmbeddedFilterTypeInterface`.
+Then in the `AddressFilterType` we will have to implement the `EmbeddedFilterTypeInterface`.
 This interface does not define any methods, it's just used by the `lexik_form_filter.query_builder_updater` service to differentiate it from an embedded type with relations.
 
 ```php
