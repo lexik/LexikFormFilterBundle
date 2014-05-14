@@ -255,7 +255,7 @@ class DefaultController extends Controller
 
         if ($this->get('request')->query->has('submit-filter')) {
             // bind values from the request
-            $form->bindRequest($this->get('request'));
+            $form->bind($this->get('request'));
 
             // initialize a query builder
             $filterBuilder = $this->get('doctrine.orm.entity_manager')
