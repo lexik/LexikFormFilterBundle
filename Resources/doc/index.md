@@ -253,9 +253,9 @@ class DefaultController extends Controller
     {
         $form = $this->get('form.factory')->create(new MySuperFilterType());
 
-        if ($this->get('request')->query->has('submit-filter')) {
-            // bind values from the request
-            $form->bindRequest($this->get('request'));
+        if ($this->get('request')->query->has($form->getName())) {
+            // manually bind values from the request
+            $form->submit($this->get('request')->query->get($form->getName()));
 
             // initialize a query builder
             $filterBuilder = $this->get('doctrine.orm.entity_manager')
