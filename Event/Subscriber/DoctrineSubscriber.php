@@ -11,6 +11,7 @@ use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Provide Doctrine ORM and DBAL filters.
@@ -231,8 +232,12 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
+            $paramName = sprintf('p_%s', str_replace('.', '_', $event->getField()));
+
             $op = empty($values['condition_operator']) ? FilterOperands::OPERATOR_EQUAL : $values['condition_operator'];
-            $qb->andWhere($expr->$op($event->getField(), $values['value']));
+
+            $qb->andWhere($expr->$op($event->getField(), ':'.$paramName));
+            $qb->setParameter($paramName, $values['value'], is_int($values['value']) ? Type::INTEGER : Type::FLOAT);
         }
     }
 

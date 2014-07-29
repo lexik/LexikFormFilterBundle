@@ -14,11 +14,11 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         parent::createBuildQueryTest('getSQL', array(
             'SELECT i FROM item i',
             'SELECT i FROM item i WHERE i.name LIKE \'blabla\'',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > 2)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > 2) AND (i.enabled = 1)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > 2) AND (i.enabled = 1)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= 2) AND (i.createdAt = \'2013-09-27\')',
-            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= 2) AND (i.createdAt = \'2013-09-27 13:21:00\')',
+            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position)',
+            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = 1)',
+            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = 1)',
+            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = \'2013-09-27\')',
+            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = \'2013-09-27 13:21:00\')',
         ));
     }
 

@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,20 +9,44 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
 
 /**
  * Filter query builder tests.
  */
 abstract class DoctrineQueryBuilderUpdater extends TestCase
 {
+    /**
+     * Get query parameters from the query builder.
+     *
+     * @param $qb
+     * @return array
+     */
+    protected function getQueryBuilderParameters($qb)
+    {
+        if ($qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
+            return $qb->getParameters();
+        }
+
+        if ($qb instanceof \Doctrine\ORM\QueryBuilder) {
+            $params = array();
+
+            foreach ($qb->getParameters() as $parameter) {
+                $params[$parameter->getName()] = $parameter->getValue();
+            }
+
+            return $params;
+        }
+
+        return array();
+    }
+
     protected function createBuildQueryTest($method, array $dqls)
     {
         $form = $this->formFactory->create(new ItemFilterType());
@@ -53,6 +75,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[2], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
 
         // bind a request to the form - 3 params
@@ -63,6 +86,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[3], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
 
         // bind a request to the form - 3 params (use checkbox for enabled field)
@@ -73,6 +97,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[4], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
 
         // bind a request to the form - date + pattern selector
@@ -87,6 +112,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
 
         // bind a request to the form - datetime + pattern selector
@@ -104,6 +130,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createApplyFilterOptionTest($method, array $dqls)
