@@ -156,6 +156,10 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array(
+            'p_i_position_left' => 1,
+            'p_i_position_right' => 3,
+        ), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createNumberRangeCompoundTest($method, array $dqls)
@@ -172,6 +176,10 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array(
+            'p_i_position_selector_left' => 4,
+            'p_i_position_selector_right' => 8,
+        ), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createNumberRangeDefaultValuesTest($method, array $dqls)
@@ -185,6 +193,10 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+        $this->assertEquals(array(
+            'p_i_default_position_left' => 1,
+            'p_i_default_position_right' => 3,
+        ), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createDateRangeTest($method, array $dqls)

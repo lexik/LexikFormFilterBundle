@@ -250,35 +250,41 @@ class DoctrineSubscriber implements EventSubscriberInterface
 
         if (isset($value['left_number'][0])) {
             $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator'] );
+            $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['left_number'][0])) {
                 $leftValue = $value['left_number'][0];
                 $leftCond  = $value['left_number']['condition_operator'];
 
-                $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
+                $qb->andWhere($expr->$leftCond($event->getField(), ':'.$leftParamName));
+                $qb->setParameter($leftParamName, $leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
 
             } else if ($hasSelector && isset($value['left_number'][0]['text'])) {
                 $leftValue = $value['left_number'][0]['text'];
                 $leftCond  = $value['left_number'][0]['condition_operator'];
 
-                $qb->andWhere($expr->$leftCond($event->getField(), $leftValue));
+                $qb->andWhere($expr->$leftCond($event->getField(), ':'.$leftParamName));
+                $qb->setParameter($leftParamName, $leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
             }
         }
 
         if (isset($value['right_number'][0])) {
             $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator'] );
+            $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['right_number'][0])) {
                 $rightValue = $value['right_number'][0];
                 $rightCond  = $value['right_number']['condition_operator'];
 
-                $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
+                $qb->andWhere($expr->$rightCond($event->getField(), ':'.$rightParamName));
+                $qb->setParameter($rightParamName, $rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
 
             } else if ($hasSelector && isset($value['right_number'][0]['text'])) {
                 $rightValue = $value['right_number'][0]['text'];
                 $rightCond  = $value['right_number'][0]['condition_operator'];
 
-                $qb->andWhere($expr->$rightCond($event->getField(), $rightValue));
+                $qb->andWhere($expr->$rightCond($event->getField(), ':'.$rightParamName));
+                $qb->setParameter($rightParamName, $rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
             }
         }
     }

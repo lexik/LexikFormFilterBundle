@@ -34,21 +34,21 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testNumberRange()
     {
         parent::createNumberRangeTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position > 1 AND i.position < 3',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position > :p_i_position_left AND i.position < :p_i_position_right',
         ));
     }
 
     public function testNumberRangeWithSelector()
     {
         parent::createNumberRangeCompoundTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position_selector > 4 AND i.position_selector <= 8',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position_selector > :p_i_position_selector_left AND i.position_selector <= :p_i_position_selector_right',
         ));
     }
 
     public function testNumberRangeDefaultValues()
     {
         parent::createNumberRangeDefaultValuesTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.default_position >= 1 AND i.default_position <= 3',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.default_position >= :p_i_default_position_left AND i.default_position <= :p_i_default_position_right',
         ));
     }
 
