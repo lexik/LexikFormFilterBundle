@@ -117,7 +117,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                     $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
 
                     if (!$addSharedClosure instanceof \Closure) {
-                        throw new \RuntimeException('Please provide a closure to the "add_shared" option of "filter_collection_adapter".');
+                        throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
                     }
 
                     $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
@@ -125,7 +125,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 }
 
                 if (count($parts)) {
-                    $isCollection = ($child instanceof CollectionAdapterFilterType);
+                    $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
                     $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join]);
                 }

@@ -24,7 +24,7 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
             'type'       => new OptionFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
                 $joinClosure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
-                    $filterBuilder->leftJoin($alias . '.options', 'opt');
+                    $filterBuilder->leftJoin($alias . '.options', $joinAlias);
                 };
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $joinClosure);
             }
