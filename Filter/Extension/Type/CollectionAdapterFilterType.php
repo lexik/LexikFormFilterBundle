@@ -9,8 +9,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
-
 /**
  * Filter to used to simulate a collection and get filter to apply on collection elements.
  *
@@ -24,7 +22,7 @@ class CollectionAdapterFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // update collection to only get one element
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $form = $event->getForm();
             $data = $event->getData();
 
@@ -50,9 +48,6 @@ class CollectionAdapterFilterType extends AbstractType
 
             $form->add($index, $options['type'], $childOptions);
         });
-
-        // keep the closure as attribute to execute it later in the query builder updater
-        $builder->setAttribute('add_shared', $options['add_shared']);
     }
 
     /**
@@ -64,10 +59,17 @@ class CollectionAdapterFilterType extends AbstractType
             'type'         => null,
             'options'      => array(),
             'default_data' => array(),
-            'add_shared'   => function(FilterBuilderExecuterInterface $qbe) {},
         ));
 
         $resolver->setRequired(array('type'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return 'filter_sharedable';
     }
 
     /**

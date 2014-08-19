@@ -20,6 +20,7 @@
         <parameter key="lexik_form_filter.type.filter_datetime.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_datetime_range.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeRangeFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_collection_adapter.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_sharedable.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\SharedableFilterType</parameter>
 
         <!-- Type extension -->
         <parameter key="lexik_form_filter.type_extension.filter_extension.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterTypeExtension</parameter>
@@ -82,6 +83,10 @@
 
         <service id="lexik_form_filter.type.filter_collection_adapter" class="%lexik_form_filter.type.filter_collection_adapter.class%">
             <tag name="form.type" alias="filter_collection_adapter" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_sharedable" class="%lexik_form_filter.type.filter_sharedable.class%">
+            <tag name="form.type" alias="filter_sharedable" />
         </service>
 
         <!-- Type extension -->

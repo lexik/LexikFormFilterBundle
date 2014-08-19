@@ -11,7 +11,6 @@ use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterfac
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
@@ -72,6 +71,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param  string|null   $alias
      *
      * @return object filter builder
+     *
+     * @throws \RuntimeException
      */
     public function addFilterConditions(FormInterface $form, $queryBuilder, $alias = null)
     {
@@ -99,6 +100,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param QueryInterface $filterQuery
      * @param string         $alias
      * @param array          $parts
+     *
+     * @throws \RuntimeException
      */
     protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null, array &$parts = array())
     {
@@ -106,7 +109,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            if ($formType instanceof CollectionAdapterFilterType) {
+            // this means we have a relation
+            if ($child->getConfig()->hasAttribute('add_shared')) {
                 $join = $alias . '.' . $child->getName();
 
                 if (!isset($parts[$join])) {
@@ -121,12 +125,16 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 }
 
                 if (count($parts)) {
-                    $this->addFilters($child->get(0), $filterQuery, $parts[$join]);
+                    $isCollection = ($child instanceof CollectionAdapterFilterType);
+
+                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join]);
                 }
 
+            // Doctrine2 embedded object case
             } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
                 $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
 
+            // default case
             } else {
                 $this->applyFilterCondition($child, $formType, $filterQuery, $alias);
             }

@@ -30,6 +30,7 @@ class FilterExtension extends AbstractExtension
             new Type\NumberRangeFilterType(),
             new Type\TextFilterType(),
             new Type\CollectionAdapterFilterType(),
+            new Type\SharedableFilterType(),
         );
     }
 
