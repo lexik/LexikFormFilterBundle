@@ -18,7 +18,7 @@ Add the bundle to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "v2.0.0" // check packagist.org for more tags
+    "lexik/form-filter-bundle": "~2.0" // check packagist.org for more tags
     // ...
 }
 ```
@@ -289,7 +289,7 @@ Basic template
 Inner workings
 --------------
 
-A filter is applied using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter.
+A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter.
 We provide a subscriber that supports Doctrine ORM and DBAL.
 
 The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
@@ -317,14 +317,13 @@ Filter customization
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
-If this option is defined the `QueryBuilderUpdater` won't trigger any event,  but instead will call the given closure.
+If this option is defined the `QueryBuilderUpdater` won't trigger any event, but if will call the given closure instead.
 
 The closure takes 3 parameters:
 
 * an object that implements `Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface` from which you can get the query builder and the expression class.
-* the expression class
-* the field name
-* an array of values containing the field value and some other data
+* the field name.
+* an array of values containing the field value and some other data.
 
 ```php
 <?php
@@ -359,7 +358,8 @@ class MySuperFilterType extends AbstractType
 
 #### B. By listening an event
 
-Another way to override the default way to apply the filter is to listen a custom event name composed of the form type name plus the form type's parent names, so the custom event name is like:
+Another way to override the default way to apply the filter is to listen a custom event name.
+This event name is composed of the form type name plus the form type's parent names, so the custom event name is like:
 
 `lexik_form_filter.apply.<query_builder_type>.<parents_field_name>.<field_name>`
 
@@ -399,36 +399,13 @@ Before triggering the default event name, the `lexik_form_filter.query_builder_u
 Working with entity associations and embeddeding filters
 --------------------------------------------------------
 
+#### A. Collection
+
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
-Let's say the entity we filter with the `MySuperFilterType` filter is related to some options, and an option has 2 fields: label and color.
+Let's say the entity we filter with the `MySuperFilterType` filter is related to a collection of options, and an option has 2 fields: label and color.
 We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
 
-```php
-<?php
-
-namespace Project\Bundle\SuperBundle\Filter;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-
-class MySuperFilterType extends AbstractType
-{
-    public function buildForm(FormBuilder $builder, array $options)
-    {
-        $builder->add('name', 'filter_text');
-        $builder->add('rank', 'filter_number');
-        $builder->add('options', new OptionsFilterType());
-    }
-
-    public function getName()
-    {
-        return 'my_super_filter';
-    }
-}
-```
-
-The `OptionsFilterType` class is a standard form that has to implement `Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface`.
-This interface defines an `addShared()` method used to add joins (or other stuff) needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
+The `OptionsFilterType` class is a standard form, and would looks like:
 
 ```php
 <?php
@@ -440,14 +417,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\ORM\QueryBuilder;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Expr;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
-
 /**
  * Embed filter type.
  */
-class OptionsFilterType extends AbstractType implements FilterTypeSharedableInterface
+class OptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -459,23 +432,57 @@ class OptionsFilterType extends AbstractType implements FilterTypeSharedableInte
     {
         return 'options_filter';
     }
+}
+```
 
-    /**
-     * This method aims to add all joins you need
-     */
-    public function addShared(FilterBuilderExecuterInterface $qbe)
+Then we can use it in our "root" type. But we will embed it by using a `filter_collection_adapter` type.
+This type will allow us to use the `add_shared` option to add joins (or other stuff) we needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+
+class MySuperFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
     {
-        $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
-            // add the join clause to the doctrine query builder
-            // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
-            $filterBuilder->leftJoin($alias . '.options', 'opt');
-        }
+        $builder->add('name', 'filter_text');
+        $builder->add('rank', 'filter_number');
+        $builder->add('options', 'filter_collection_adapter', array(
+            'type'      => new OptionsFilterType(),
+            'add_shared => funciton (FilterBuilderExecuterInterface $qbe)  {
+                $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                    // add the join clause to the doctrine query builder
+                    // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
+                    $filterBuilder->leftJoin($alias . '.options', $joinAlias');
+                }
 
-        // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
-        $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+                // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
+                $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+            },
+        );
+    }
+
+    public function getName()
+    {
+        return 'my_super_filter';
     }
 }
 ```
+
+#### B. Single object
+
+TODO :D
+
 
 Doctrine embeddables
 --------------------
