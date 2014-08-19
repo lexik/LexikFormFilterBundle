@@ -14,6 +14,9 @@ abstract class ExpressionBuilder
      */
     protected $expr;
 
+    /**
+     * @var boolean
+     */
     protected $forceCaseInsensitivity;
 
     /**
