@@ -207,14 +207,14 @@ Create a type extended from AbstractType, add `name` and `rank` and use the filt
 
 ```php
 <?php
-// MySuperFilterType.php
+// ItemFilterType.php
 namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MySuperFilterType extends AbstractType
+class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -224,7 +224,7 @@ class MySuperFilterType extends AbstractType
 
     public function getName()
     {
-        return 'my_super_filter';
+        return 'item_filter';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -237,7 +237,7 @@ class MySuperFilterType extends AbstractType
 }
 ```
 
-Then in an action, create a form object from the MySuperFilterType. Let's say we filter when the form is submitted with a GET method.
+Then in an action, create a form object from the ItemFilterType. Let's say we filter when the form is submitted with a GET method.
 
 ```php
 <?php
@@ -245,13 +245,13 @@ Then in an action, create a form object from the MySuperFilterType. Let's say we
 namespace Project\Bundle\SuperBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Project\Bundle\SuperBundle\Filter\MySuperFilterType;
+use Project\Bundle\SuperBundle\Filter\ItemFilterType;
 
 class DefaultController extends Controller
 {
     public function testFilterAction()
     {
-        $form = $this->get('form.factory')->create(new MySuperFilterType());
+        $form = $this->get('form.factory')->create(new ItemFilterType());
 
         if ($this->get('request')->query->has('submit-filter')) {
             // bind values from the request
@@ -327,7 +327,7 @@ The closure takes 3 parameters:
 
 ```php
 <?php
-// MySuperFilterType.php
+// ItemFilterType.php
 namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
@@ -336,7 +336,7 @@ use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
-class MySuperFilterType extends AbstractType
+class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
@@ -351,7 +351,7 @@ class MySuperFilterType extends AbstractType
 
     public function getName()
     {
-        return 'my_super_filter';
+        return 'item_filter';
     }
 }
 ```
@@ -367,7 +367,7 @@ For example, if I use the following form type:
 
 ```php
 <?php
-// MySuperFilterType.php
+// ItemFilterType.php
 namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
@@ -375,7 +375,7 @@ use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
-class MySuperFilterType extends AbstractType
+class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
@@ -384,14 +384,14 @@ class MySuperFilterType extends AbstractType
 
     public function getName()
     {
-        return 'my_super_filter';
+        return 'item_filter';
     }
 }
 ```
 
 The custom event name will be:
 
-`lexik_form_filter.apply.orm.my_super_filter.position`
+`lexik_form_filter.apply.orm.item_filter.position`
 
 Before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
@@ -399,11 +399,15 @@ Before triggering the default event name, the `lexik_form_filter.query_builder_u
 Working with entity associations and embeddeding filters
 --------------------------------------------------------
 
+You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
+
+In the two following sections (A and B), I suppose we have 2 entities Item and Options.
+And Item has a collection of Option and and Option has one Item.
+
 #### A. Collection
 
-You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
-Let's say the entity we filter with the `MySuperFilterType` filter is related to a collection of options, and an option has 2 fields: label and color.
-We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `MySuperFilterType`:
+Let's say the entity we filter with the `ItemFilterType` filter is related to a collection of options, and an option has 2 fields: label and color.
+We can filter entities by their option's label and color by creating and using a `OptionsFilterType` inside `ItemFilterType`:
 
 The `OptionsFilterType` class is a standard form, and would looks like:
 
@@ -435,7 +439,7 @@ class OptionsFilterType extends AbstractType
 }
 ```
 
-Then we can use it in our "root" type. But we will embed it by using a `filter_collection_adapter` type.
+Then we can use it in our `ItemFilterType` type. But we will embed it by using a `filter_collection_adapter` type.
 This type will allow us to use the `add_shared` option to add joins (or other stuff) we needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
 
 ```php
@@ -451,12 +455,13 @@ use Doctrine\ORM\QueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 
-class MySuperFilterType extends AbstractType
+class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'filter_text');
         $builder->add('rank', 'filter_number');
+
         $builder->add('options', 'filter_collection_adapter', array(
             'type'      => new OptionsFilterType(),
             'add_shared => funciton (FilterBuilderExecuterInterface $qbe)  {
@@ -474,15 +479,78 @@ class MySuperFilterType extends AbstractType
 
     public function getName()
     {
-        return 'my_super_filter';
+        return 'item_filter';
     }
 }
 ```
 
 #### B. Single object
 
-TODO :D
+So let's say we need to filter some Option by their related Item's name.
+We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filder on field that belong to Item.
 
+Let's start with the `ItemFilterType`, the only thing we have to do is to change the default parent type of our by using the `getParent()` method.
+This will allow us to use the `add_shared` option as in the `filter_collection_adapter` type (by default this option is not available on a type).
+
+```php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('name', 'filter_text');
+    }
+
+    public function getParent()
+    {
+        return 'filter_sharedable'; // this allow us to use the "add_shared" option
+    }
+
+    public function getName()
+    {
+        return 'filter_item';
+    }
+}
+```
+
+Then we can use our `ItemFilterType` inside `OptionsFilterType` and add the joins we need through the `add_shared` option.
+
+```php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class OptionsFilterType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('item', new ItemFilterType(), array(
+            'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
+                $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                    $filterBuilder->leftJoin($alias . '.item', $joinAlias);
+                };
+
+                $qbe->addOnce($qbe->getAlias().'.item', 'i', $closure);
+            }
+        ));
+    }
+
+    public function getName()
+    {
+        return 'filter_options';
+    }
+}
+```
 
 Doctrine embeddables
 --------------------
