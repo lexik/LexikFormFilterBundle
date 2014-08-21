@@ -8,10 +8,9 @@ use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
@@ -72,6 +71,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param  string|null   $alias
      *
      * @return object filter builder
+     *
+     * @throws \RuntimeException
      */
     public function addFilterConditions(FormInterface $form, $queryBuilder, $alias = null)
     {
@@ -99,6 +100,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param QueryInterface $filterQuery
      * @param string         $alias
      * @param array          $parts
+     *
+     * @throws \RuntimeException
      */
     protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null, array &$parts = array())
     {
@@ -106,21 +109,32 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            if ($formType instanceof FilterTypeSharedableInterface) {
+            // this means we have a relation
+            if ($child->getConfig()->hasAttribute('add_shared')) {
                 $join = $alias . '.' . $child->getName();
 
                 if (!isset($parts[$join])) {
+                    $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
+
+                    if (!$addSharedClosure instanceof \Closure) {
+                        throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
+                    }
+
                     $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
-                    $formType->addShared($qbe);
+                    $addSharedClosure($qbe);
                 }
 
                 if (count($parts)) {
-                    $this->addFilters($child, $filterQuery, $parts[$join]);
-                }
-            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
+                    $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
+                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join]);
+                }
+
+            // Doctrine2 embedded object case
+            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
                 $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
 
+            // default case
             } else {
                 $this->applyFilterCondition($child, $formType, $filterQuery, $alias);
             }
@@ -147,15 +161,19 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
         if ($callable instanceof \Closure) {
             $callable($filterQuery, $field, $values);
+
         } else if (is_callable($callable)) {
             call_user_func($callable, $filterQuery, $field, $values);
+
         } else {
             // build specific event name including all form parent names
             $name = $form->getName();
             $parentForm = $form;
             do {
                 $parentForm = $parentForm->getParent();
-                $name = $parentForm->getName() . '.' . $name;
+                if (!is_numeric($parentForm->getName())) { // skip collection numeric index
+                    $name = $parentForm->getName() . '.' . $name;
+                }
             } while ( ! $parentForm->isRoot());
 
             // trigger specific or global event name
@@ -166,14 +184,6 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
             $event = new ApplyFilterEvent($filterQuery, $field, $values);
             $this->dispatcher->dispatch($eventName, $event);
-
-            if ($this->dispatcher->hasListeners('lexik_filter.get')) {
-                $type = $this->getFilterType($form->getConfig(), $filterQuery->getQueryBuilder());
-
-                if ($type instanceof FilterInterface) {
-                    $type->applyFilter($filterQuery->getQueryBuilder(), new Expr(), $field, $values);
-                }
-            }
         }
     }
 
@@ -193,41 +203,5 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         }
 
         return $values;
-    }
-
-    /**
-     * Get filter type name by form config
-     *
-     * @param FormConfigInterface $config
-     *
-     * @return string
-     *
-     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
-     */
-    protected function getFilterTypeName(FormConfigInterface $config)
-    {
-        $formType = $config->getType()->getInnerType();
-
-        return ($config->hasAttribute('apply_filter') && is_string($config->getAttribute('apply_filter')))
-            ? $config->getAttribute('apply_filter')
-            : $formType->getName();
-    }
-
-    /**
-     * Returns the filter type used to build the given form.
-     *
-     * @param FormConfigInterface $config
-     * @param object              $filterBuilder
-     *
-     * @return FilterInterface
-     *
-     * @deprecated Deprecated since version 2.0, to be removed in 2.1. Use EventDispatcher instead.
-     */
-    protected function getFilterType(FormConfigInterface $config, $filterBuilder)
-    {
-        $event = new GetFilterEvent($filterBuilder, $this->getFilterTypeName($config));
-        $this->dispatcher->dispatch(FilterEvents::GET_FILTER, $event);
-
-        return $event->getFilter();
     }
 }

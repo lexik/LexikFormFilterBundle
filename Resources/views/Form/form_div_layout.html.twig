@@ -33,3 +33,8 @@
         {{ form_widget(form.right_date, {'attr': attr}) }}
     </div>
 {% endblock filter_date_range_widget %}
+
+{% block filter_collection_adapter_widget %}
+    {# only display the first element #}
+    {{ form_widget(form[0]) }}
+{% endblock filter_collection_adapter_widget %}
