@@ -4,18 +4,15 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\ORM\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
-use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
