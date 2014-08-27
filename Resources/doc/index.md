@@ -464,7 +464,7 @@ class ItemFilterType extends AbstractType
 
         $builder->add('options', 'filter_collection_adapter', array(
             'type'      => new OptionsFilterType(),
-            'add_shared => funciton (FilterBuilderExecuterInterface $qbe)  {
+            'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
                     // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
