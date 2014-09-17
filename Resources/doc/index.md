@@ -663,7 +663,7 @@ Now we can use the `filter_locale` type, but no filter will be applied. To apply
 namespace Super\Namespace\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 class FilterSubscriber implements EventSubscriberInterface
 {
@@ -686,7 +686,7 @@ class FilterSubscriber implements EventSubscriberInterface
      *
      * This method should work whih both ORM and DBAL query builder.
      */
-    public function filterLocale(ApplyFilterEvent $event)
+    public function filterLocale(GetFilterConditionEvent $event)
     {
         $qb     = $event->getQueryBuilder();
         $expr   = $event->getFilterQuery()->getExpr();

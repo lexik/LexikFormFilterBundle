@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 use Symfony\Component\Form\AbstractType;
@@ -20,8 +21,10 @@ class FormType extends AbstractType
         $builder->add('position', 'integer', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    $filterQuery->getQueryBuilder()->andWhere($filterQuery->getExpr()->eq($field, $values['value']));
+                    return new Condition($filterQuery->getExpr()->eq($field, $values['value']));
                 }
+
+                return null;
             },
         ));
     }

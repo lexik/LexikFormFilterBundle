@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Extension;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 
@@ -25,6 +24,10 @@ class FilterTypeExtension extends AbstractTypeExtension
         ) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
         }
+
+        if ($options['filter_condition_builder'] instanceof \Closure) {
+            $builder->setAttribute('filter_condition_builder', $options['filter_condition_builder']);
+        }
     }
 
     /**
@@ -32,11 +35,10 @@ class FilterTypeExtension extends AbstractTypeExtension
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $resolver->setDefaults(array(
-            'apply_filter'           => null,
-            'data_extraction_method' => 'default',
+            'apply_filter'             => null,
+            'data_extraction_method'   => 'default',
+            'filter_condition_builder' => null,
         ));
     }
 

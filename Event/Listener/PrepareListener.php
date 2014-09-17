@@ -5,6 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
+
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 
 /**
@@ -34,12 +35,11 @@ class PrepareListener
         }
 
         if (class_exists('\Doctrine\ORM\QueryBuilder') && $qb instanceof \Doctrine\ORM\QueryBuilder) {
-            return $qb->getEntityManager()->getConnection()->getDatabasePlatform()
-                instanceof PostgreSqlPlatform;
+            return ($qb->getEntityManager()->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform);
         }
 
         if (class_exists('\Doctrine\DBAL\Query\QueryBuilder') && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
-            return  $qb->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform;
+            return ($qb->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform);
         }
     }
 
