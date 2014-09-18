@@ -8,8 +8,8 @@
         <parameter key="lexik_form_filter.filter_prepare.class">Lexik\Bundle\FormFilterBundle\Event\Listener\PrepareListener</parameter>
         <parameter key="lexik_form_filter.get_filter.doctrine_orm.class">Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineORMSubscriber</parameter>
         <parameter key="lexik_form_filter.get_filter.doctrine_dbal.class">Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineDBALSubscriber</parameter>
-        <parameter key="lexik_form_filter.apply_filter.doctrine_orm.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineORMApplyFilterListener</parameter>
-        <parameter key="lexik_form_filter.apply_filter.doctrine_dbal.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineDBALApplyFilterListener</parameter>
+        <parameter key="lexik_form_filter.apply_filter.doctrine_orm.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineApplyFilterListener</parameter>
+        <parameter key="lexik_form_filter.apply_filter.doctrine_dbal.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineApplyFilterListener</parameter>
     </parameters>
 
     <services>

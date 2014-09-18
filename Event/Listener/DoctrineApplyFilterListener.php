@@ -2,8 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\ORM\Query\Expr\Composite;
+
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
@@ -14,7 +17,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNode;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DoctrineORMApplyFilterListener
+class DoctrineApplyFilterListener
 {
     /**
      * @var array
@@ -47,11 +50,11 @@ class DoctrineORMApplyFilterListener
     }
 
     /**
-     * @param QueryBuilder  $queryBuilder
-     * @param ConditionNode $node
-     * @return Composite|null
+     * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
+     * @param ConditionNode                    $node
+     * @return Composite|CompositeExpression|null
      */
-    protected function computeExpression(QueryBuilder $queryBuilder, ConditionNode $node)
+    protected function computeExpression($queryBuilder, ConditionNode $node)
     {
         if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
             return null;
