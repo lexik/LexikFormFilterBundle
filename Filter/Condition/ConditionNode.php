@@ -2,6 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 
+/**
+ * Defined the operator to use for a list of fields.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class ConditionNode implements \ArrayAccess
 {
     const EXPR_AND = 'and';
@@ -27,7 +32,11 @@ class ConditionNode implements \ArrayAccess
      */
     private $fields;
 
-    public function __construct($operator, $parent)
+    /**
+     * @param string        $operator
+     * @param ConditionNode $parent
+     */
+    public function __construct($operator, ConditionNode $parent = null)
     {
         $this->operator = $operator;
         $this->parent = $parent;
@@ -35,6 +44,12 @@ class ConditionNode implements \ArrayAccess
         $this->fields = array();
     }
 
+    /**
+     * Start a OR sub expression.
+     *
+     * @param string $name
+     * @return static
+     */
     public function orX($name)
     {
         $node = new static(self::EXPR_OR, $this);
@@ -44,6 +59,12 @@ class ConditionNode implements \ArrayAccess
         return $node;
     }
 
+    /**
+     * Start a AND sub expression.
+     *
+     * @param string $name
+     * @return static
+     */
     public function andX($name)
     {
         $node = new static(self::EXPR_AND, $this);
@@ -53,11 +74,22 @@ class ConditionNode implements \ArrayAccess
         return $node;
     }
 
+    /**
+     * Returns the parent node.
+     *
+     * @return ConditionNode
+     */
     public function end()
     {
         return $this->parent;
     }
 
+    /**
+     * Add a field in the current expression.
+     *
+     * @param string $name
+     * @return $this
+     */
     public function field($name)
     {
         $this->fields[$name] = null;
@@ -87,16 +119,6 @@ class ConditionNode implements \ArrayAccess
     public function getChildren()
     {
         return $this->children;
-    }
-
-    public function getChild($name)
-    {
-        return isset($this->children[$name]) ? $this->children[$name] : null;
-    }
-
-    public function getValue($field)
-    {
-        return isset($this->fields[$field]) ? $this->fields[$field] : null;
     }
 
     /**

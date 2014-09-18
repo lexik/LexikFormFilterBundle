@@ -3,6 +3,8 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 
 /**
+ * Represent a filter condition to ba added on a query builder.
+ *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
 class Condition

@@ -2,15 +2,29 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class ApplyFilterConditionEvent extends Event
 {
+    /**
+     * @var mixed
+     */
     private $queryBuilder;
 
+    /**
+     * @var ConditionBuilder
+     */
     private $conditionBuilder;
 
-    public function __construct($queryBuilder, $conditionBuilder)
+    /**
+     * @param mixed            $queryBuilder
+     * @param ConditionBuilder $conditionBuilder
+     */
+    public function __construct($queryBuilder, ConditionBuilder $conditionBuilder)
     {
         $this->queryBuilder = $queryBuilder;
         $this->conditionBuilder = $conditionBuilder;

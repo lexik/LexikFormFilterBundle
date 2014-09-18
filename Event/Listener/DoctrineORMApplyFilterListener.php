@@ -9,6 +9,11 @@ use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNode;
 
+/**
+ * Add filter conditions on a Doctrine ORM query builder.
+ *
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class DoctrineORMApplyFilterListener
 {
     /**
@@ -16,6 +21,9 @@ class DoctrineORMApplyFilterListener
      */
     private $parameters;
 
+    /**
+     * @param ApplyFilterConditionEvent $event
+     */
     public function onApplyFilterCondition(ApplyFilterConditionEvent $event)
     {
         $qb = $event->getQueryBuilder();
@@ -39,7 +47,7 @@ class DoctrineORMApplyFilterListener
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder  $queryBuilder
      * @param ConditionNode $node
      * @return Composite|null
      */
