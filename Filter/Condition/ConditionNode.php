@@ -35,20 +35,20 @@ class ConditionNode implements \ArrayAccess
         $this->fields = array();
     }
 
-    public function orX()
+    public function orX($name)
     {
         $node = new static(self::EXPR_OR, $this);
 
-        $this->children[] = $node;
+        $this->children[$name] = $node;
 
         return $node;
     }
 
-    public function andX()
+    public function andX($name)
     {
         $node = new static(self::EXPR_AND, $this);
 
-        $this->children[] = $node;
+        $this->children[$name] = $node;
 
         return $node;
     }
@@ -89,6 +89,16 @@ class ConditionNode implements \ArrayAccess
         return $this->children;
     }
 
+    public function getChild($name)
+    {
+        return isset($this->children[$name]) ? $this->children[$name] : null;
+    }
+
+    public function getValue($field)
+    {
+        return isset($this->fields[$field]) ? $this->fields[$field] : null;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -98,16 +108,11 @@ class ConditionNode implements \ArrayAccess
             return true;
         }
 
-        $exists = false;
-        $i = 0;
-        $end = count($this->children);
-
-        while ($i<$end && !$exists) {
-            $exists = isset($this->children[$i][$offset]);
-            $i++;
+        if (array_key_exists($offset, $this->children)) {
+            return true;
         }
 
-        return $exists;
+        return false;
     }
 
     /**
@@ -119,18 +124,11 @@ class ConditionNode implements \ArrayAccess
             return $this->fields[$offset];
         }
 
-        $value = null;
-        $i = 0;
-        $end = count($this->children);
-
-        while ($i<$end && null === $value) {
-            if (isset($this->children[$i][$offset])) {
-                $value = $this->children[$i][$offset];
-            }
-            $i++;
+        if (array_key_exists($offset, $this->children)) {
+            return $this->children[$offset];
         }
 
-        return $value;
+        return null;
     }
 
     /**
@@ -143,16 +141,8 @@ class ConditionNode implements \ArrayAccess
             $this->fields[$offset] = $value;
         }
 
-        $set = false;
-        $i = 0;
-        $end = count($this->children);
-
-        while ($i<$end && !$set) {
-            if (isset($this->children[$i][$offset])) {
-                $this->children[$i][$offset] = $value;
-                $set = true;
-            }
-            $i++;
+        if (array_key_exists($offset, $this->children)) {
+            $this->children[$offset] = $value;
         }
     }
 
@@ -165,15 +155,8 @@ class ConditionNode implements \ArrayAccess
             unset($this->fields[$offset]);
         }
 
-        $deleted = false;
-        $i = 0;
-        $end = count($this->children);
-
-        while ($i<$end && null && !$deleted) {
-            if (isset($this->children[$i][$offset])) {
-                unset($this->children[$i][$offset]);
-            }
-            $i++;
+        if (array_key_exists($offset, $this->children)) {
+            unset($this->children[$offset]);
         }
     }
 }

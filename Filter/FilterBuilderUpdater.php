@@ -47,11 +47,6 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected $conditionBuilder;
 
     /**
-     * @var boolean
-     */
-    protected $useArrayPath;
-
-    /**
      * Constructor
      *
      * @param FormDataExtractorInterface $dataExtractor
@@ -87,8 +82,6 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     public function addFilterConditions(FormInterface $form, $queryBuilder, $alias = null)
     {
-        $this->useArrayPath = is_array($form->getData());
-
         // create the right QueryInterface object
         $event = new PrepareEvent($queryBuilder);
         $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
@@ -223,10 +216,6 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         if ($condition instanceof Condition) {
             $path = trim(substr($completeName, strpos($completeName, '.')), '.'); // remove first level
 
-            if ($this->useArrayPath) {
-                $path = sprintf('[%s]', str_replace('.', '][', $path));
-            }
-
             $condition->setPath($path);
         }
 
@@ -270,7 +259,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     {
         foreach ($form->all() as $child) {
             if ($child->getConfig()->hasAttribute('add_shared')) { // @todo find another way to do this check
-                $this->buildDefaultConditionNode($child, $root->andX());
+                $isCollection = ($child->getConfig()->getType()->getInnerType() instanceof CollectionAdapterFilterType);
+
+                $this->buildDefaultConditionNode(
+                    $isCollection ? $child->get(0) : $child,
+                    $root->andX($child->getName())
+                );
             } else {
                 $root->field($child->getName());
             }

@@ -38,10 +38,15 @@ class Condition
     }
 
     /**
-     * @param string $path
+     * @param string  $path
+     * @param boolean $toArrayPath
      */
-    public function setPath($path)
+    public function setPath($path, $toArrayPath = true)
     {
+        if ($toArrayPath) {
+            $path = sprintf('[%s]', str_replace('.', '][', $path));
+        }
+
         $this->path = $path;
     }
 
