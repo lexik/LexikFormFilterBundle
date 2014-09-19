@@ -8,7 +8,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType;
@@ -155,7 +157,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             } else {
                 $condition = $this->getFilterCondition($child, $formType, $filterQuery, $alias);
 
-                if ($condition instanceof Condition) {
+                if ($condition instanceof ConditionInterface) {
                     $this->conditionBuilder->addCondition($condition);
                 }
             }
@@ -169,11 +171,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param AbstractType   $formType
      * @param QueryInterface $filterQuery
      * @param string         $alias
-     * @return Condition|null
+     * @return ConditionInterface|null
      */
     protected function getFilterCondition(FormInterface $form, AbstractType $formType, QueryInterface $filterQuery, $alias)
     {
-        $config = $form->getConfig();
         $values = $this->prepareFilterValues($form, $formType);
         $values += array('alias' => $alias);
         $field = $values['alias'] . '.' . $form->getName();
@@ -191,7 +192,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         } while ( ! $parentForm->isRoot());
 
         // apply the filter by using the closure set with the 'apply_filter' option
-        $callable = $config->getAttribute('apply_filter');
+        $callable = $form->getConfig()->getAttribute('apply_filter');
 
         if ($callable instanceof \Closure) {
             $condition = $callable($filterQuery, $field, $values);
@@ -200,7 +201,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             $condition = call_user_func($callable, $filterQuery, $field, $values);
 
         } else {
-            // trigger a specific or global event name
+            // trigger a specific or a global event name
             $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $completeName);
             if ( ! $this->dispatcher->hasListeners($eventName)) {
                 $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
@@ -213,7 +214,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         }
 
         // set condition path
-        if ($condition instanceof Condition) {
+        if ($condition instanceof ConditionInterface) {
             $path = trim(substr($completeName, strpos($completeName, '.')), '.'); // remove first level
 
             $condition->setPath($path);
@@ -240,6 +241,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         return $values;
     }
 
+    /**
+     * Get the conditon builder object for the given form.
+     *
+     * @param Form $form
+     * @return ConditionBuilderInterface
+     */
     protected function getConditionBuilder(Form $form)
     {
         $builderClosure = $form->getConfig()->getAttribute('filter_condition_builder');
@@ -255,10 +262,16 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         return $builder;
     }
 
-    protected function buildDefaultConditionNode(Form $form, $root)
+    /**
+     * Create a default node hierarchy by using AND operator.
+     *
+     * @param Form                   $form
+     * @param ConditionNodeInterface $root
+     */
+    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root)
     {
         foreach ($form->all() as $child) {
-            if ($child->getConfig()->hasAttribute('add_shared')) { // @todo find another way to do this check
+            if ($child->getConfig()->hasAttribute('add_shared')) {
                 $isCollection = ($child->getConfig()->getType()->getInnerType() instanceof CollectionAdapterFilterType);
 
                 $this->buildDefaultConditionNode(

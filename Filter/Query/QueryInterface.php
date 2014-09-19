@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Query;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
+
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
  */
@@ -20,4 +22,11 @@ interface QueryInterface
      * @return string
      */
     public function getEventPartName();
+
+    /**
+     * @param string $expression
+     * @param array  $parameters
+     * @return ConditionInterface
+     */
+    public function createCondition($expression, array $parameters = array());
 }

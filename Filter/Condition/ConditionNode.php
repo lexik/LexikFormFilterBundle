@@ -7,18 +7,15 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ConditionNode implements \ArrayAccess
+class ConditionNode implements \ArrayAccess, ConditionNodeInterface
 {
-    const EXPR_AND = 'and';
-    const EXPR_OR  = 'or';
-
     /**
      * @var string
      */
     private $operator;
 
     /**
-     * @var ConditionNode
+     * @var ConditionNodeInterface
      */
     private $parent;
 
@@ -33,10 +30,10 @@ class ConditionNode implements \ArrayAccess
     private $fields;
 
     /**
-     * @param string        $operator
-     * @param ConditionNode $parent
+     * @param string                 $operator
+     * @param ConditionNodeInterface $parent
      */
-    public function __construct($operator, ConditionNode $parent = null)
+    public function __construct($operator, ConditionNodeInterface $parent = null)
     {
         $this->operator = $operator;
         $this->parent = $parent;
@@ -45,10 +42,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * Start a OR sub expression.
-     *
-     * @param string $name
-     * @return static
+     * {@inheritDoc}
      */
     public function orX($name)
     {
@@ -60,10 +54,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * Start a AND sub expression.
-     *
-     * @param string $name
-     * @return static
+     * {@inheritDoc}
      */
     public function andX($name)
     {
@@ -75,9 +66,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * Returns the parent node.
-     *
-     * @return ConditionNode
+     * {@inheritDoc}
      */
     public function end()
     {
@@ -85,10 +74,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * Add a field in the current expression.
-     *
-     * @param string $name
-     * @return $this
+     * {@inheritDoc}
      */
     public function field($name)
     {
@@ -98,7 +84,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getOperator()
     {
@@ -106,7 +92,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getFields()
     {
@@ -114,7 +100,7 @@ class ConditionNode implements \ArrayAccess
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getChildren()
     {

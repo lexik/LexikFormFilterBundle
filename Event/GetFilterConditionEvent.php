@@ -2,9 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Symfony\Component\EventDispatcher\Event;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 /**
@@ -28,7 +29,7 @@ class GetFilterConditionEvent extends Event
     private $values;
 
     /**
-     * @var Condition
+     * @var ConditionInterface
      */
     private $condition;
 
@@ -96,7 +97,7 @@ class GetFilterConditionEvent extends Event
     }
 
     /**
-     * @return \Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition
+     * @return ConditionInterface
      */
     public function getCondition()
     {

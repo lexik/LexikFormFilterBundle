@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Register listeners to apply Doctrine ORM filters.
+ *  Register listeners to compute conditions to be applied on a Doctrine DBAL query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */

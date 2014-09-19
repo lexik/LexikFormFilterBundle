@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 use Symfony\Component\Form\AbstractType;
@@ -23,7 +22,9 @@ class ItemCallbackFilterType extends AbstractType
         $builder->add('position', 'filter_number', array(
             'apply_filter' => function(QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    return new Condition($filterQuery->getExpr()->neq($field, $values['value']));
+                    return $filterQuery->createCondition(
+                        $filterQuery->getExpr()->neq($field, $values['value'])
+                    );
                 }
 
                 return null;
@@ -39,7 +40,9 @@ class ItemCallbackFilterType extends AbstractType
     public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)
     {
         if (!empty($values['value'])) {
-            return new Condition($filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value'])));
+            return $filterQuery->createCondition(
+                $filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value']))
+            );
         }
 
         return null;

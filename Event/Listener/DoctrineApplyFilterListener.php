@@ -9,8 +9,8 @@ use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNode;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
 
 /**
  * Add filter conditions on a Doctrine ORM query builder.
@@ -51,22 +51,22 @@ class DoctrineApplyFilterListener
 
     /**
      * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
-     * @param ConditionNode                    $node
+     * @param ConditionNodeInterface           $node
      * @return Composite|CompositeExpression|null
      */
-    protected function computeExpression($queryBuilder, ConditionNode $node)
+    protected function computeExpression($queryBuilder, ConditionNodeInterface $node)
     {
         if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
             return null;
         }
 
-        $method = ($node->getOperator() == ConditionNode::EXPR_AND) ? 'andX' : 'orX';
+        $method = ($node->getOperator() == ConditionNodeInterface::EXPR_AND) ? 'andX' : 'orX';
 
         $expression = $queryBuilder->expr()->{$method}();
 
         foreach ($node->getFields() as $condition) {
             if (null !== $condition) {
-                /** @var Condition $condition */
+                /** @var ConditionInterface $condition */
                 $expression->add($condition->getExpression());
 
                 $this->parameters = array_merge($this->parameters, $condition->getParameters());

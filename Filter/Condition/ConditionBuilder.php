@@ -9,23 +9,21 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ConditionBuilder
+class ConditionBuilder implements ConditionBuilderInterface
 {
     /**
-     * @var ConditionNode
+     * @var ConditionNodeInterface
      */
     private $root;
 
     /**
-     * @param string $operator
-     * @return ConditionNode
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
     public function root($operator)
     {
         $operator = strtolower($operator);
 
-        if (!in_array($operator, array(ConditionNode::EXPR_AND, ConditionNode::EXPR_OR))) {
+        if (!in_array($operator, array(ConditionNodeInterface::EXPR_AND, ConditionNodeInterface::EXPR_OR))) {
             throw new \RuntimeException(sprintf('Invalid operator "%s", allowed values: and, or', $operator));
         }
 
@@ -35,9 +33,9 @@ class ConditionBuilder
     }
 
     /**
-     * @param Condition $condition
+     * {@inheritdoc}
      */
-    public function addCondition(Condition $condition)
+    public function addCondition(ConditionInterface $condition)
     {
         PropertyAccess::createPropertyAccessor()->setValue(
             $this->root,
@@ -47,7 +45,7 @@ class ConditionBuilder
     }
 
     /**
-     * @return ConditionNode
+     * {@inheritdoc}
      */
     public function getRoot()
     {

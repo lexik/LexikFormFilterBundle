@@ -22,10 +22,6 @@ final class FilterOperands
 
     const OPERAND_SELECTOR = 'selection';
 
-    private function __construct()
-    {
-    }
-
     /**
      * Returns all available number operands.
      *

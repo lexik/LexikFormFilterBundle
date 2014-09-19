@@ -7,7 +7,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class Condition
+class Condition implements ConditionInterface
 {
     /**
      * @var string
@@ -40,8 +40,7 @@ class Condition
     }
 
     /**
-     * @param string  $path
-     * @param boolean $toArrayPath
+     * {@inheritdoc}
      */
     public function setPath($path, $toArrayPath = true)
     {
@@ -53,7 +52,7 @@ class Condition
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getPath()
     {
@@ -61,7 +60,7 @@ class Condition
     }
 
     /**
-     * @param string $expression
+     * {@inheritdoc}
      */
     public function setExpression($expression)
     {
@@ -69,7 +68,7 @@ class Condition
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getExpression()
     {
@@ -77,7 +76,7 @@ class Condition
     }
 
     /**
-     * @param array $parameters
+     * {@inheritdoc}
      */
     public function setParameters(array $parameters)
     {
@@ -85,7 +84,7 @@ class Condition
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getParameters()
     {

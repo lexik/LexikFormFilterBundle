@@ -9,7 +9,7 @@ use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Register listeners to apply Doctrine DBAL filters.
+ * Register listeners to compute conditions to be applied on a Doctrine ORM query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ORMExpressionBuilder;
 
@@ -26,10 +27,9 @@ class ORMQuery implements QueryInterface
      * Constructor.
      *
      * @param QueryBuilder $queryBuilder
+     * @param boolean      $forceCaseInsensitivity
      */
-    public function __construct(
-        QueryBuilder $queryBuilder,
-        $forceCaseInsensitivity = false)
+    public function __construct(QueryBuilder $queryBuilder, $forceCaseInsensitivity = false)
     {
         $this->queryBuilder      = $queryBuilder;
         $this->expressionBuilder = new ORMExpressionBuilder(
@@ -52,6 +52,14 @@ class ORMQuery implements QueryInterface
     public function getQueryBuilder()
     {
         return $this->queryBuilder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createCondition($expression, array $parameters = array())
+    {
+        return new Condition($expression, $parameters);
     }
 
     /**
