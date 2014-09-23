@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 
-use Symfony\Component\PropertyAccess\PropertyAccess;
-
 /**
  * Used to build a condition nodes hierarchy to defined condition pattern.
  *
@@ -37,11 +35,9 @@ class ConditionBuilder implements ConditionBuilderInterface
      */
     public function addCondition(ConditionInterface $condition)
     {
-        PropertyAccess::createPropertyAccessor()->setValue(
-            $this->root,
-            $condition->getPath(),
-            $condition
-        );
+        if (false === $this->root->setCondition($condition->getName(), $condition)) {
+            throw new \RuntimeException(sprintf('Can\'t set condition object for: "%s"', $condition->getName()));
+        }
     }
 
     /**

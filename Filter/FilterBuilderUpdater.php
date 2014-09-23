@@ -215,9 +215,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
         // set condition path
         if ($condition instanceof ConditionInterface) {
-            $path = trim(substr($completeName, strpos($completeName, '.')), '.'); // remove first level
-
-            $condition->setPath($path);
+            $condition->setName(
+                trim(substr($completeName, strpos($completeName, '.')), '.') // remove first level
+            );
         }
 
         return $condition;
@@ -267,8 +267,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      *
      * @param Form                   $form
      * @param ConditionNodeInterface $root
+     * @param string                 $parentName
      */
-    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root)
+    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, $parentName = '')
     {
         foreach ($form->all() as $child) {
             if ($child->getConfig()->hasAttribute('add_shared')) {
@@ -276,10 +277,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
                 $this->buildDefaultConditionNode(
                     $isCollection ? $child->get(0) : $child,
-                    $root->andX($child->getName())
+                    $root->andX(),
+                    $child->getName()
                 );
             } else {
-                $root->field($child->getName());
+                $name = ('' !== $parentName) ? $parentName.'.'.$child->getName() : $child->getName();
+                $root->field($name);
             }
         }
     }

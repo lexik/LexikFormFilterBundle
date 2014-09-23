@@ -7,7 +7,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ConditionNode implements \ArrayAccess, ConditionNodeInterface
+class ConditionNode implements ConditionNodeInterface
 {
     /**
      * @var string
@@ -44,11 +44,11 @@ class ConditionNode implements \ArrayAccess, ConditionNodeInterface
     /**
      * {@inheritDoc}
      */
-    public function orX($name)
+    public function orX()
     {
         $node = new static(self::EXPR_OR, $this);
 
-        $this->children[$name] = $node;
+        $this->children[] = $node;
 
         return $node;
     }
@@ -56,11 +56,11 @@ class ConditionNode implements \ArrayAccess, ConditionNodeInterface
     /**
      * {@inheritDoc}
      */
-    public function andX($name)
+    public function andX()
     {
         $node = new static(self::EXPR_AND, $this);
 
-        $this->children[$name] = $node;
+        $this->children[] = $node;
 
         return $node;
     }
@@ -108,63 +108,29 @@ class ConditionNode implements \ArrayAccess, ConditionNodeInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set the condition for the given field name.
+     *
+     * @param string             $name
+     * @param ConditionInterface $condition
+     * @return bool
      */
-    public function offsetExists($offset)
+    public function setCondition($name, ConditionInterface $condition)
     {
-        if (array_key_exists($offset, $this->fields)) {
+        if (array_key_exists($name, $this->fields)) {
+            $this->fields[$name] = $condition;
+
             return true;
         }
 
-        if (array_key_exists($offset, $this->children)) {
-            return true;
+        $i = 0;
+        $end = count($this->children);
+        $set = false;
+
+        while ($i<$end && !$set) {
+            $set = $this->children[$i]->setCondition($name, $condition);
+            $i++;
         }
 
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetGet($offset)
-    {
-        if (array_key_exists($offset, $this->fields)) {
-            return $this->fields[$offset];
-        }
-
-        if (array_key_exists($offset, $this->children)) {
-            return $this->children[$offset];
-        }
-
-        return null;
-    }
-
-    /**
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (array_key_exists($offset, $this->fields)) {
-            $this->fields[$offset] = $value;
-        }
-
-        if (array_key_exists($offset, $this->children)) {
-            $this->children[$offset] = $value;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetUnset($offset)
-    {
-        if (array_key_exists($offset, $this->fields)) {
-            unset($this->fields[$offset]);
-        }
-
-        if (array_key_exists($offset, $this->children)) {
-            unset($this->children[$offset]);
-        }
+        return $set;
     }
 }

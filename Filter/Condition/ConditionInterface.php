@@ -8,19 +8,18 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 interface ConditionInterface
 {
     /**
-     * Set the path to map the condition on the ConditionBuilder instance.
+     * Set the name to map the condition on the ConditionBuilder instance.
      *
-     * @param string  $path
-     * @param boolean $toArrayPath
+     * @param string $name
      */
-    public function setPath($path, $toArrayPath = true);
+    public function setName($name);
 
     /**
      * Get condition path.
      *
      * @return string
      */
-    public function getPath();
+    public function getName();
 
     /**
      * Set the condition expression.

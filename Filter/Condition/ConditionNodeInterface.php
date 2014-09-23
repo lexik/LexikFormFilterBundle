@@ -13,18 +13,16 @@ interface ConditionNodeInterface
     /**
      * Start a OR sub expression.
      *
-     * @param string $name
      * @return static
      */
-    public function orX($name);
+    public function orX();
 
     /**
      * Start a AND sub expression.
      *
-     * @param string $name
      * @return static
      */
-    public function andX($name);
+    public function andX();
 
     /**
      * Returns the parent node.

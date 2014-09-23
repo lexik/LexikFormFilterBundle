@@ -12,7 +12,7 @@ class Condition implements ConditionInterface
     /**
      * @var string
      */
-    public $path;
+    public $name;
 
     /**
      * @var string
@@ -42,21 +42,17 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function setPath($path, $toArrayPath = true)
+    public function setName($name)
     {
-        if ($toArrayPath) {
-            $path = sprintf('[%s]', str_replace('.', '][', $path));
-        }
-
-        $this->path = $path;
+        $this->name = $name;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPath()
+    public function getName()
     {
-        return $this->path;
+        return $this->name;
     }
 
     /**
