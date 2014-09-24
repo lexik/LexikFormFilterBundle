@@ -61,7 +61,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         // bind a request to the form - 1 params
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'blabla', 'position' => ''));
+        $form->submit(array('name' => 'blabla', 'position' => ''));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[1], $doctrineQueryBuilder->{$method}());
@@ -71,7 +71,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'blabla', 'position' => 2));
+        $form->submit(array('name' => 'blabla', 'position' => 2));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[2], $doctrineQueryBuilder->{$method}());
@@ -82,7 +82,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form = $this->formFactory->create(new ItemFilterType());
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
+        $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[3], $doctrineQueryBuilder->{$method}());
@@ -93,7 +93,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(false, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
+        $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[4], $doctrineQueryBuilder->{$method}());
@@ -104,7 +104,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array(
+        $form->submit(array(
             'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
@@ -119,7 +119,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form = $this->formFactory->create(new ItemFilterType(true, false, true));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array(
+        $form->submit(array(
             'name' => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position' => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array(
@@ -139,7 +139,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'blabla', 'position' => 2));
+        $form->submit(array('name' => 'blabla', 'position' => 2));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
@@ -152,7 +152,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('position' => array('left_number' => 1, 'right_number' => 3)));
+        $form->submit(array('position' => array('left_number' => 1, 'right_number' => 3)));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
@@ -169,7 +169,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('position_selector' => array(
+        $form->submit(array('position_selector' => array(
             'left_number' => array('text' => 4, 'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
             'right_number' => array('text' => 8, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
         )));
@@ -189,7 +189,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('default_position' => array('left_number' => 1, 'right_number' => 3)));
+        $form->submit(array('default_position' => array('left_number' => 1, 'right_number' => 3)));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
@@ -206,7 +206,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array(
+        $form->submit(array(
             'createdAt' => array(
                 'left_date' => '2012-05-12',
                 'right_date' => array('year' => '2012', 'month' => '5', 'day' => '22'),
@@ -224,7 +224,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array(
+        $form->submit(array(
             'updatedAt' => array(
                 'left_datetime' => array(
                     'date' => '2012-05-12',
@@ -247,7 +247,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array(
+        $form->submit(array(
             'name'     => 'hey dude',
             'position' => 99,
         ));
