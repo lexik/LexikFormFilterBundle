@@ -468,13 +468,13 @@ class ItemFilterType extends AbstractType
                 $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
                     // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
-                    $filterBuilder->leftJoin($alias . '.options', $joinAlias');
-                }
+                    $filterBuilder->leftJoin($alias . '.options', $joinAlias);
+                };
 
                 // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
             },
-        );
+        ));
     }
 
     public function getName()
