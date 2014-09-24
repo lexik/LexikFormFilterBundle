@@ -157,4 +157,20 @@ class Item
     {
         $this->updatedAt = $updatedAt;
     }
+
+    /**
+     * @param mixed $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }

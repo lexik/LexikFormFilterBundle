@@ -140,6 +140,25 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
+    public function testWithDataClass()
+    {
+        // doctrine query builder without any joins + a data_class
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'data_class' => 'Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item',
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name LIKE \'dude\' AND (opt.label LIKE \'color\' AND opt.rank = :p_opt_rank)';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+    }
+
     protected function createDoctrineQueryBuilder()
     {
         return $this->em
