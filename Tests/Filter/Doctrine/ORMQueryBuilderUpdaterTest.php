@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
 
 /**
@@ -106,6 +107,37 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('p_o_rank' => 5), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+    }
+
+    public function testCustomConditionBuilder()
+    {
+        // doctrine query builder without any joins + custom condition builder
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+                $builder
+                    ->root('or')
+                        ->field('options.label')
+                        ->andX()
+                            ->field('options.rank')
+                            ->field('name')
+                        ->end()
+                    ->end()
+                ;
+
+                return $builder;
+            }
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->bind(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE opt.label LIKE \'color\' OR (opt.rank = :p_opt_rank AND i.name LIKE \'dude\')';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createDoctrineQueryBuilder()

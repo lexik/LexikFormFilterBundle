@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 
 /**
- * Defined the operator to use for a list of fields.
+ * Define the operator to use for a list of fields.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
