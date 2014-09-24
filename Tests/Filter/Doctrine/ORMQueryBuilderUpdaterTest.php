@@ -123,8 +123,6 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
                         ->end()
                     ->end()
                 ;
-
-                return $builder;
             }
         ));
         $filterQueryBuilder = $this->initQueryBuilder();
@@ -138,6 +136,36 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+
+
+        // doctrine query builder without any joins + custom condition builder
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+                    $builder
+                        ->root('and')
+                            ->orX()
+                                ->field('name')
+                                ->field('options.label')
+                            ->end()
+                            ->orX()
+                                ->field('options.rank')
+                                ->field('position')
+                            ->end()
+                        ->end()
+                    ;
+                }
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array('name' => 'dude', 'position' => 1, 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE (i.name LIKE \'dude\' OR opt.label LIKE \'color\') AND (opt.rank = :p_opt_rank OR i.position = :p_i_position)';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6, 'p_i_position' => 1), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     public function testWithDataClass()
