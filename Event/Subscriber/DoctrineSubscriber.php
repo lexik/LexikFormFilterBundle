@@ -122,8 +122,8 @@ class DoctrineSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
-            $value = (int)(BooleanFilterType::VALUE_YES == $values['value']);
-            $qb->andWhere($expr->eq($event->getField(), $value));
+            $value = (bool)(BooleanFilterType::VALUE_YES == $values['value']);
+            $qb->andWhere($expr->eq($event->getField(), $qb->expr()->literal($value)));
         }
     }
 
