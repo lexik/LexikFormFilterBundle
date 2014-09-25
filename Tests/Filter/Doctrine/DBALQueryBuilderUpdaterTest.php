@@ -15,7 +15,7 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
             'SELECT i FROM item i',
             'SELECT i FROM item i WHERE i.name LIKE \'blabla\'',
             'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = 1)',
+            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = \'1\')',
             'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = 1)',
             'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = \'2013-09-27\')',
             'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = \'2013-09-27 13:21:00\')',
