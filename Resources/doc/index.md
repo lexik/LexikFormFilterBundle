@@ -515,7 +515,7 @@ The custom event name will be:
 The correspondig listener could looks like:
 
 ```php
-namespace MyBundle\Listener\ItemPositionFilterConditionListener;
+namespace MyBundle\EventListener;
 
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
@@ -541,7 +541,7 @@ class ItemPositionFilterConditionListener
 ```
 
 ```xml
-<service id="my_bundle.listener.get_item_position_filter" class="Acme\DemoBundle\EventListener\AcmeExceptionListener">
+<service id="my_bundle.listener.get_item_position_filter" class="MyBundle\EventListener\ItemPositionFilterConditionListener">
     <tag name="kernel.event_listener" event="lexik_form_filter.apply.orm.item_filter.position" method="onGetFilterCondition" />
 </service>
 ```
