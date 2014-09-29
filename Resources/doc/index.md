@@ -512,7 +512,41 @@ The custom event name will be:
 
 `lexik_form_filter.apply.orm.item_filter.position`
 
-Before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
+The correspondig listener could looks like:
+
+```php
+namespace MyBundle\Listener\ItemPositionFilterConditionListener;
+
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+
+class ItemPositionFilterConditionListener
+{
+    public function onGetFilterCondition(GetFilterConditionEvent $event)
+    {
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (!empty($values['value'])) {
+            // create a parameter name from the field
+            $paramName = sprintf('p_%s', str_replace('.', '_', $field));
+
+            // Set the condition on the given event
+            $event->setCondition(
+                $expr->eq($event->getField(), ':' . $paramName),
+                array($paramName => $values['value'])
+            );
+        }
+    }
+}
+```
+
+```xml
+<service id="my_bundle.listener.get_item_position_filter" class="Acme\DemoBundle\EventListener\AcmeExceptionListener">
+    <tag name="kernel.event_listener" event="lexik_form_filter.apply.orm.item_filter.position" method="onGetFilterCondition" />
+</service>
+```
+
+Note that before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
 
 5. Working with entity associations and embeddeding filters
