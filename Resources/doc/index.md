@@ -1,17 +1,17 @@
-A. Installation
-B. Configuration
-C. Provided form types
-D. Working with the filters
-    * 1. Simple example
-    * 2. Inner workings
-    * 3. Customize condition operator (and/or)
-    * 4. Filter customization
-    * 5. Working with entity associations and embeddeding filters
-    * 6. Doctrine embeddables
-    * 7. Create your own filter type
-E. The FilterTypeExtension
+1. Installation
+2. Configuration
+3. Provided form types
+4. Working with the filters
+    1. Simple example
+    2. Inner workings
+    3. Customize condition operator (and/or)
+    4. Filter customization
+    5. Working with entity associations and embeddeding filters
+    6. Doctrine embeddables
+    7. Create your own filter type
+5. The FilterTypeExtension
 
-A. Installation
+1. Installation
 ===============
 
 Add the bundle to your `composer.json` file:
@@ -43,7 +43,7 @@ Register the bundle with your kernel:
     );
 ```
 
-B. Configuration
+2. Configuration
 ================
 
 You only need to add the following lines in your `app/config/config.yml`. This file contains the template blocks for the filter_xxx types.
@@ -68,7 +68,7 @@ lexik_form_filter:
 If you use Postgres and you want your LIKE comparisons to be case sensitive
 anyway, set it to `true`.
 
-C. Provided types
+3. Provided types
 =================
 
 The bundle provides form types dedicated to filtering. Here the list of these types with their parent type and their specific options.
@@ -164,10 +164,10 @@ Options:
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text.
 
 
-D. Working with the bundle
+1. Working with the bundle
 ==========================
 
-1. Simple example
+i. Simple example
 -----------------
 
 Here an example of how to use the bundle. Let's use the following entity:
@@ -287,8 +287,8 @@ Basic template
 </form>
 ```
 
-2. Inner workings
------------------
+ii. Inner workings
+------------------
 
 A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type to get the condition for a given filter.
 Then once all condition have been gotten another event will be triggered to add these conditions to the (doctrine) query builder.
@@ -317,8 +317,8 @@ Then another event will be triggered to add all the conditions to the (doctrine)
 
 * `lexik_filter.apply_filters.dbal` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
-3. Customize condition operator
--------------------------------
+iii. Customize condition operator
+---------------------------------
 
 By default the `lexik_form_filter.query_builder_updater` service will add conditions by using AND.
 But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
@@ -420,8 +420,8 @@ $resolver->setDefaults(array(
 
 The generated where clause will be: `WHERE (<options.label> OR <name>) AND (<options.rank> OR <date>)`.
 
-4. Filter customization
------------------------
+iv. Filter customization
+-------------------------
 
 
 #### A. With the `apply_filter` option:
@@ -549,7 +549,7 @@ class ItemPositionFilterConditionListener
 Note that before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
 
-5. Working with entity associations and embeddeding filters
+v. Working with entity associations and embeddeding filters
 -----------------------------------------------------------
 
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
@@ -705,8 +705,8 @@ class OptionsFilterType extends AbstractType
 }
 ```
 
-6. Doctrine embeddables
------------------------
+vi. Doctrine embeddables
+------------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
 In the following code we suppose we use entities defined in the [doctrine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
@@ -751,8 +751,8 @@ class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterf
 }
 ```
 
-7. Create your own filter type
-------------------------------
+vii. Create your own filter type
+--------------------------------
 
 Let's see that through a simple example, we suppose I want to create a `LocaleFilterType` class to filter fields which contain a locale as value.
 
@@ -887,7 +887,7 @@ class FilterSubscriber implements EventSubscriberInterface
 ```
 
 
-E. The FilterTypeExtension
+5. The FilterTypeExtension
 ==========================
 
 The bundle loads a custom type extension to add the `apply_filter`,  `data_extraction_method`, and `filter_condition_builder` options to **all form types**. These options are used when a filter condition is applied to the query builder.
@@ -1024,4 +1024,4 @@ public function buildForm(FormBuilderInterface $builder, array $options)
 This option is used to defined the operator (and/or) to use between each condition.
 This option is expected to be closure and recieve one parameter which is an instance of `Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface`.
 
-See D.3 section for examples.
+See 4.iii section for examples.
