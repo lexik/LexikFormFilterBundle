@@ -27,6 +27,9 @@ abstract class ExpressionBuilder
         return $this->expr;
     }
 
+    /**
+     * @param boolean $forceCaseInsensitivity
+     */
     public function __construct($forceCaseInsensitivity)
     {
         $this->forceCaseInsensitivity = $forceCaseInsensitivity;

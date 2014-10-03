@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Type;
 
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
@@ -67,6 +68,8 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
         $values = $event->getValues();
 
         if (is_object($values['value'])) {
+            $paramName = $this->generateParameterName($event->getField());
+
             if ($values['value'] instanceof Collection) {
                 $ids = array();
 
@@ -78,7 +81,10 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 }
 
                 if (count($ids) > 0) {
-                    $event->setCondition($expr->in($event->getField(), $ids));
+                    $event->setCondition(
+                        $expr->in($event->getField(), ':'.$paramName),
+                        array($paramName => array($ids, Type::SIMPLE_ARRAY))
+                    );
                 }
 
             } else {
@@ -86,11 +92,9 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                     throw new \RuntimeException(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
                 }
 
-                $fieldAlias = 'p_'.substr($event->getField(), strpos($event->getField(), '.') + 1);
-
                 $event->setCondition(
-                    $expr->eq($event->getField(), ':'.$fieldAlias),
-                    array($fieldAlias => $values['value']->getId())
+                    $expr->eq($event->getField(), ':'.$paramName),
+                    array($paramName => array($values['value']->getId(), Type::INTEGER))
                 );
             }
         }

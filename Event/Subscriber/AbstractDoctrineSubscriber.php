@@ -26,16 +26,18 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
-            // alias.field -> alias_field
-            $fieldName = str_replace('.', '_', $event->getField());
+            $paramName = $this->generateParameterName($event->getField());
 
             if (is_array($values['value']) && sizeof($values['value']) > 0) {
-                $event->setCondition($expr->in($event->getField(), $values['value']));
+                $event->setCondition(
+                    $expr->in($event->getField(), ':'.$paramName),
+                    array($paramName => array($values['value'], Type::SIMPLE_ARRAY))
+                );
 
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
-                    $expr->eq($event->getField(), ':' . $fieldName),
-                    array($fieldName => $values['value'])
+                    $expr->eq($event->getField(), ':'.$paramName),
+                    array($paramName => array($values['value'], Type::STRING))
                 );
             }
         }
@@ -50,8 +52,14 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
-            $value = (bool)(BooleanFilterType::VALUE_YES == $values['value']);
-            $event->setCondition($expr->eq($event->getField(), $expr->literal($value)));
+            $paramName = $this->generateParameterName($event->getField());
+
+            $value = (bool) (BooleanFilterType::VALUE_YES == $values['value']);
+
+            $event->setCondition(
+                $expr->eq($event->getField(), ':'.$paramName),
+                array($paramName => array($value, Type::BOOLEAN))
+            );
         }
     }
 
@@ -64,7 +72,12 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
-            $event->setCondition($expr->eq($event->getField(), $values['value']));
+            $paramName = $this->generateParameterName($event->getField());
+
+            $event->setCondition(
+                $expr->eq($event->getField(), ':'.$paramName),
+                array($paramName => array($values['value'], Type::STRING))
+            );
         }
     }
 
@@ -77,8 +90,14 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if ($values['value'] instanceof \DateTime) {
+            $paramName = $this->generateParameterName($event->getField());
+
             $date = $values['value']->format(ExpressionBuilder::SQL_DATE);
-            $event->setCondition($expr->eq($event->getField(), $expr->literal($date)));
+
+            $event->setCondition(
+                $expr->eq($event->getField(), ':'.$paramName),
+                array($paramName => array($date, Type::DATE))
+            );
         }
     }
 
@@ -105,8 +124,14 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if ($values['value'] instanceof \DateTime) {
+            $paramName = $this->generateParameterName($event->getField());
+
             $date = $values['value']->format(ExpressionBuilder::SQL_DATE_TIME);
-            $event->setCondition($expr->eq($event->getField(), $expr->literal($date)));
+
+            $event->setCondition(
+                $expr->eq($event->getField(), ':'.$paramName),
+                array($paramName => array($date, Type::DATETIME))
+            );
         }
     }
 
@@ -217,5 +242,14 @@ abstract class AbstractDoctrineSubscriber
                 $event->setCondition($expr->stringLike($event->getField(), $values['value']));
             }
         }
+    }
+
+    /**
+     * @param string $field
+     * @return string
+     */
+    protected function generateParameterName($field)
+    {
+        return sprintf('p_%s', str_replace('.', '_', $field));
     }
 }

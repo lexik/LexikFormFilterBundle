@@ -4,7 +4,6 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\ORM\Query\Expr\Composite;
-
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
