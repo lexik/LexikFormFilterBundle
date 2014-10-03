@@ -456,14 +456,17 @@ class ItemFilterType extends AbstractType
                     return null;
                 }
 
-                $expr = $filterQuery->getExpr();
-
                 $paramName = sprintf('p_%s', str_replace('.', '_', $field));
 
-                return $filterQuery->createCondition(
-                    $expr->eq($field, ':'.$paramName),    // expression
-                    array($paramName => $values['value']) // parameters
-                );
+                // expression that represent the condition
+                $expression = $filterQuery->getExpr()->eq($field, ':'.$paramName);
+
+                // expression parameters
+                $parameters = array($paramName => $values['value']); / [ name => value ]
+                // or if you need to define the parameter's type
+                // $parameters = array($paramName => array($values['value'], \PDO::PARAM_STR)); // [ name => [value, type] ]
+
+                return $filterQuery->createCondition($expression, $parameters);
             },
         ));
     }
@@ -925,7 +928,7 @@ class CallbackFilterType extends AbstractType
 
                 return $filterQuery->createCondition(
                     $expr->eq($field, ':'.$paramName),    // expression
-                    array($paramName => $values['value']) // parameters
+                    array($paramName => $values['value']) // parameters [ name => value ]
                 );
             },
         ));
@@ -948,7 +951,7 @@ class CallbackFilterType extends AbstractType
 
         return $filterQuery->createCondition(
             $expr->eq($field, ':'.$paramName),    // expression
-            array($paramName => $values['value']) // parameters
+            array($paramName => array($values['value'], \PDO::PARAM_STR) // parameters [ name => [value, type] ]
         );
     }
 }

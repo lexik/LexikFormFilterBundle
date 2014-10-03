@@ -1,4 +1,4 @@
-UPGRADE FROM 2.1 to 2.2
+UPGRADE FROM 2.1 to 3.0
 =======================
 
 #### Update way to add a condition by using the `apply_filter` option.
@@ -28,10 +28,17 @@ $builder->add('name', 'filter_text', array(
         if (!empty($values['value']) {
             $paramName = sprintf('p_%s', str_replace('.', '_', $field));
 
-            return $filterQuery->createCondition(
-                $filterQuery->getExpr()->eq($field, ':'.$paramName), // expression
-                array($paramName => $values['value'])                // parameters (not required)
+            // expression
+            $expression = $filterQuery->getExpr()->eq($field, ':'.$paramName);
+
+            // parameters
+            $parameters = array(
+                $paramName => array($values['value'], \PDO::PARAM_STR), // name => [value, type]
+                // OR
+                // $paramName => $values['value'] // name => value
             );
+
+            return $filterQuery->createCondition($expression, $parameters);
         }
 
         return null;
