@@ -2,12 +2,13 @@
 2. Configuration
 3. Provided form types
 4. Working with the filters
-    * Simple example
-    * Inner workings
-    * Filter customization
-    * Working with entity associations and embeddeding filters
-    * Doctrine embeddables
-    * Create your own filter type
+    1. Simple example
+    2. Inner workings
+    3. Customize condition operator (and/or)
+    4. Filter customization
+    5. Working with entity associations and embeddeding filters
+    6. Doctrine embeddables
+    7. Create your own filter type
 5. The FilterTypeExtension
 
 1. Installation
@@ -163,11 +164,11 @@ Options:
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text.
 
 
-4. Working with the bundle
+1. Working with the bundle
 ==========================
 
-Simple example
---------------
+i. Simple example
+-----------------
 
 Here an example of how to use the bundle. Let's use the following entity:
 
@@ -286,11 +287,12 @@ Basic template
 </form>
 ```
 
-Inner workings
---------------
+ii. Inner workings
+------------------
 
-A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type, then a listner will apply the filter.
-We provide a subscriber that supports Doctrine ORM and DBAL.
+A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type to get the condition for a given filter.
+Then once all condition have been gotten another event will be triggered to add these conditions to the (doctrine) query builder.
+We provide a event/listener that supports Doctrine ORM and DBAL.
 
 The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
 
@@ -303,15 +305,123 @@ public function buildForm(FormBuilder $builder, array $options)
 }
 ```
 
-The event name that will be triggerered will be:
+The event name that will be triggered to get conditions to apply will be:
 
-* `lexik_form_filter.apply.orm.filter_text` in the case you provide a `Doctrine\ORM\QueryBuilder`
+* `lexik_form_filter.apply.orm.filter_text` if you provide a `Doctrine\ORM\QueryBuilder`
 
-* `lexik_form_filter.apply.dbal.filter_text` in the case you provide a `Doctrine\DBAL\Query\QueryBuilder`
+* `lexik_form_filter.apply.dbal.filter_text` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
+Then another event will be triggered to add all the conditions to the (doctrine) query builder instance:
 
-Filter customization
---------------------
+* `lexik_filter.apply_filters.orm` if you provide a `Doctrine\ORM\QueryBuilder`
+
+* `lexik_filter.apply_filters.dbal` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
+
+iii. Customize condition operator
+---------------------------------
+
+By default the `lexik_form_filter.query_builder_updater` service will add conditions by using AND.
+But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
+To do so you will have to use the `filter_condition_builder` option in your main type class.
+
+Here a simple example, the main type `ItemFilterType` is composed of 2 simple fileds and a sub type (RelatedOptionsType).
+The `filter_condition_builder` option is expected to be a closuse that will be used to set operators to use between conditions.
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+class RelatedOptionsType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('label', 'filter_text');
+        $builder->add('rank', 'filter_number');
+    }
+
+    public function getName()
+    {
+        return 'related_options';
+    }
+}
+```
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\OptionsResolver\ConditionBuilderInterface;
+
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text');
+        $builder->add('date', 'filter_date');
+        $builder->add('options', new RelatedOptionsType());
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+                $builder
+                    ->root('or')
+                        ->field('options.label')
+                        ->andX()
+                            ->field('options.rank')
+                            ->field('name')
+                        ->end()
+                        ->field('date')
+                    ->end()
+                ;
+            }
+        ));
+    }
+
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
+
+With the above condition builder the complete where clause pattern will be: `WHERE <options.label> OR <date> OR (<options.rank> AND <name>)`.
+
+Here another example of condition builder:
+
+```php
+$resolver->setDefaults(array(
+    'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+        $builder
+            ->root('and')
+                ->orX()
+                    ->field('options.label')
+                    ->field('name')
+                ->end()
+                ->orX()
+                    ->field('options.rank')
+                    ->field('date')
+                ->end()
+            ->end()
+        ;
+    }
+));
+```
+
+The generated where clause will be: `WHERE (<options.label> OR <name>) AND (<options.rank> OR <date>)`.
+
+iv. Filter customization
+-------------------------
 
 
 #### A. With the `apply_filter` option:
@@ -342,9 +452,21 @@ class ItemFilterType extends AbstractType
     {
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+                if (empty($values['value']) {
+                    return null;
+                }
 
-                // add conditions you need :)
+                $paramName = sprintf('p_%s', str_replace('.', '_', $field));
 
+                // expression that represent the condition
+                $expression = $filterQuery->getExpr()->eq($field, ':'.$paramName);
+
+                // expression parameters
+                $parameters = array($paramName => $values['value']); / [ name => value ]
+                // or if you need to define the parameter's type
+                // $parameters = array($paramName => array($values['value'], \PDO::PARAM_STR)); // [ name => [value, type] ]
+
+                return $filterQuery->createCondition($expression, $parameters);
             },
         ));
     }
@@ -393,11 +515,45 @@ The custom event name will be:
 
 `lexik_form_filter.apply.orm.item_filter.position`
 
-Before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
+The correspondig listener could looks like:
+
+```php
+namespace MyBundle\EventListener;
+
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+
+class ItemPositionFilterConditionListener
+{
+    public function onGetFilterCondition(GetFilterConditionEvent $event)
+    {
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (!empty($values['value'])) {
+            // create a parameter name from the field
+            $paramName = sprintf('p_%s', str_replace('.', '_', $field));
+
+            // Set the condition on the given event
+            $event->setCondition(
+                $expr->eq($event->getField(), ':' . $paramName),
+                array($paramName => $values['value'])
+            );
+        }
+    }
+}
+```
+
+```xml
+<service id="my_bundle.listener.get_item_position_filter" class="MyBundle\EventListener\ItemPositionFilterConditionListener">
+    <tag name="kernel.event_listener" event="lexik_form_filter.apply.orm.item_filter.position" method="onGetFilterCondition" />
+</service>
+```
+
+Note that before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
 
-Working with entity associations and embeddeding filters
---------------------------------------------------------
+v. Working with entity associations and embeddeding filters
+-----------------------------------------------------------
 
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
 
@@ -552,8 +708,8 @@ class OptionsFilterType extends AbstractType
 }
 ```
 
-Doctrine embeddables
---------------------
+vi. Doctrine embeddables
+------------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
 In the following code we suppose we use entities defined in the [doctrine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
@@ -598,8 +754,8 @@ class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterf
 }
 ```
 
-Create your own filter type
----------------------------
+vii. Create your own filter type
+--------------------------------
 
 Let's see that through a simple example, we suppose I want to create a `LocaleFilterType` class to filter fields which contain a locale as value.
 
@@ -663,7 +819,7 @@ Now we can use the `filter_locale` type, but no filter will be applied. To apply
 namespace Super\Namespace\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterEvent;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 class FilterSubscriber implements EventSubscriberInterface
 {
@@ -686,17 +842,18 @@ class FilterSubscriber implements EventSubscriberInterface
      *
      * This method should work whih both ORM and DBAL query builder.
      */
-    public function filterLocale(ApplyFilterEvent $event)
+    public function filterLocale(GetFilterConditionEvent $event)
     {
-        $qb     = $event->getQueryBuilder();
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
             $paramName = str_replace('.', '_', $event->getField());
 
-            $qb->andWhere($expr->eq($event->getField(), ':'.$paramName));
-            $qb->setParameter($paramName, $values['value']);
+            $event->setCondition(
+                $expr->eq($event->getField(), ':'.$paramName),
+                array($paramName => $values['value'])
+            );
         }
     }
 }
@@ -736,7 +893,7 @@ class FilterSubscriber implements EventSubscriberInterface
 5. The FilterTypeExtension
 ==========================
 
-The bundle loads a custom type extension to add the `apply_filter` and the `data_extraction_method` options to **all form types**. These options are used when a filter condition is applied to the query builder.
+The bundle loads a custom type extension to add the `apply_filter`,  `data_extraction_method`, and `filter_condition_builder` options to **all form types**. These options are used when a filter condition is applied to the query builder.
 
 ##### The `apply_filter` option:
 
@@ -761,10 +918,18 @@ class CallbackFilterType extends AbstractType
 
         $builder->add('my_number_field', 'filter_number', array(
             'apply_filter' => function(QueryInterface $filterQuery, $field, $values) {
-                if (!empty($values['value'])) {
-                    $qb = $filterQuery->getQueryBuilder();
-                    $qb->andWhere($filterQuery->getExpr()->eq($field, $values['value']));
+                if (empty($values['value'])) {
+                    return null;
                 }
+
+                $expr = $filterQuery->getExpr();
+
+                $paramName = sprintf('p_%s', str_replace('.', '_', $field));
+
+                return $filterQuery->createCondition(
+                    $expr->eq($field, ':'.$paramName),    // expression
+                    array($paramName => $values['value']) // parameters [ name => value ]
+                );
             },
         ));
     }
@@ -776,10 +941,18 @@ class CallbackFilterType extends AbstractType
 
     public function textFieldCallback(QueryInterface $filterQuery, $field, $values)
     {
-        if (!empty($values['value'])) {
-            $qb = $filterQuery->getQueryBuilder();
-            $qb->andWhere($filterQuery->getExpr()->eq($field, $values['value']));
+        if (empty($values['value'])) {
+            return null;
         }
+
+        $expr = $filterQuery->getExpr();
+
+        $paramName = sprintf('p_%s', str_replace('.', '_', $field));
+
+        return $filterQuery->createCondition(
+            $expr->eq($field, ':'.$paramName),    // expression
+            array($paramName => array($values['value'], \PDO::PARAM_STR) // parameters [ name => [value, type] ]
+        );
     }
 }
 ```
@@ -848,3 +1021,10 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     ));
 }
 ```
+
+##### The `filter_condition_builder` option:
+
+This option is used to defined the operator (and/or) to use between each condition.
+This option is expected to be closure and recieve one parameter which is an instance of `Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface`.
+
+See 4.iii section for examples.

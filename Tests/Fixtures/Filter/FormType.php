@@ -20,8 +20,12 @@ class FormType extends AbstractType
         $builder->add('position', 'integer', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    $filterQuery->getQueryBuilder()->andWhere($filterQuery->getExpr()->eq($field, $values['value']));
+                    return $filterQuery->createCondition(
+                        $filterQuery->getExpr()->eq($field, $values['value'])
+                    );
                 }
+
+                return null;
             },
         ));
     }

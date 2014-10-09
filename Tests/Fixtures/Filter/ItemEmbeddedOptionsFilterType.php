@@ -20,6 +20,7 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'filter_text');
+        $builder->add('position', 'filter_number');
         $builder->add('options', 'filter_collection_adapter', array(
             'type'       => new OptionFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {

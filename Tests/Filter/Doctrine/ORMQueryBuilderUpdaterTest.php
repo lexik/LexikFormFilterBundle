@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
 
 /**
@@ -17,10 +18,10 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
             'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i',
             'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\'',
             'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\' AND i.position > :p_i_position',
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\' AND i.position > :p_i_position AND i.enabled = true',
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\' AND i.position > :p_i_position AND i.enabled = 1',
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%blabla\' AND i.position <= :p_i_position AND i.createdAt = \'2013-09-27\'',
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%blabla\' AND i.position <= :p_i_position AND i.createdAt = \'2013-09-27 13:21:00\'',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\' AND i.position > :p_i_position AND i.enabled = :p_i_enabled',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'blabla\' AND i.position > :p_i_position AND i.enabled = :p_i_enabled',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%blabla\' AND i.position <= :p_i_position AND i.createdAt = :p_i_createdAt',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%blabla\' AND i.position <= :p_i_position AND i.createdAt = :p_i_createdAt',
         ));
     }
 
@@ -80,10 +81,10 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $filterQueryBuilder = $this->initQueryBuilder();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
-        $form->bind(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 3))));
+        $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 3))));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
-        $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name LIKE \'dude\' AND opt.label LIKE \'color\' AND opt.rank = :p_opt_rank';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name LIKE \'dude\' AND (opt.label LIKE \'color\' AND opt.rank = :p_opt_rank)';
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
 
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
@@ -96,16 +97,94 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $doctrineQueryBuilder->leftJoin('i.options', 'o');
-        $form->bind(array('name' => 'dude', 'options' => array(array('label' => 'size', 'rank' => 5))));
+        $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'size', 'rank' => 5))));
 
         $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
-        $expectedDql .= ' LEFT JOIN i.options o WHERE i.name LIKE \'dude\' AND o.label LIKE \'size\' AND o.rank = :p_o_rank';
+        $expectedDql .= ' LEFT JOIN i.options o WHERE i.name LIKE \'dude\' AND (o.label LIKE \'size\' AND o.rank = :p_o_rank)';
 
         $filterQueryBuilder->setParts(array('i.options' => 'o'));
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
 
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('p_o_rank' => 5), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+    }
+
+    public function testCustomConditionBuilder()
+    {
+        // doctrine query builder without any joins + custom condition builder
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+                $builder
+                    ->root('or')
+                        ->field('options.label')
+                        ->andX()
+                            ->field('options.rank')
+                            ->field('name')
+                        ->end()
+                    ->end()
+                ;
+            }
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE opt.label LIKE \'color\' OR (opt.rank = :p_opt_rank AND i.name LIKE \'dude\')';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+
+
+        // doctrine query builder without any joins + custom condition builder
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+                    $builder
+                        ->root('and')
+                            ->orX()
+                                ->field('name')
+                                ->field('options.label')
+                            ->end()
+                            ->orX()
+                                ->field('options.rank')
+                                ->field('position')
+                            ->end()
+                        ->end()
+                    ;
+                }
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array('name' => 'dude', 'position' => 1, 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE (i.name LIKE \'dude\' OR opt.label LIKE \'color\') AND (opt.rank = :p_opt_rank OR i.position = :p_i_position)';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6, 'p_i_position' => 1), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+    }
+
+    public function testWithDataClass()
+    {
+        // doctrine query builder without any joins + a data_class
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'data_class' => 'Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item',
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));
+
+        $expectedDql = 'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i';
+        $expectedDql .= ' LEFT JOIN i.options opt WHERE i.name LIKE \'dude\' AND (opt.label LIKE \'color\' AND opt.rank = :p_opt_rank)';
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+
+        $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
+        $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createDoctrineQueryBuilder()
