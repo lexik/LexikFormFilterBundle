@@ -452,7 +452,7 @@ class ItemFilterType extends AbstractType
     {
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
-                if (empty($values['value']) {
+                if (empty($values['value'])) {
                     return null;
                 }
 
