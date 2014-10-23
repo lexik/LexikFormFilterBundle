@@ -24,6 +24,19 @@ class DoctrineApplyFilterListener
     private $parameters;
 
     /**
+     * @var string
+     */
+    private $whereMethod;
+
+    /**
+     * @param string $whereMethod
+     */
+    public function __construct($whereMethod)
+    {
+        $this->whereMethod = (null === $whereMethod) ? 'where' : sprintf('%sWhere', strtolower($whereMethod));
+    }
+
+    /**
      * @param ApplyFilterConditionEvent $event
      */
     public function onApplyFilterCondition(ApplyFilterConditionEvent $event)
@@ -35,7 +48,7 @@ class DoctrineApplyFilterListener
         $expression = $this->computeExpression($qb, $conditionBuilder->getRoot());
 
         if (null !== $expression && $expression->count()) {
-            $qb->where($expression);
+            $qb->{$this->whereMethod}($expression);
 
             foreach ($this->parameters as $name => $value) {
                 if (is_array($value)) {

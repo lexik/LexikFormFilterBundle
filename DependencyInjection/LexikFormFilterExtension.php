@@ -37,5 +37,7 @@ class LexikFormFilterExtension extends Extension
                 array($config['force_case_insensitivity'])
             );
         }
+
+        $container->setParameter('lexik_form_filter.where_method', $config['where_method']);
     }
 }

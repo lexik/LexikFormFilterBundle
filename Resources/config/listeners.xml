@@ -28,10 +28,12 @@
 
         <!-- Listener to apply filter conditions -->
         <service id="lexik_form_filter.apply_filter.doctrine_orm" class="%lexik_form_filter.apply_filter.doctrine_orm.class%">
+            <argument>%lexik_form_filter.where_method%</argument>
             <tag name="kernel.event_listener" event="lexik_filter.apply_filters.orm" method="onApplyFilterCondition" />
         </service>
 
         <service id="lexik_form_filter.apply_filter.doctrine_dbal" class="%lexik_form_filter.apply_filter.doctrine_dbal.class%">
+            <argument>%lexik_form_filter.where_method%</argument>
             <tag name="kernel.event_listener" event="lexik_filter.apply_filters.dbal" method="onApplyFilterCondition" />
         </service>
     </services>

@@ -276,6 +276,8 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $loadXml->load('form.xml');
         $loadXml->load('listeners.xml');
 
+        $container->setParameter('lexik_form_filter.where_method', null);
+
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());
         $container->addCompilerPass(new FormDataExtractorPass());

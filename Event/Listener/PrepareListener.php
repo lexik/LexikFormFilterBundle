@@ -18,16 +18,26 @@ class PrepareListener
      */
     protected $forceCaseInsensitivity = null;
 
+    /**
+     * @param boolean $value
+     * @return PrepareListener $this
+     * @throws \InvalidArgumentException
+     */
     public function setForceCaseInsensitivity($value)
     {
         if (!is_bool($value)) {
             throw new \InvalidArgumentException("Expected a boolean");
         }
+
         $this->forceCaseInsensitivity = $value;
 
         return $this;
     }
 
+    /**
+     * @param $qb
+     * @return boolean
+     */
     public function getForceCaseInsensitivity($qb)
     {
         if (isset($this->forceCaseInsensitivity)) {
