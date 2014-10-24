@@ -2,17 +2,16 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
-use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DoctrineQueryBuilderAdapter;
 
 /**
- * Add filter conditions on a Doctrine ORM query builder.
+ * Add filter conditions on a Doctrine ORM or DBAL query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
@@ -41,32 +40,32 @@ class DoctrineApplyFilterListener
      */
     public function onApplyFilterCondition(ApplyFilterConditionEvent $event)
     {
-        $qb = $event->getQueryBuilder();
+        $qbAdapter = new DoctrineQueryBuilderAdapter($event->getQueryBuilder());
         $conditionBuilder = $event->getConditionBuilder();
 
         $this->parameters = array();
-        $expression = $this->computeExpression($qb, $conditionBuilder->getRoot());
+        $expression = $this->computeExpression($qbAdapter, $conditionBuilder->getRoot());
 
         if (null !== $expression && $expression->count()) {
-            $qb->{$this->whereMethod}($expression);
+            $qbAdapter->{$this->whereMethod}($expression);
 
             foreach ($this->parameters as $name => $value) {
                 if (is_array($value)) {
                     list($value, $type) = $value;
-                    $qb->setParameter($name, $value, $type);
+                    $qbAdapter->setParameter($name, $value, $type);
                 } else {
-                    $qb->setParameter($name, $value);
+                    $qbAdapter->setParameter($name, $value);
                 }
             }
         }
     }
 
     /**
-     * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
-     * @param ConditionNodeInterface           $node
+     * @param DoctrineQueryBuilderAdapter $queryBuilder
+     * @param ConditionNodeInterface      $node
      * @return Composite|CompositeExpression|null
      */
-    protected function computeExpression($queryBuilder, ConditionNodeInterface $node)
+    protected function computeExpression(DoctrineQueryBuilderAdapter $queryBuilder, ConditionNodeInterface $node)
     {
         if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
             return null;
@@ -74,7 +73,7 @@ class DoctrineApplyFilterListener
 
         $method = ($node->getOperator() == ConditionNodeInterface::EXPR_AND) ? 'andX' : 'orX';
 
-        $expression = $queryBuilder->expr()->{$method}();
+        $expression = $queryBuilder->{$method}();
 
         foreach ($node->getFields() as $condition) {
             if (null !== $condition) {
