@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": "2.5.*",
+        "symfony/framework-bundle": "~2.5",
         "symfony/form": "~2.1",
         "doctrine/orm": "~2.2"
     },
