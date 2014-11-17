@@ -35,7 +35,7 @@
     "target-dir": "Lexik/Bundle/FormFilterBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x.x-dev"
+            "dev-master": "3.x.x-dev"
         }
     }
 }
