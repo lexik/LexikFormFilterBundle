@@ -7,6 +7,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -31,7 +32,7 @@ abstract class AbstractDoctrineSubscriber
             if (is_array($values['value']) && sizeof($values['value']) > 0) {
                 $event->setCondition(
                     $expr->in($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Type::SIMPLE_ARRAY))
+                    array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
                 );
 
             } elseif (!is_array($values['value'])) {

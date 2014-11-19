@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
@@ -83,7 +84,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 if (count($ids) > 0) {
                     $event->setCondition(
                         $expr->in($event->getField(), ':'.$paramName),
-                        array($paramName => array($ids, Type::SIMPLE_ARRAY))
+                        array($paramName => array($ids, Connection::PARAM_INT_ARRAY))
                     );
                 }
 
