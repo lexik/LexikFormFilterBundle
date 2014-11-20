@@ -93,11 +93,9 @@ abstract class AbstractDoctrineSubscriber
         if ($values['value'] instanceof \DateTime) {
             $paramName = $this->generateParameterName($event->getField());
 
-            $date = $values['value']->format(ExpressionBuilder::SQL_DATE);
-
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($date, Type::DATE))
+                array($paramName => array($values['value'], Type::DATE))
             );
         }
     }
@@ -127,11 +125,9 @@ abstract class AbstractDoctrineSubscriber
         if ($values['value'] instanceof \DateTime) {
             $paramName = $this->generateParameterName($event->getField());
 
-            $date = $values['value']->format(ExpressionBuilder::SQL_DATE_TIME);
-
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($date, Type::DATETIME))
+                array($paramName => array($values['value'], Type::DATETIME))
             );
         }
     }

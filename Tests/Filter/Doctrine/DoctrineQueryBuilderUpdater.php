@@ -112,7 +112,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => '2013-09-27'), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
 
         // bind a request to the form - datetime + pattern selector
@@ -130,7 +130,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => '2013-09-27 13:21:00'), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27 13:21:00')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createApplyFilterOptionTest($method, array $dqls)
