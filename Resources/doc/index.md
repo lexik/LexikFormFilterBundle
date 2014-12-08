@@ -151,6 +151,10 @@ Options:
 
 Parent type: _entity_
 
+Options:
+
+* `class`: A select of this entity will be made, e.g. `AppBundle:FooBar`.
+
 **This type does not support many-to-many relations.**
 
 ---
