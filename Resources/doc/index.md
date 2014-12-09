@@ -149,11 +149,14 @@ Options:
 ---
 **filter_entity:**
 
+This type will create a select input
+
 Parent type: _entity_
 
 Options:
 
-* `class`: A select of this entity will be made, e.g. `AppBundle:FooBar`.
+* `class`: The entity that the select input will be populated with, e.g. `AppBundle:FooBar`.
+* `property`: If the entity does not have a toString method, then you need to define the field that will be used as the text value of each select option 
 
 **This type does not support many-to-many relations.**
 
