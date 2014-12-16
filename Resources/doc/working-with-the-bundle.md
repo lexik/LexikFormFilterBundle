@@ -723,3 +723,7 @@ class FilterSubscriber implements EventSubscriberInterface
     [...]
 }
 ```
+
+***
+
+Next: [5. The FilterTypeExtension](filtertypeextension.md)

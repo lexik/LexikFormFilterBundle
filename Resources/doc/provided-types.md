@@ -93,3 +93,7 @@ Options:
 
 * `condition_pattern`: this option allows you to configure the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. See the FilterOperands::STRING_xxx constants for all available patterns.
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text.
+
+***
+
+Next: [4. Working with the filters](working-with-the-bundle.md)

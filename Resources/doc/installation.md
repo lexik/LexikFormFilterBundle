@@ -30,3 +30,7 @@ Register the bundle with your kernel:
         // ...
     );
 ```
+
+***
+
+Next: [2. Configuration](configuration.md)

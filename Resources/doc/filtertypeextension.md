@@ -136,4 +136,4 @@ public function buildForm(FormBuilderInterface $builder, array $options)
 This option is used to defined the operator (and/or) to use between each condition.
 This option is expected to be closure and recieve one parameter which is an instance of `Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface`.
 
-See 4.iii section for examples.
+See [4.iii section](working-with-the-bundle.md#iii-customize-condition-operator) for examples.

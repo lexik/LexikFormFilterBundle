@@ -45,3 +45,7 @@ lexik_form_filter:
 ```
 
 So if you set this option to `and` or `or` the bundle will use `andWhere()` or  `orWhere()`.
+
+***
+
+Next: [3. Provided form types](provided-types.md)
