@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,8 +18,6 @@ class DateRangeFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $builder->add('left_date', 'filter_date', $options['left_date_options']);
         $builder->add('right_date', 'filter_date', $options['right_date_options']);
 
@@ -34,8 +32,6 @@ class DateRangeFilterType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $resolver
             ->setDefaults(array(
                 'required'               => false,

@@ -576,7 +576,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EmbeddedFilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EmbeddedFilterTypeInterface;
 
 class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterface
 {

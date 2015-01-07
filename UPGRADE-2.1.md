@@ -40,7 +40,7 @@ class ItemFilterType extends AbstractType
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\FilterTypeSharedableInterface;
 
 class OptionsFilterType extends AbstractType implements FilterTypeSharedableInterface
 {

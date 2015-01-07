@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
@@ -21,8 +21,6 @@ class TextFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         if (true === $options['compound']) {
             $builder->add('condition_pattern', 'choice', $options['choice_options']);
             $builder->add('text', 'text', $options['text_options']);
@@ -39,8 +37,6 @@ class TextFilterType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $resolver
             ->setDefaults(array(
                 'required'               => false,

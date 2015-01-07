@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
@@ -21,8 +21,6 @@ class NumberFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         if (true === $options['compound']) {
             // if the form is compound we don't need the NumberToLocalizedStringTransformer added in the parent type.
             $builder->resetViewTransformers();
@@ -42,8 +40,6 @@ class NumberFilterType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $resolver
             ->setDefaults(array(
                 'required'               => false,

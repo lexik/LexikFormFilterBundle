@@ -1,24 +1,22 @@
 <?php
 
-namespace Lexik\Bundle\FormFilterBundle\Filter\Extension\Type;
+namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Filter type for select list.
+ * Filter type for datetime field.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ChoiceFilterType extends AbstractType
+class DateTimeFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $resolver
             ->setDefaults(array(
                 'required'               => false,
@@ -35,7 +33,7 @@ class ChoiceFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return 'datetime';
     }
 
     /**
@@ -43,6 +41,6 @@ class ChoiceFilterType extends AbstractType
      */
     public function getName()
     {
-        return 'filter_choice';
+        return 'filter_datetime';
     }
 }

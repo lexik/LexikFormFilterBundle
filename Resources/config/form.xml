@@ -6,24 +6,24 @@
 
     <parameters>
         <!-- Filter Types -->
-        <parameter key="lexik_form_filter.type.filter_field.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FieldFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_text.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\TextFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_number.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_number_range.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\NumberRangeFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_checkbox.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CheckboxFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_boolean.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_choice.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\ChoiceFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_entity.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\EntityFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_date.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_date_range.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateRangeFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_datetime.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_datetime_range.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\DateTimeRangeFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_collection_adapter.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\CollectionAdapterFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_sharedable.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\SharedableFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_field.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\FieldFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\FilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_text.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_number.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_number_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_checkbox.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CheckboxFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_boolean.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_choice.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\ChoiceFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_entity.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_date.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_date_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_datetime.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_datetime_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_collection_adapter.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_sharedable.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\SharedableFilterType</parameter>
 
         <!-- Type extension -->
-        <parameter key="lexik_form_filter.type_extension.filter_extension.class">Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterTypeExtension</parameter>
+        <parameter key="lexik_form_filter.type_extension.filter_extension.class">Lexik\Bundle\FormFilterBundle\Filter\Form\FilterTypeExtension</parameter>
     </parameters>
 
     <services>

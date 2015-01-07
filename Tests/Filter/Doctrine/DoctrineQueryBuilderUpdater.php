@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;

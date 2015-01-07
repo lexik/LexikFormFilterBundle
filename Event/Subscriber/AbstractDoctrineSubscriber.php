@@ -3,8 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 use Doctrine\DBAL\Connection;

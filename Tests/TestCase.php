@@ -11,7 +11,7 @@ use Symfony\Component\Form\ResolvedFormTypeFactory;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\FilterExtension;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
