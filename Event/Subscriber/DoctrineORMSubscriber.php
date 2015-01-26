@@ -75,10 +75,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 $ids = array();
 
                 foreach ($values['value'] as $value) {
-                    if (!is_callable(array($value, 'getId'))) {
-                        throw new \RuntimeException(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($value)));
-                    }
-                    $ids[] = $value->getId();
+                    $ids[] = $this->getValueIdentifier($value);
                 }
 
                 if (count($ids) > 0) {
@@ -89,15 +86,29 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 }
 
             } else {
-                if (!is_callable(array($values['value'], 'getId'))) {
-                    throw new \RuntimeException(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($values['value'])));
-                }
-
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value']->getId(), Type::INTEGER))
+                    array($paramName => array($this->getValueIdentifier($values['value']), Type::INTEGER))
                 );
             }
         }
+    }
+
+    /**
+     * Get identifier of an object, with getter or `id` attribute.
+     *
+     * @param $value
+     * @return integer
+     * @throws \RuntimeException
+     */
+    private function getValueIdentifier($value)
+    {
+        if (is_callable(array($value, 'getId'))) {
+            return $value->getId();
+        } else if (isset($value->id)) {
+            return $value->id;
+        }
+
+        throw new \RuntimeException(sprintf('Can\'t call method "getId()" on an instance of "%s"', get_class($value)));
     }
 }
