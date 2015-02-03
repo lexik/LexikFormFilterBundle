@@ -9,4 +9,5 @@
     5. [Working with entity associations and embeddeding filters](working-with-the-bundle.md#v-working-with-entity-associations-and-embeddeding-filters)
     6. [Doctrine embeddables](working-with-the-bundle.md#vi-doctrine-embeddables)
     7. [Create your own filter type](working-with-the-bundle.md#vii-create-your-own-filter-type)
+    8. [Enable validation on your filter type](working-with-the-bundle.md#viii-enable-filtertype-form-validation)
 5. [The FilterTypeExtension](filtertypeextension.md)
