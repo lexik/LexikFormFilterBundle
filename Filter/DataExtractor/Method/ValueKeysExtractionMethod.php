@@ -25,7 +25,7 @@ class ValueKeysExtractionMethod implements DataExtractionMethodInterface
      */
     public function extract(FormInterface $form)
     {
-        $data   = $form->getData();
+        $data   = $form->getData() ?: array();
         $keys   = array();
         $config = $form->getConfig();
 
