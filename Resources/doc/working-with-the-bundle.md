@@ -724,6 +724,38 @@ class FilterSubscriber implements EventSubscriberInterface
 }
 ```
 
+viii. Enable FilterType form validation
+---------------------------------------
+
+By default most `FilterForms` are submitted using `GET`, and are defined in class instead of via a formBuilder in the controller. When you injected the data in the `FilterForm` yourself via the `$form->submit($data)` method, all was fine. In order to let the `validator` service function properly, we need to tell the form it does use the `GET` method:
+
+```php
+ public function setDefaultOptions(OptionsResolverInterface $resolver)
+{
+	parent::setDefaultOptions($resolver);
+    $resolver->setDefaults(array(
+        'error_bubbling' 	=> true,
+		'csrf_protection'   => false,
+		'validation_groups' => array('filtering'), // avoid NotBlank() constraint-related message
+        'method'            => 'get',
+    ));
+}
+```
+
+In order to automatically validate your requests, you have to make use of Symfony its built-in `$form->handleRequest()` function. In your controller, you can create your forms in a different way:
+
+```php
+// Handle the filtering
+$filterForm = $this->createForm(new OrderFilterType());
+
+$filterForm->handleRequest($request);
+
+if ($filterForm->isValid()) {
+	$filterBuilder = $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $filterBuilder);
+}
+```
+Now the Symfony `requestHandler` will take over and won't `addFilterConditions` to the builder in case the form isn't valid.
+
 ***
 
 Next: [5. The FilterTypeExtension](filtertypeextension.md)
