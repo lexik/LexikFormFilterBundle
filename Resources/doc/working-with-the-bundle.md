@@ -386,6 +386,34 @@ class ItemPositionFilterConditionListener
 
 Note that before triggering the default event name, the `lexik_form_filter.query_builder_updater` service checks if this custom event has some listeners, in which case this event will be triggered instead of the default one.
 
+#### C. Disable filtering for one field
+
+For any reason if you need to don't apply some filter condition for a given field, you can set the `apply_filter` option to `false`.
+This will make the bundle skip the field, so no condition will be added for this field.
+
+```php
+<?php
+// ItemFilterType.php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text', array(
+            'apply_filter' => false, // disable filter
+        ));
+    }
+
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
 
 v. Working with entity associations and embeddeding filters
 -----------------------------------------------------------

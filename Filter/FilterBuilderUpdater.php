@@ -194,6 +194,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         // apply the filter by using the closure set with the 'apply_filter' option
         $callable = $form->getConfig()->getAttribute('apply_filter');
 
+        if (false === $callable) {
+            return null;
+        }
+
         if ($callable instanceof \Closure) {
             $condition = $callable($filterQuery, $field, $values);
 

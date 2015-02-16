@@ -90,7 +90,9 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
 
         // bind a request to the form - 3 params (use checkbox for enabled field)
-        $form = $this->formFactory->create(new ItemFilterType(false, true));
+        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+            'checkbox' => true,
+        ));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
@@ -101,7 +103,9 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
 
         // bind a request to the form - date + pattern selector
-        $form = $this->formFactory->create(new ItemFilterType(true));
+        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+            'with_selector' => true,
+        ));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array(
@@ -116,7 +120,10 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
 
         // bind a request to the form - datetime + pattern selector
-        $form = $this->formFactory->create(new ItemFilterType(true, false, true));
+        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+            'with_selector' => true,
+            'datetime'      => true,
+        ));
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array(
@@ -131,6 +138,21 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
         $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27 13:21:00')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+    }
+
+    protected function createDisabledFieldTest($method, array $dqls)
+    {
+        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+            'with_selector' => false,
+            'disabled_name' => true,
+        ));
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array('name' => 'blabla', 'position' => 2));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
 
     protected function createApplyFilterOptionTest($method, array $dqls)
@@ -255,6 +277,8 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
+
+
 
     protected function initQueryBuilder()
     {

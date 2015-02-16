@@ -18,10 +18,7 @@ class FilterTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['apply_filter'] instanceof \Closure
-            || is_callable($options['apply_filter'])
-            || is_string($options['apply_filter'])
-        ) {
+        if (null !== $options['apply_filter']) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
         }
 

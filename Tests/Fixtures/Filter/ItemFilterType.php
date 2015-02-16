@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Form filter for tests.
@@ -14,21 +15,12 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
  */
 class ItemFilterType extends AbstractType
 {
-    protected $withSelector;
-    protected $checkbox;
-    protected $datetime;
-
-    public function __construct($withSelector = false, $checkbox = false, $datetime = false)
-    {
-        $this->withSelector = $withSelector;
-        $this->checkbox = $checkbox;
-        $this->datetime = $datetime;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->withSelector) {
-            $builder->add('name', 'filter_text');
+        if (!$options['with_selector']) {
+            $builder->add('name', 'filter_text', array(
+                'apply_filter' => $options['disabled_name'] ? false : null,
+            ));
             $builder->add('position', 'filter_number', array(
                 'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN,
             ));
@@ -41,8 +33,18 @@ class ItemFilterType extends AbstractType
             ));
         }
 
-        $builder->add('enabled', $this->checkbox ? 'filter_checkbox' : 'filter_boolean');
-        $builder->add('createdAt', $this->datetime ? 'filter_datetime' : 'filter_date');
+        $builder->add('enabled', $options['checkbox'] ? 'filter_checkbox' : 'filter_boolean');
+        $builder->add('createdAt', $options['datetime'] ? 'filter_datetime' : 'filter_date');
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'with_selector' => false,
+            'checkbox'      => false,
+            'datetime'      => false,
+            'disabled_name' => false,
+        ));
     }
 
     public function getName()

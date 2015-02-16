@@ -25,6 +25,13 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         ));
     }
 
+    public function testDisabledFieldQuery()
+    {
+        parent::createDisabledFieldTest('getDQL', array(
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.position > :p_i_position',
+        ));
+    }
+
     public function testApplyFilterOption()
     {
         parent::createApplyFilterOptionTest('getDQL', array(

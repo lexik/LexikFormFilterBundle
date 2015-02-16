@@ -22,6 +22,13 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         ));
     }
 
+    public function testDisabledFieldQuery()
+    {
+        parent::createDisabledFieldTest('getSQL', array(
+            'SELECT i FROM item i WHERE i.position > :p_i_position',
+        ));
+    }
+
     public function testApplyFilterOption()
     {
         parent::createApplyFilterOptionTest('getSQL', array(
