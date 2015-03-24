@@ -34,17 +34,16 @@ anyway, set it to `true`.
 
 * Query builder method:
 
-This option will define which method to use on the (doctrine) query builder to add the **entire** filter condition (not the operator between each condition).
-By default this option is `null` so the bundle will call the `where()`method to set the entire filter condition.
-So it will override the existing where clause. If you don't want the bundle override the where clause you can use the following option:
+This option will define which method to use on the (doctrine) query builder to add the **entire** condition computed from the form type (this option is not about the operator between each filter condition).
+By default this option is set to `and`, so the bundle will call the `andWhere()` method to set the entire condition on the doctrine query builder.
+If you set it to `null` or `or`, the bundle will use the `where()` or `orWhere()` method to set the entire condition.
+And so if the value is `null` it will override the existing where clause (in case of you initialized one on the query builder).
 
 ```yaml
 # app/config/config.yml
 lexik_form_filter:
     where_method: ~  # null | and | or
 ```
-
-So if you set this option to `and` or `or` the bundle will use `andWhere()` or  `orWhere()`.
 
 ***
 

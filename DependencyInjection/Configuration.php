@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('where_method')
-                    ->defaultNull()
+                    ->defaultValue('and')
                     ->info('Defined the doctrine query builder method the bundle will use to add the entire filter condition.')
                     ->validate()
                         ->ifNotInArray(array(null, 'and', 'or'))
