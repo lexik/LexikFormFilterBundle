@@ -29,7 +29,7 @@ class ValueKeysExtractionMethod implements DataExtractionMethodInterface
         $keys   = array();
         $config = $form->getConfig();
 
-        if ($config->hasAttribute('filter_value_keys')) {
+        if ($config->hasAttribute('filter_value_keys') && is_array($data)) {
             $keys = array_merge($data, $config->getAttribute('filter_value_keys'));
         }
 
