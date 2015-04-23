@@ -11,3 +11,5 @@
     7. [Create your own filter type](working-with-the-bundle.md#vii-create-your-own-filter-type)
     8. [Enable validation on your filter type](working-with-the-bundle.md#viii-enable-filtertype-form-validation)
 5. [The FilterTypeExtension](filtertypeextension.md)
+6. [Working with other bundles](working-with-other-bundles.md)
+    1. [KNP Paginator Example](working-with-other-bundles.md#knp-paginator)
