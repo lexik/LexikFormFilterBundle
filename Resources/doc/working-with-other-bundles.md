@@ -1,4 +1,4 @@
-4. Working with other bundles
+6. Working with other bundles
 =============================
 
 i. KNP Paginator example
