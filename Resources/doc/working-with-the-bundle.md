@@ -159,7 +159,7 @@ By default the `lexik_form_filter.query_builder_updater` service will add condit
 But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
 To do so you will have to use the `filter_condition_builder` option in your main type class.
 
-Here a simple example, the main type `ItemFilterType` is composed of 2 simple fileds and a sub type (RelatedOptionsType).
+Here a simple example, the main type `ItemFilterType` is composed of 2 simple fields and a sub type (RelatedOptionsType).
 The `filter_condition_builder` option is expected to be a closuse that will be used to set operators to use between conditions.
 
 ```php
