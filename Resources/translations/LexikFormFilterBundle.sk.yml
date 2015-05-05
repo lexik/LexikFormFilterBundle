@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Áno alebo nie"
+    yes:                "Áno"
+    no:                 "Nie"
+
+number:
+    equal:              "Rovné"
+    greater_than:       "Väčšie ako"
+    greater_than_equal: "Väčšie ako alebo rovné"
+    lower_than:         "Menšie ako"
+    lower_than_equal:   "Menšie ako alebo rovné"
+
+text:
+    starts:             "Začína na"
+    ends:               "Končí na"
+    equals:             "Zhoduje sa"
+    both:               "Obsahuje"
