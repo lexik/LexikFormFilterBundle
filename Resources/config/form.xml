@@ -6,8 +6,6 @@
 
     <parameters>
         <!-- Filter Types -->
-        <parameter key="lexik_form_filter.type.filter_field.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\FieldFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\FilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_text.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_number.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_number_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberRangeFilterType</parameter>
@@ -28,14 +26,6 @@
 
     <services>
         <!-- Filter Types -->
-        <service id="lexik_form_filter.type.filter_field" class="%lexik_form_filter.type.filter_field.class%">
-            <tag name="form.type" alias="filter_field" />
-        </service>
-
-        <service id="lexik_form_filter.type.filter" class="%lexik_form_filter.type.filter.class%">
-            <tag name="form.type" alias="filter" />
-        </service>
-
         <service id="lexik_form_filter.type.filter_text" class="%lexik_form_filter.type.filter_text.class%">
             <tag name="form.type" alias="filter_text" />
         </service>
