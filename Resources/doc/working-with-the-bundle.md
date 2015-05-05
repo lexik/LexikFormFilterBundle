@@ -506,7 +506,7 @@ class ItemFilterType extends AbstractType
 #### B. Single object
 
 So let's say we need to filter some Option by their related Item's name.
-We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filder on field that belong to Item.
+We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filter on field that belong to Item.
 
 Let's start with the `ItemFilterType`, the only thing we have to do is to change the default parent type of our by using the `getParent()` method.
 This will allow us to use the `add_shared` option as in the `filter_collection_adapter` type (by default this option is not available on a type).
