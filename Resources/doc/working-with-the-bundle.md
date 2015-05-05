@@ -159,7 +159,7 @@ By default the `lexik_form_filter.query_builder_updater` service will add condit
 But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
 To do so you will have to use the `filter_condition_builder` option in your main type class.
 
-Here a simple example, the main type `ItemFilterType` is composed of 2 simple fileds and a sub type (RelatedOptionsType).
+Here a simple example, the main type `ItemFilterType` is composed of 2 simple fields and a sub type (RelatedOptionsType).
 The `filter_condition_builder` option is expected to be a closuse that will be used to set operators to use between conditions.
 
 ```php
@@ -506,7 +506,7 @@ class ItemFilterType extends AbstractType
 #### B. Single object
 
 So let's say we need to filter some Option by their related Item's name.
-We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filder on field that belong to Item.
+We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filter on field that belong to Item.
 
 Let's start with the `ItemFilterType`, the only thing we have to do is to change the default parent type of our by using the `getParent()` method.
 This will allow us to use the `add_shared` option as in the `filter_collection_adapter` type (by default this option is not available on a type).
