@@ -287,7 +287,7 @@ class ItemFilterType extends AbstractType
     {
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
-                if (empty($values['value']) {
+                if (empty($values['value'])) {
                     return null;
                 }
 
@@ -297,7 +297,7 @@ class ItemFilterType extends AbstractType
                 $expression = $filterQuery->getExpr()->eq($field, ':'.$paramName);
 
                 // expression parameters
-                $parameters = array($paramName => $values['value']); / [ name => value ]
+                $parameters = array($paramName => $values['value']); // [ name => value ]
                 // or if you need to define the parameter's type
                 // $parameters = array($paramName => array($values['value'], \PDO::PARAM_STR)); // [ name => [value, type] ]
 
@@ -484,7 +484,7 @@ class ItemFilterType extends AbstractType
         $builder->add('options', 'filter_collection_adapter', array(
             'type'      => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
-                $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
                     // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater
                     $filterBuilder->leftJoin($alias . '.options', $joinAlias);
@@ -555,7 +555,7 @@ class OptionsFilterType extends AbstractType
     {
         $builder->add('item', new ItemFilterType(), array(
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
-                $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     $filterBuilder->leftJoin($alias . '.item', $joinAlias);
                 };
 
