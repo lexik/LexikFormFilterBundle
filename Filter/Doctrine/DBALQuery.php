@@ -73,11 +73,9 @@ class DBALQuery implements QueryInterface
     }
 
     /**
-     * Get root alias.
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getAlias()
+    public function getRootAlias()
     {
         $from = $this->queryBuilder->getQueryPart('from');
 

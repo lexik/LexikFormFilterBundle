@@ -94,7 +94,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
         // init parts (= ['alias' -> 'joins'])
         if ( ! $alias) {
-            $alias = $event->getFilterQuery()->getAlias();
+            $alias = $event->getFilterQuery()->getRootAlias();
             $this->parts[$alias] = '__root__'; // the root alias does not target a join
         }
 
