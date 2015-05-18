@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Indiferente"
+    yes:                "Sí"
+    no:                 "No"
+
+number:
+    equal:              "Igual que"
+    greater_than:       "Mayor que"
+    greater_than_equal: "Mayor o igual que"
+    lower_than:         "Menor que"
+    lower_than_equal:   "Menor o igual que"
+
+text:
+    starts:             "Empieza por"
+    ends:               "Termina por"
+    equals:             "Igual a"
+    both:               "Contiene"

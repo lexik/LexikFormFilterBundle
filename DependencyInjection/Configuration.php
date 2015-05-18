@@ -20,7 +20,24 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+
         $rootNode = $treeBuilder->root('lexik_form_filter');
+        $rootNode
+            ->children()
+                ->scalarNode('where_method')
+                    ->defaultValue('and')
+                    ->info('Defined the doctrine query builder method the bundle will use to add the entire filter condition.')
+                    ->validate()
+                        ->ifNotInArray(array(null, 'and', 'or'))
+                        ->thenInvalid('Invalid value, please use "null", "and", "or".')
+                    ->end()
+                ->end()
+
+                ->booleanNode('force_case_insensitivity')
+                    ->info('Whether to do case insensitive LIKE comparisons.')
+                    ->defaultNull()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

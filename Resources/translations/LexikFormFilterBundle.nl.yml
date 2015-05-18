@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Ja of Nee"
+    yes:                "Ja"
+    no:                 "Nee"
+
+number:
+    equal:              "Gelijk"
+    greater_than:       "Groter dan"
+    greater_than_equal: "Groter dan of Gelijk"
+    lower_than:         "Lager dan"
+    lower_than_equal:   "Lager dan of Gelijk"
+
+text:
+    starts:             "Begint met"
+    ends:               "Eindigt op"
+    equals:             "Gelijk"
+    both:               "Bevat"

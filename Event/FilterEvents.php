@@ -10,6 +10,4 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 class FilterEvents
 {
     const PREPARE = 'lexik_filter.prepare';
-
-    const GET_FILTER = 'lexik_filter.get';
 }

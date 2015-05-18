@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- Filter Types -->
+        <parameter key="lexik_form_filter.type.filter_text.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_number.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_number_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_checkbox.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CheckboxFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_boolean.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_choice.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\ChoiceFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_entity.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_date.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_date_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_datetime.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_datetime_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeRangeFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_collection_adapter.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType</parameter>
+        <parameter key="lexik_form_filter.type.filter_sharedable.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\SharedableFilterType</parameter>
+
+        <!-- Type extension -->
+        <parameter key="lexik_form_filter.type_extension.filter_extension.class">Lexik\Bundle\FormFilterBundle\Filter\Form\FilterTypeExtension</parameter>
+    </parameters>
+
+    <services>
+        <!-- Filter Types -->
+        <service id="lexik_form_filter.type.filter_text" class="%lexik_form_filter.type.filter_text.class%">
+            <tag name="form.type" alias="filter_text" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_number" class="%lexik_form_filter.type.filter_number.class%">
+            <tag name="form.type" alias="filter_number" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_number_range" class="%lexik_form_filter.type.filter_number_range.class%">
+            <tag name="form.type" alias="filter_number_range" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_checkbox" class="%lexik_form_filter.type.filter_checkbox.class%">
+            <tag name="form.type" alias="filter_checkbox" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_boolean" class="%lexik_form_filter.type.filter_boolean.class%">
+            <tag name="form.type" alias="filter_boolean" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_choice" class="%lexik_form_filter.type.filter_choice.class%">
+            <tag name="form.type" alias="filter_choice" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_entity" class="%lexik_form_filter.type.filter_entity.class%">
+            <argument type="service" id="doctrine" />
+            <tag name="form.type" alias="filter_entity" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_date" class="%lexik_form_filter.type.filter_date.class%">
+            <tag name="form.type" alias="filter_date" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_date_range" class="%lexik_form_filter.type.filter_date_range.class%">
+            <tag name="form.type" alias="filter_date_range" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_datetime" class="%lexik_form_filter.type.filter_datetime.class%">
+            <tag name="form.type" alias="filter_datetime" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_datetime_range" class="%lexik_form_filter.type.filter_datetime_range.class%">
+            <tag name="form.type" alias="filter_datetime_range" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_collection_adapter" class="%lexik_form_filter.type.filter_collection_adapter.class%">
+            <tag name="form.type" alias="filter_collection_adapter" />
+        </service>
+
+        <service id="lexik_form_filter.type.filter_sharedable" class="%lexik_form_filter.type.filter_sharedable.class%">
+            <tag name="form.type" alias="filter_sharedable" />
+        </service>
+
+        <!-- Type extension -->
+        <service id="lexik_form_filter.type_extension.filter_extension" class="%lexik_form_filter.type_extension.filter_extension.class%">
+            <tag name="form.type_extension" alias="form" />
+        </service>
+    </services>
+</container>

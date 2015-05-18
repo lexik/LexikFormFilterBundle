@@ -4,93 +4,62 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
 /**
  * Get alias and expression builder for filter builder
+ *
+ * @author Jeremy Barthe <j.barthe@lexik.fr>
  */
 class PrepareEvent extends Event
 {
     /**
-     * @var object
+     * @var object $queryBuilder
      */
-    protected $filterBuilder;
+    private $queryBuilder;
 
     /**
-     * Alias
-     *
-     * @var string
+     * @var object $filterQuery
      */
-    protected $alias;
-
-    /**
-     * @var object
-     */
-    protected $expr;
+    private $filterQuery;
 
     /**
      * Construct
      *
-     * @param object $filterBuilder
+     * @param object $queryBuilder
      */
-    public function __construct($filterBuilder)
+    public function __construct($queryBuilder)
     {
-        $this->filterBuilder = $filterBuilder;
+        $this->queryBuilder = $queryBuilder;
     }
 
     /**
-     * Get filter builder
+     * Get query builder
      *
      * @return object
      */
-    public function getFilterBuilder()
+    public function getQueryBuilder()
     {
-        return $this->filterBuilder;
+        return $this->queryBuilder;
     }
 
     /**
-     * Set alias
+     * Set filter query
      *
-     * @param string $alias
-     *
-     * @return PrepareEvent
+     * @param QueryInterface $filterQuery
      */
-    public function setAlias($alias)
+    public function setFilterQuery(QueryInterface $filterQuery)
     {
-        $this->alias = $alias;
-
-        return $this;
+        $this->filterQuery = $filterQuery;
     }
 
     /**
-     * Get alias
+     * Get filter query
      *
-     * @return string
+     * @return QueryInterface
      */
-    public function getAlias()
+    public function getFilterQuery()
     {
-        return $this->alias;
-    }
-
-    /**
-     * Set expr
-     *
-     * @param object $expr
-     *
-     * @return PrepareEvent
-     */
-    public function setExpr($expr)
-    {
-        $this->expr = $expr;
-
-        return $this;
-    }
-
-    /**
-     * Get expr
-     *
-     * @return object
-     */
-    public function getExpr()
-    {
-        return $this->expr;
+        return $this->filterQuery;
     }
 }

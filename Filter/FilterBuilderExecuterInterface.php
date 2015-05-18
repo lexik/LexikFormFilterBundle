@@ -2,6 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
+/**
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 interface FilterBuilderExecuterInterface
 {
     /**

@@ -2,30 +2,36 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Extension\Type\FilterTypeSharedableInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Transformer\FilterTransformerInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EmbeddedFilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
-use Lexik\Bundle\FormFilterBundle\Event\GetFilterEvent;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
+ * @author Jeremy Barthe <j.barthe@lexik.fr>
  */
 class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 {
     /**
-     * @var Lexik\Bundle\FormFilterBundle\Filter\Transformer\TransformerAggregatorInterface
+     * @var FormDataExtractorInterface
      */
-    protected $filterTransformerAggregator;
+    protected $dataExtractor;
 
     /**
      * @var EventDispatcherInterface
@@ -38,16 +44,21 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected $parts;
 
     /**
+     * @var ConditionBuilder
+     */
+    protected $conditionBuilder;
+
+    /**
      * Constructor
      *
-     * @param TransformerAggregatorInterface $filterTransformerAggregator
-     * @param EventDispatcherInterface       $dispatcher
+     * @param FormDataExtractorInterface $dataExtractor
+     * @param EventDispatcherInterface   $dispatcher
      */
-    public function __construct(TransformerAggregatorInterface $filterTransformerAggregator, EventDispatcherInterface $dispatcher)
+    public function __construct(FormDataExtractorInterface $dataExtractor, EventDispatcherInterface $dispatcher)
     {
-        $this->filterTransformerAggregator = $filterTransformerAggregator;
-        $this->dispatcher                  = $dispatcher;
-        $this->parts                       = array();
+        $this->dataExtractor = $dataExtractor;
+        $this->dispatcher    = $dispatcher;
+        $this->parts         = array();
     }
 
     /**
@@ -64,91 +75,156 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * Build a filter query.
      *
      * @param  FormInterface $form
-     * @param  object $filterBuilder
-     * @param  string|null $alias
+     * @param  object        $queryBuilder
+     * @param  string|null   $alias
      *
      * @return object filter builder
+     *
+     * @throws \RuntimeException
      */
-    public function addFilterConditions(FormInterface $form, $filterBuilder, $alias = null)
+    public function addFilterConditions(FormInterface $form, $queryBuilder, $alias = null)
     {
-        $event = new PrepareEvent($filterBuilder);
+        // create the right QueryInterface object
+        $event = new PrepareEvent($queryBuilder);
         $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
 
-        if (!$alias) {
-            $alias = $event->getAlias();
-            $this->parts[$alias] = '__root__';
+        if ( ! $event->getFilterQuery() instanceof QueryInterface) {
+            throw new \RuntimeException("Couldn't find any filter query object.");
         }
-        $expr = $event->getExpr();
-        $this->addFilters($form, $filterBuilder, $alias, $this->parts, $expr);
 
-        return $filterBuilder;
+        // init parts (= ['alias' -> 'joins'])
+        if ( ! $alias) {
+            $alias = $event->getFilterQuery()->getAlias();
+            $this->parts[$alias] = '__root__'; // the root alias does not target a join
+        }
+
+        // get conditions nodes defined by the 'filter_condition_builder' option
+        // and add filters condition for each node
+        $this->conditionBuilder = $this->getConditionBuilder($form);
+        $this->addFilters($form, $event->getFilterQuery(), $alias, $this->parts);
+
+        // walk condition nodes to add condition on the query builder instance
+        $name = sprintf('lexik_filter.apply_filters.%s', $event->getFilterQuery()->getEventPartName());
+        $this->dispatcher->dispatch($name, new ApplyFilterConditionEvent($queryBuilder, $this->conditionBuilder));
+
+        $this->conditionBuilder = null;
+
+        return $queryBuilder;
     }
 
     /**
-     * Add conditions on the filter builder instance.
+     * Add filter conditions on the condition node instance.
      *
-     * @param FormInterface $form
-     * @param object $filterBuilder
-     * @param string $alias
-     * @param array $parts
-     * @param Expr $expr
+     * @param FormInterface  $form
+     * @param QueryInterface $filterQuery
+     * @param string         $alias
+     * @param array          $parts
+     *
+     * @throws \RuntimeException
      */
-    protected function addFilters(FormInterface $form, $filterBuilder, $alias = null, array &$parts = array(), $expr = null)
+    protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null, array &$parts = array())
     {
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            if ($formType instanceof FilterTypeSharedableInterface) {
+            // this means we have a relation
+            if ($child->getConfig()->hasAttribute('add_shared')) {
                 $join = $alias . '.' . $child->getName();
 
                 if (!isset($parts[$join])) {
-                    $qbe = new FilterBuilderExecuter($filterBuilder, $alias, $expr, $parts);
-                    $formType->addShared($qbe);
+                    $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
+
+                    if (!$addSharedClosure instanceof \Closure) {
+                        throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
+                    }
+
+                    $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
+                    $addSharedClosure($qbe);
                 }
 
                 if (count($parts)) {
-                    $this->addFilters($child, $filterBuilder, $parts[$join], $parts, $expr);
-                }
-            } else {
-                $type = $this->getFilterType($child->getConfig(), $filterBuilder);
+                    $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
-                if ($type instanceof FilterInterface) {
-                    $this->applyFilterCondition($child, $type, $filterBuilder, $alias, $expr);
+                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join]);
+                }
+
+            // Doctrine2 embedded object case
+            } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
+                $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
+
+            // default case
+            } else {
+                $condition = $this->getFilterCondition($child, $formType, $filterQuery, $alias);
+
+                if ($condition instanceof ConditionInterface) {
+                    $this->conditionBuilder->addCondition($condition);
                 }
             }
         }
     }
 
     /**
-     * Apply the condition for one FilterInterface.
+     * Get the condition through event dispatcher.
      *
-     * @param FormInterface $form
-     * @param FilterInterface $type
-     * @param object $filterBuilder
-     * @param string $alias
-     * @param object $expr
+     * @param FormInterface  $form
+     * @param AbstractType   $formType
+     * @param QueryInterface $filterQuery
+     * @param string         $alias
+     * @return ConditionInterface|null
      */
-    protected function applyFilterCondition(FormInterface $form, FilterInterface $type, $filterBuilder, $alias, $expr)
+    protected function getFilterCondition(FormInterface $form, AbstractType $formType, QueryInterface $filterQuery, $alias)
     {
-        $config = $form->getConfig();
-        $values = $this->prepareFilterValues($form, $type);
+        $values = $this->prepareFilterValues($form, $formType);
         $values += array('alias' => $alias);
         $field = $values['alias'] . '.' . $form->getName();
 
-        // apply the filter by using the closure set with the 'apply_filter' option
-        if ($config->hasAttribute('apply_filter')) {
-            $callable = $config->getAttribute('apply_filter');
+        $condition = null;
 
-            if ($callable instanceof \Closure) {
-                $callable($filterBuilder, $expr, $field, $values);
-            } else {
-                call_user_func($callable, $filterBuilder, $expr, $field, $values);
+        // build a complete form name including parents
+        $completeName = $form->getName();
+        $parentForm = $form;
+        do {
+            $parentForm = $parentForm->getParent();
+            if (!is_numeric($parentForm->getName())) { // skip collection numeric index
+                $completeName = $parentForm->getName() . '.' . $completeName;
             }
-        } else {
-            // if no closure we use the applyFilter() method from a FilterInterface
-            $type->applyFilter($filterBuilder, $expr, $field, $values);
+        } while ( ! $parentForm->isRoot());
+
+        // apply the filter by using the closure set with the 'apply_filter' option
+        $callable = $form->getConfig()->getAttribute('apply_filter');
+
+        if (false === $callable) {
+            return null;
         }
+
+        if ($callable instanceof \Closure) {
+            $condition = $callable($filterQuery, $field, $values);
+
+        } elseif (is_callable($callable)) {
+            $condition = call_user_func($callable, $filterQuery, $field, $values);
+
+        } else {
+            // trigger a specific or a global event name
+            $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $completeName);
+            if ( ! $this->dispatcher->hasListeners($eventName)) {
+                $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
+            }
+
+            $event = new GetFilterConditionEvent($filterQuery, $field, $values);
+            $this->dispatcher->dispatch($eventName, $event);
+
+            $condition = $event->getCondition();
+        }
+
+        // set condition path
+        if ($condition instanceof ConditionInterface) {
+            $condition->setName(
+                trim(substr($completeName, strpos($completeName, '.')), '.') // remove first level
+            );
+        }
+
+        return $condition;
     }
 
     /**
@@ -159,10 +235,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     protected function prepareFilterValues(FormInterface $form)
     {
-        $config      = $form->getConfig();
-        $values      = array();
-        $transformer = $this->filterTransformerAggregator->get($config->getOption('transformer_id'));
-        $values      = $transformer->transform($form);
+        $config = $form->getConfig();
+        $values = $this->dataExtractor->extractData($form, $config->getOption('data_extraction_method', 'default'));
 
         if ($config->hasAttribute('filter_options')) {
             $values = array_merge($values, $config->getAttribute('filter_options'));
@@ -172,34 +246,48 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * Get filter type name by form config
+     * Get the conditon builder object for the given form.
      *
-     * @param FormConfigInterface $config
-     *
-     * @return string
+     * @param Form $form
+     * @return ConditionBuilderInterface
      */
-    protected function getFilterTypeName(FormConfigInterface $config)
+    protected function getConditionBuilder(Form $form)
     {
-        $formType = $config->getType()->getInnerType();
+        $builderClosure = $form->getConfig()->getAttribute('filter_condition_builder');
 
-        return ($config->hasAttribute('apply_filter') && is_string($config->getAttribute('apply_filter')))
-            ? $config->getAttribute('apply_filter')
-            : $formType->getName();
+        $builder = new ConditionBuilder();
+
+        if ($builderClosure instanceof \Closure) {
+            $builderClosure($builder);
+        } else {
+            $this->buildDefaultConditionNode($form, $builder->root('AND'));
+        }
+
+        return $builder;
     }
 
     /**
-     * Returns the filter type used to build the given form.
+     * Create a default node hierarchy by using AND operator.
      *
-     * @param FormConfigInterface $config
-     * @param object              $filterBuilder
-     *
-     * @return FilterInterface
+     * @param Form                   $form
+     * @param ConditionNodeInterface $root
+     * @param string                 $parentName
      */
-    protected function getFilterType(FormConfigInterface $config, $filterBuilder)
+    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, $parentName = '')
     {
-        $event = new GetFilterEvent($filterBuilder, $this->getFilterTypeName($config));
-        $this->dispatcher->dispatch(FilterEvents::GET_FILTER, $event);
+        foreach ($form->all() as $child) {
+            if ($child->getConfig()->hasAttribute('add_shared')) {
+                $isCollection = ($child->getConfig()->getType()->getInnerType() instanceof CollectionAdapterFilterType);
 
-        return $event->getFilter();
+                $this->buildDefaultConditionNode(
+                    $isCollection ? $child->get(0) : $child,
+                    $root->andX(),
+                    $child->getName()
+                );
+            } else {
+                $name = ('' !== $parentName) ? $parentName.'.'.$child->getName() : $child->getName();
+                $root->field($name);
+            }
+        }
     }
 }

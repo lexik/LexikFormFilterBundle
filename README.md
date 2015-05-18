@@ -4,6 +4,9 @@ Overview
 This Symfony2 bundle aims to provide classes to build a form filter and then build a doctrine query from this form filter.
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
+![Project Status](http://stillmaintained.com/lexik/LexikFormFilterBundle.png)
+[![Latest Stable Version](https://poser.pugx.org/lexik/form-filter-bundle/v/stable.svg)](https://packagist.org/packages/lexik/form-filter-bundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c/mini.png)](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c)
 
 The idea is:
 
@@ -16,6 +19,12 @@ The idea is:
 Documentation
 =============
 
-The `master` branch is now compatible with Symfony 2.1, if you are using Symfony 2.0.x use the `symfony2.0` branch.
+The `master` branch is compatible with Symfony 2.3 or higher, if you are using Symfony 2.0.x use the `symfony2.0` branch.
 
-For installation and how to use the bundle refer to [Resources/doc/index.md](https://github.com/lexik/LexikFormFilterBundle/blob/master/Resources/doc/index.md)
+For installation and how to use the bundle refer to [Resources/doc/index.md](Resources/doc/index.md)
+
+Running the test suite
+======================
+
+    composer install
+    bin/phpunit
