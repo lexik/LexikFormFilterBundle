@@ -73,11 +73,9 @@ class ORMQuery implements QueryInterface
     }
 
     /**
-     * Get root alias.
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getAlias()
+    public function getRootAlias()
     {
         $aliases = $this->queryBuilder->getRootAliases();
 
