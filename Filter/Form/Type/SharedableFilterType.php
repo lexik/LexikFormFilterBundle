@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -30,7 +29,7 @@ class SharedableFilterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'add_shared' => function(FilterBuilderExecuterInterface $qbe) {},
+            'add_shared' => function (FilterBuilderExecuterInterface $qbe) {},
         ));
     }
 

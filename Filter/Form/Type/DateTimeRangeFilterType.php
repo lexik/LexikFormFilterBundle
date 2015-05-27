@@ -22,7 +22,7 @@ class DateTimeRangeFilterType extends AbstractType
         $builder->add('right_datetime', 'filter_datetime', $options['right_datetime_options']);
 
         $builder->setAttribute('filter_value_keys', array(
-            'left_datetime'  => $options['left_datetime_options'],
+            'left_datetime' => $options['left_datetime_options'],
             'right_datetime' => $options['right_datetime_options'],
         ));
     }
@@ -34,8 +34,8 @@ class DateTimeRangeFilterType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'required'               => false,
-                'left_datetime_options'  => array(),
+                'required' => false,
+                'left_datetime_options' => array(),
                 'right_datetime_options' => array(),
                 'data_extraction_method' => 'value_keys',
             ))

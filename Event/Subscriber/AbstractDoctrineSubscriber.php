@@ -2,12 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
-use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
-
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 
 /**
  * Provide Doctrine ORM and DBAL filters.
@@ -22,7 +21,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterValue(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
@@ -33,7 +32,6 @@ abstract class AbstractDoctrineSubscriber
                     $expr->in($event->getField(), ':'.$paramName),
                     array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
                 );
-
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
@@ -48,7 +46,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterBoolean(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
@@ -68,7 +66,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterCheckbox(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if (!empty($values['value'])) {
@@ -86,7 +84,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterDate(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if ($values['value'] instanceof \DateTime) {
@@ -104,9 +102,9 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterDateRange(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpressionBuilder();
+        $expr = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
-        $value  = $values['value'];
+        $value = $values['value'];
 
         if (isset($value['left_date'][0]) || isset($value['right_date'][0])) {
             $event->setCondition($expr->dateInRange($event->getField(), $value['left_date'][0], $value['right_date'][0]));
@@ -118,7 +116,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterDateTime(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if ($values['value'] instanceof \DateTime) {
@@ -136,7 +134,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterDateTimeRange(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpressionBuilder();
+        $expr = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
 
         $value = $values['value'];
@@ -151,7 +149,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterNumber(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
@@ -171,27 +169,26 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterNumberRange(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpr();
+        $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
-        $value  = $values['value'];
+        $value = $values['value'];
 
         $expression = $expr->andX();
         $params = array();
 
         if (isset($value['left_number'][0])) {
-            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator'] );
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator']);
             $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['left_number'][0])) {
                 $leftValue = $value['left_number'][0];
-                $leftCond  = $value['left_number']['condition_operator'];
+                $leftCond = $value['left_number']['condition_operator'];
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
                 $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
-
-            } else if ($hasSelector && isset($value['left_number'][0]['text'])) {
+            } elseif ($hasSelector && isset($value['left_number'][0]['text'])) {
                 $leftValue = $value['left_number'][0]['text'];
-                $leftCond  = $value['left_number'][0]['condition_operator'];
+                $leftCond = $value['left_number'][0]['condition_operator'];
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
                 $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
@@ -199,19 +196,18 @@ abstract class AbstractDoctrineSubscriber
         }
 
         if (isset($value['right_number'][0])) {
-            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator'] );
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator']);
             $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['right_number'][0])) {
                 $rightValue = $value['right_number'][0];
-                $rightCond  = $value['right_number']['condition_operator'];
+                $rightCond = $value['right_number']['condition_operator'];
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
                 $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
-
-            } else if ($hasSelector && isset($value['right_number'][0]['text'])) {
+            } elseif ($hasSelector && isset($value['right_number'][0]['text'])) {
                 $rightValue = $value['right_number'][0]['text'];
-                $rightCond  = $value['right_number'][0]['condition_operator'];
+                $rightCond = $value['right_number'][0]['condition_operator'];
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
                 $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
@@ -228,7 +224,7 @@ abstract class AbstractDoctrineSubscriber
      */
     public function filterText(GetFilterConditionEvent $event)
     {
-        $expr   = $event->getFilterQuery()->getExpressionBuilder();
+        $expr = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
@@ -242,6 +238,7 @@ abstract class AbstractDoctrineSubscriber
 
     /**
      * @param string $field
+     *
      * @return string
      */
     protected function generateParameterName($field)

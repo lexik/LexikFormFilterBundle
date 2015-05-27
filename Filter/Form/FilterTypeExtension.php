@@ -2,9 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Define filtering options.
@@ -33,8 +33,8 @@ class FilterTypeExtension extends AbstractTypeExtension
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'apply_filter'             => null,
-            'data_extraction_method'   => 'default',
+            'apply_filter' => null,
+            'data_extraction_method' => 'default',
             'filter_condition_builder' => null,
         ));
     }

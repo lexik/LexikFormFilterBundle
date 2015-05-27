@@ -2,10 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -41,8 +40,8 @@ class ItemFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'with_selector' => false,
-            'checkbox'      => false,
-            'datetime'      => false,
+            'checkbox' => false,
+            'datetime' => false,
             'disabled_name' => false,
         ));
     }

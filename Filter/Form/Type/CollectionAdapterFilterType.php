@@ -56,8 +56,8 @@ class CollectionAdapterFilterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'type'         => null,
-            'options'      => array(),
+            'type' => null,
+            'options' => array(),
             'default_data' => array(),
         ));
 

@@ -3,11 +3,9 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\DataExtractor;
 
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DataExtractionMethodInterface;
-
 use Symfony\Component\Form\FormInterface;
 
 /**
- *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
 class FormDataExtractor implements FormDataExtractorInterface
@@ -38,7 +36,7 @@ class FormDataExtractor implements FormDataExtractorInterface
      */
     public function extractData(FormInterface $form, $methodName)
     {
-        if ( !isset($this->methods[$methodName]) ) {
+        if (!isset($this->methods[$methodName])) {
             throw new \RuntimeException(sprintf('Unknown extration method maned "%s".', $methodName));
         }
 

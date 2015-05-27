@@ -3,15 +3,12 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
-
+use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
+use Symfony\Component\Form\Extension\Core\CoreExtension;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\ResolvedFormTypeFactory;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\Extension\Core\CoreExtension;
-
-use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -30,11 +27,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected $formFactory;
 
-
     public function setUp()
     {
-        $this->em          = $this->getSqliteEntityManager();
-        $this->conn        = $this->em->getConnection();
+        $this->em = $this->getSqliteEntityManager();
+        $this->conn = $this->em->getConnection();
         $this->formFactory = $this->getFormFactory();
     }
 
@@ -59,7 +55,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * EntityManager mock object together with annotation mapping driver and
-     * pdo_sqlite database in memory
+     * pdo_sqlite database in memory.
      *
      * @return EntityManager
      */

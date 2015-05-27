@@ -2,31 +2,32 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
-
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 
 /**
- * Prepare listener event
+ * Prepare listener event.
  */
 class PrepareListener
 {
     /**
-     * @var boolean
+     * @var bool
      */
     protected $forceCaseInsensitivity = null;
 
     /**
-     * @param boolean $value
+     * @param bool $value
+     *
      * @return PrepareListener $this
+     *
      * @throws \InvalidArgumentException
      */
     public function setForceCaseInsensitivity($value)
     {
         if (!is_bool($value)) {
-            throw new \InvalidArgumentException("Expected a boolean");
+            throw new \InvalidArgumentException('Expected a boolean');
         }
 
         $this->forceCaseInsensitivity = $value;
@@ -36,7 +37,8 @@ class PrepareListener
 
     /**
      * @param $qb
-     * @return boolean
+     *
+     * @return bool
      */
     public function getForceCaseInsensitivity($qb)
     {
@@ -54,7 +56,7 @@ class PrepareListener
     }
 
     /**
-     * Filter builder prepare event
+     * Filter builder prepare event.
      *
      * @param PrepareEvent $event
      */

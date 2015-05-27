@@ -2,11 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\DBALExpressionBuilder;
-
 use Doctrine\DBAL\Query\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\DBALExpressionBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -14,12 +13,12 @@ use Doctrine\DBAL\Query\QueryBuilder;
 class DBALQuery implements QueryInterface
 {
     /**
-     * @var QueryBuilder $queryBuilder
+     * @var QueryBuilder
      */
     private $queryBuilder;
 
     /**
-     * @var DBALExpressionBuilder $expr
+     * @var DBALExpressionBuilder
      */
     private $expressionBuilder;
 
@@ -27,11 +26,11 @@ class DBALQuery implements QueryInterface
      * Constructor.
      *
      * @param QueryBuilder $queryBuilder
-     * @param boolean      $forceCaseInsensitivity
+     * @param bool         $forceCaseInsensitivity
      */
     public function __construct(QueryBuilder $queryBuilder, $forceCaseInsensitivity = false)
     {
-        $this->queryBuilder      = $queryBuilder;
+        $this->queryBuilder = $queryBuilder;
         $this->expressionBuilder = new DBALExpressionBuilder(
             $this->queryBuilder->expr(),
             $forceCaseInsensitivity

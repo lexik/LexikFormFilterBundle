@@ -6,7 +6,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 abstract class ExpressionBuilder
 {
-    const SQL_DATE      = 'Y-m-d';
+    const SQL_DATE = 'Y-m-d';
     const SQL_DATE_TIME = 'Y-m-d H:i:s';
 
     /**
@@ -15,7 +15,7 @@ abstract class ExpressionBuilder
     protected $expr;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $forceCaseInsensitivity;
 
@@ -28,7 +28,7 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * @param boolean $forceCaseInsensitivity
+     * @param bool $forceCaseInsensitivity
      */
     public function __construct($forceCaseInsensitivity)
     {
@@ -38,11 +38,11 @@ abstract class ExpressionBuilder
     /**
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
-     * Returns gte expression if min is null
+     * Returns gte expression if min is null.
      *
      * @param string $field field name
-     * @param number $min minimum value
-     * @param number $max maximum value
+     * @param number $min   minimum value
+     * @param number $max   maximum value
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
@@ -55,7 +55,7 @@ abstract class ExpressionBuilder
         if (null === $min) {
             // $max exists
             return $this->expr()->lte($field, (float) $max);
-        } else if (null === $max) {
+        } elseif (null === $max) {
             // $min exists
             return $this->expr()->gte($field, (float) $min);
         }
@@ -68,20 +68,20 @@ abstract class ExpressionBuilder
      * Creates BETWEEN() function with the given argument.
      *
      * @param string $field field name
-     * @param number $min minimum value
-     * @param number $max maximum value
+     * @param number $min   minimum value
+     * @param number $max   maximum value
      *
      * @return string
      */
     public function between($field, $min, $max)
     {
-        return $field . ' BETWEEN ' . $min . ' AND ' . $max;
+        return $field.' BETWEEN '.$min.' AND '.$max;
     }
 
     /**
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
-     * Returns gte expression if min is null
+     * Returns gte expression if min is null.
      *
      * @param string        $field field name
      * @param null|DateTime $min   start date
@@ -101,7 +101,7 @@ abstract class ExpressionBuilder
         if (null === $min) {
             // $max exists
             return $this->expr()->lte($field, $max);
-        } else if (null === $max) {
+        } elseif (null === $max) {
             // $min exists
             return $this->expr()->gte($field,  $min);
         }
@@ -116,30 +116,31 @@ abstract class ExpressionBuilder
     /**
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
-     * Returns gte expression if min is null
+     * Returns gte expression if min is null.
      *
-     * @param  string|DateTime $value alias.fieldName or mysql date string format or DateTime
-     * @param  string|DateTime $min alias.fieldName or mysql date string format or DateTime
-     * @param  string|DateTime $max alias.fieldName or mysql date string format or DateTime
+     * @param string|DateTime $value alias.fieldName or mysql date string format or DateTime
+     * @param string|DateTime $min   alias.fieldName or mysql date string format or DateTime
+     * @param string|DateTime $max   alias.fieldName or mysql date string format or DateTime
+     *
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
     public function dateTimeInRange($value, $min = null, $max = null)
     {
         if (!$min && !$max) {
-            return null;
+            return;
         }
 
         $value = $this->convertToSqlDateTime($value);
-        $min   = $this->convertToSqlDateTime($min);
-        $max   = $this->convertToSqlDateTime($max);
+        $min = $this->convertToSqlDateTime($min);
+        $max = $this->convertToSqlDateTime($max);
 
         if (!$max && !$min) {
-            return null;
+            return;
         }
 
         if ($min === null) {
             $findExpression = $this->expr()->lte($value, $max);
-        } else if ($max === null) {
+        } elseif ($max === null) {
             $findExpression = $this->expr()->gte($value,  $min);
         } else {
             $findExpression = $this->expr()->andX(
@@ -152,11 +153,11 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Get string like expression
+     * Get string like expression.
      *
-     * @param  string $field field name
-     * @param  string $value string value
-     * @param  int    $type one of FilterOperands::STRING_* constant
+     * @param string $field field name
+     * @param string $value string value
+     * @param int    $type  one of FilterOperands::STRING_* constant
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
@@ -171,16 +172,16 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Normalize DateTime boundary
+     * Normalize DateTime boundary.
      *
-     * @param  DateTime $date
-     * @param  bool     $isMax
+     * @param DateTime $date
+     * @param bool     $isMax
      *
      * @return \Doctrine\ORM\Query\Expr\Literal|string
      */
     protected function convertToSqlDate($date, $isMax = false)
     {
-        if ( ! $date instanceof \DateTime) {
+        if (!$date instanceof \DateTime) {
             return;
         }
 
@@ -194,9 +195,10 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Normalize date time boundary
+     * Normalize date time boundary.
      *
      * @param DateTime|string $date
+     *
      * @return \Doctrine\ORM\Query\Expr\Literal
      */
     protected function convertToSqlDateTime($date)
@@ -209,10 +211,10 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Prepare value for like operation
+     * Prepare value for like operation.
      *
      * @param string $value
-     * @param int    $type one of FilterOperands::STRING_*
+     * @param int    $type  one of FilterOperands::STRING_*
      *
      * @return string
      *
@@ -224,17 +226,17 @@ abstract class ExpressionBuilder
             $value = strtolower($value);
         }
 
-        switch($type) {
+        switch ($type) {
             case FilterOperands::STRING_STARTS:
                 $value .= '%';
                 break;
 
             case FilterOperands::STRING_ENDS:
-                $value = '%' . $value;
+                $value = '%'.$value;
                 break;
 
             case FilterOperands::STRING_BOTH:
-                $value = '%' . $value . '%';
+                $value = '%'.$value.'%';
                 break;
 
             case FilterOperands::STRING_EQUALS:

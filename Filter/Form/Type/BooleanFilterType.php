@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class BooleanFilterType extends AbstractType
 {
     const VALUE_YES = 'y';
-    const VALUE_NO  = 'n';
+    const VALUE_NO = 'n';
 
     /**
      * {@inheritdoc}
@@ -38,13 +38,13 @@ class BooleanFilterType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'required'               => false,
-                'choices'                => array(
-                    self::VALUE_YES  => 'boolean.yes',
-                    self::VALUE_NO   => 'boolean.no',
+                'required' => false,
+                'choices' => array(
+                    self::VALUE_YES => 'boolean.yes',
+                    self::VALUE_NO => 'boolean.no',
                 ),
-                'empty_value'            => 'boolean.yes_or_no',
-                'translation_domain'     => 'LexikFormFilterBundle',
+                'empty_value' => 'boolean.yes_or_no',
+                'translation_domain' => 'LexikFormFilterBundle',
                 'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(

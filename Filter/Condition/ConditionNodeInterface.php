@@ -8,7 +8,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 interface ConditionNodeInterface
 {
     const EXPR_AND = 'and';
-    const EXPR_OR  = 'or';
+    const EXPR_OR = 'or';
 
     /**
      * Start a OR sub expression.
@@ -35,6 +35,7 @@ interface ConditionNodeInterface
      * Add a field in the current expression.
      *
      * @param string $name
+     *
      * @return $this
      */
     public function field($name);

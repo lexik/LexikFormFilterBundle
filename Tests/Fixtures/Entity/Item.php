@@ -49,9 +49,9 @@ class Item
     private $options;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -59,7 +59,7 @@ class Item
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */
@@ -69,7 +69,7 @@ class Item
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -79,7 +79,7 @@ class Item
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return int
      */
@@ -89,7 +89,7 @@ class Item
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param int $position
      */
@@ -99,9 +99,9 @@ class Item
     }
 
     /**
-     * Get enabled
+     * Get enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getEnabled()
     {
@@ -109,9 +109,9 @@ class Item
     }
 
     /**
-     * Set enabled
+     * Set enabled.
      *
-     * @param boolean $enabled
+     * @param bool $enabled
      */
     public function setEnabled($enabled)
     {
@@ -119,7 +119,7 @@ class Item
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param datetime $createdAt
      */
@@ -129,7 +129,7 @@ class Item
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return datetime $createdAt
      */
@@ -139,7 +139,7 @@ class Item
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -149,7 +149,7 @@ class Item
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      */

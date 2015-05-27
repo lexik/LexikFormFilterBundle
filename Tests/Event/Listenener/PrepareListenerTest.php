@@ -11,12 +11,12 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetForceCaseInsensitivity()
     {
-        $listener     = new PrepareListener;
+        $listener = new PrepareListener();
 
         $pgPlatform = $this->getMock('Doctrine\DBAL\Platforms\PostgreSqlPlatform');
         $myPlatform = $this->getMock('Doctrine\DBAL\Platforms\MySqlPlatform');
 
-        $connection    = $this->getMock(
+        $connection = $this->getMock(
             'Doctrine\DBAL\Connection',
             array(),
             array(),
@@ -40,7 +40,7 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getConnection')
             ->will($this->returnValue($connection));
 
-        $queryBuilder  = $this->getMock(
+        $queryBuilder = $this->getMock(
             '\Doctrine\ORM\QueryBuilder',
             array('getEntityManager'),
             array($entityManager)
@@ -53,7 +53,7 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($listener->getForceCaseInsensitivity($queryBuilder));
         $this->assertFalse($listener->getForceCaseInsensitivity($queryBuilder));
 
-        $queryBuilder  = $this->getMock(
+        $queryBuilder = $this->getMock(
             'Doctrine\DBAL\Query\QueryBuilder',
             array('getConnection'),
             array($connection)
