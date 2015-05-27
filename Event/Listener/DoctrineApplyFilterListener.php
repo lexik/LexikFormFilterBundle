@@ -2,9 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
-
+use Doctrine\ORM\Query\Expr\Composite;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
@@ -63,12 +62,13 @@ class DoctrineApplyFilterListener
     /**
      * @param DoctrineQueryBuilderAdapter $queryBuilder
      * @param ConditionNodeInterface      $node
+     *
      * @return Composite|CompositeExpression|null
      */
     protected function computeExpression(DoctrineQueryBuilderAdapter $queryBuilder, ConditionNodeInterface $node)
     {
         if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
-            return null;
+            return;
         }
 
         $method = ($node->getOperator() == ConditionNodeInterface::EXPR_AND) ? 'andX' : 'orX';
@@ -77,7 +77,7 @@ class DoctrineApplyFilterListener
 
         foreach ($node->getFields() as $condition) {
             if (null !== $condition) {
-                /** @var ConditionInterface $condition */
+                /* @var ConditionInterface $condition */
                 $expression->add($condition->getExpression());
 
                 $this->parameters = array_merge($this->parameters, $condition->getParameters());

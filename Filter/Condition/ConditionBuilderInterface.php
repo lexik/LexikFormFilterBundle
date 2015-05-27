@@ -11,6 +11,7 @@ interface ConditionBuilderInterface
      * Create the root node.
      *
      * @param string $operator
+     *
      * @return ConditionNodeInterface
      */
     public function root($operator);

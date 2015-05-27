@@ -2,12 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\DataExtractor;
 
+use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DataExtractionMethodInterface;
 use Symfony\Component\Form\FormInterface;
 
-use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DataExtractionMethodInterface;
-
 /**
- *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
 interface FormDataExtractorInterface
@@ -24,6 +22,7 @@ interface FormDataExtractorInterface
      *
      * @param FormInterface $form
      * @param string        $methodName
+     *
      * @return array
      */
     public function extractData(FormInterface $form, $methodName);

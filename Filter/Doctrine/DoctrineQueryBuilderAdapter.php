@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
-use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
+use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -17,11 +17,12 @@ class DoctrineQueryBuilderAdapter
 
     /**
      * @param mixed $qb
+     *
      * @throws \RuntimeException
      */
     public function __construct($qb)
     {
-        if ( ! ($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder) ) {
+        if (!($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder)) {
             throw new \RuntimeException('Invalid Doctrine query builder instance.');
         }
 

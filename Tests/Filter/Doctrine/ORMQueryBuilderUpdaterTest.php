@@ -97,7 +97,6 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('p_opt_rank' => 3), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
-
         // doctrine query builder with joins
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
         $filterQueryBuilder = $this->initQueryBuilder();
@@ -130,7 +129,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
                         ->end()
                     ->end()
                 ;
-            }
+            },
         ));
         $filterQueryBuilder = $this->initQueryBuilder();
 
@@ -143,7 +142,6 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         $this->assertEquals($expectedDql, $doctrineQueryBuilder->getDql());
         $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
-
 
         // doctrine query builder without any joins + custom condition builder
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
@@ -160,7 +158,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
                             ->end()
                         ->end()
                     ;
-                }
+                },
         ));
         $filterQueryBuilder = $this->initQueryBuilder();
 

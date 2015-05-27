@@ -4,9 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -22,13 +20,13 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
         $builder->add('name', 'filter_text');
         $builder->add('position', 'filter_number');
         $builder->add('options', 'filter_collection_adapter', array(
-            'type'       => new OptionFilterType(),
+            'type' => new OptionFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
-                $joinClosure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
-                    $filterBuilder->leftJoin($alias . '.options', $joinAlias);
+                $joinClosure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                    $filterBuilder->leftJoin($alias.'.options', $joinAlias);
                 };
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $joinClosure);
-            }
+            },
         ));
     }
 

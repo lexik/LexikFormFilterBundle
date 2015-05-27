@@ -19,7 +19,7 @@ class ChoiceFilterType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'required'               => false,
+                'required' => false,
                 'data_extraction_method' => 'default',
             ))
             ->setAllowedValues(array(

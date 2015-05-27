@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -20,14 +19,14 @@ class ItemCallbackFilterType extends AbstractType
             'apply_filter' => array($this, 'fieldNameCallback'),
         ));
         $builder->add('position', 'filter_number', array(
-            'apply_filter' => function(QueryInterface $filterQuery, $field, $values) {
+            'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
                     return $filterQuery->createCondition(
                         $filterQuery->getExpr()->neq($field, $values['value'])
                     );
                 }
 
-                return null;
+                return;
             },
         ));
     }
@@ -45,6 +44,6 @@ class ItemCallbackFilterType extends AbstractType
             );
         }
 
-        return null;
+        return;
     }
 }

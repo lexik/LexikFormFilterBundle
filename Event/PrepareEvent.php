@@ -2,29 +2,28 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\EventDispatcher\Event;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-
 /**
- * Get alias and expression builder for filter builder
+ * Get alias and expression builder for filter builder.
  *
  * @author Jeremy Barthe <j.barthe@lexik.fr>
  */
 class PrepareEvent extends Event
 {
     /**
-     * @var object $queryBuilder
+     * @var object
      */
     private $queryBuilder;
 
     /**
-     * @var object $filterQuery
+     * @var object
      */
     private $filterQuery;
 
     /**
-     * Construct
+     * Construct.
      *
      * @param object $queryBuilder
      */
@@ -34,7 +33,7 @@ class PrepareEvent extends Event
     }
 
     /**
-     * Get query builder
+     * Get query builder.
      *
      * @return object
      */
@@ -44,7 +43,7 @@ class PrepareEvent extends Event
     }
 
     /**
-     * Set filter query
+     * Set filter query.
      *
      * @param QueryInterface $filterQuery
      */
@@ -54,7 +53,7 @@ class PrepareEvent extends Event
     }
 
     /**
-     * Get filter query
+     * Get filter query.
      *
      * @return QueryInterface
      */

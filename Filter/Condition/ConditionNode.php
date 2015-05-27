@@ -112,6 +112,7 @@ class ConditionNode implements ConditionNodeInterface
      *
      * @param string             $name
      * @param ConditionInterface $condition
+     *
      * @return bool
      */
     public function setCondition($name, ConditionInterface $condition)
@@ -126,7 +127,7 @@ class ConditionNode implements ConditionNodeInterface
         $end = count($this->children);
         $set = false;
 
-        while ($i<$end && !$set) {
+        while ($i < $end && !$set) {
             $set = $this->children[$i]->setCondition($name, $condition);
             $i++;
         }

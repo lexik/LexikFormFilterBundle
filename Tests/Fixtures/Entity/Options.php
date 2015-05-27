@@ -35,9 +35,9 @@ class Options
     private $item;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -45,7 +45,7 @@ class Options
     }
 
     /**
-     * Set label
+     * Set label.
      *
      * @param string $label
      */
@@ -55,7 +55,7 @@ class Options
     }
 
     /**
-     * Get label
+     * Get label.
      *
      * @return string
      */
@@ -65,7 +65,7 @@ class Options
     }
 
     /**
-     * Get rank
+     * Get rank.
      *
      * @return int
      */
@@ -75,7 +75,7 @@ class Options
     }
 
     /**
-     * Set rank
+     * Set rank.
      *
      * @param int $rank
      */

@@ -33,12 +33,12 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
      * @param string         $alias
      * @param array          $parts
      */
-    public function __construct(QueryInterface $filterQuery, $alias, array & $parts = array())
+    public function __construct(QueryInterface $filterQuery, $alias, array &$parts = array())
     {
         $this->filterQuery = $filterQuery;
-        $this->expr        = $filterQuery->getExpr();
-        $this->alias       = $alias;
-        $this->parts       = & $parts;
+        $this->expr = $filterQuery->getExpr();
+        $this->alias = $alias;
+        $this->parts = &$parts;
     }
 
     /**
@@ -63,7 +63,7 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     public function addOnce($join, $alias, \Closure $callback)
     {
         if (isset($this->parts[$join])) {
-            return null;
+            return;
         }
 
         $this->parts[$join] = $alias;

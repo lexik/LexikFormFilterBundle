@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
-
 use Symfony\Component\EventDispatcher\Event;
 
 /**

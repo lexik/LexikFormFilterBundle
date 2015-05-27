@@ -9,23 +9,24 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
  */
 final class FilterOperands
 {
-    const OPERATOR_EQUAL              = 'eq';
-    const OPERATOR_GREATER_THAN       = 'gt';
+    const OPERATOR_EQUAL = 'eq';
+    const OPERATOR_GREATER_THAN = 'gt';
     const OPERATOR_GREATER_THAN_EQUAL = 'gte';
-    const OPERATOR_LOWER_THAN         = 'lt';
-    const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
+    const OPERATOR_LOWER_THAN = 'lt';
+    const OPERATOR_LOWER_THAN_EQUAL = 'lte';
 
     const STRING_STARTS = 1;
-    const STRING_ENDS   = 2;
+    const STRING_ENDS = 2;
     const STRING_EQUALS = 3;
-    const STRING_BOTH   = 4;
+    const STRING_BOTH = 4;
 
     const OPERAND_SELECTOR = 'selection';
 
     /**
      * Returns all available number operands.
      *
-     * @param boolean $includeSelector
+     * @param bool $includeSelector
+     *
      * @return array
      */
     public static function getNumberOperands($includeSelector = false)
@@ -48,7 +49,8 @@ final class FilterOperands
     /**
      * Returns all available string operands.
      *
-     * @param boolean $includeSelector
+     * @param bool $includeSelector
+     *
      * @return array
      */
     public static function getStringOperands($includeSelector = false)
