@@ -11,7 +11,7 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetForceCaseInsensitivity()
     {
-        $listener     = new PrepareListener;
+        $listener = new PrepareListener();
 
         $pgPlatform = $this->getMock('Doctrine\DBAL\Platforms\PostgreSqlPlatform');
         $myPlatform = $this->getMock('Doctrine\DBAL\Platforms\MySqlPlatform');

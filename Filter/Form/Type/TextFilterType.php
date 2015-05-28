@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,7 +23,6 @@ class TextFilterType extends AbstractType
         if (true === $options['compound']) {
             $builder->add('condition_pattern', 'choice', $options['choice_options']);
             $builder->add('text', 'text', $options['text_options']);
-
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_pattern' => $options['condition_pattern'],
@@ -49,16 +47,16 @@ class TextFilterType extends AbstractType
                     'trim'     => true,
                 ),
                 'choice_options'         => array(
-                    'choices'  => FilterOperands::getStringOperandsChoices(),
-                    'required' => false,
-                    'translation_domain' => 'LexikFormFilterBundle'
+                    'choices'            => FilterOperands::getStringOperandsChoices(),
+                    'required'           => false,
+                    'translation_domain' => 'LexikFormFilterBundle',
                 ),
                 'data_extraction_method' => function (Options $options) {
                     return $options['compound'] ? 'text' : 'default';
                 },
             ))
             ->setAllowedValues(array(
-                'data_extraction_method' => array('text','default'),
+                'data_extraction_method' => array('text', 'default'),
                 'condition_pattern'      => FilterOperands::getStringOperands(true),
             ))
         ;

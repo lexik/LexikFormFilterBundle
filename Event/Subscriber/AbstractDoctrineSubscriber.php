@@ -5,7 +5,6 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
-
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 
@@ -33,7 +32,6 @@ abstract class AbstractDoctrineSubscriber
                     $expr->in($event->getField(), ':'.$paramName),
                     array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
                 );
-
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
@@ -179,7 +177,7 @@ abstract class AbstractDoctrineSubscriber
         $params = array();
 
         if (isset($value['left_number'][0])) {
-            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator'] );
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator']);
             $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['left_number'][0])) {
@@ -188,8 +186,7 @@ abstract class AbstractDoctrineSubscriber
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
                 $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
-
-            } else if ($hasSelector && isset($value['left_number'][0]['text'])) {
+            } elseif ($hasSelector && isset($value['left_number'][0]['text'])) {
                 $leftValue = $value['left_number'][0]['text'];
                 $leftCond  = $value['left_number'][0]['condition_operator'];
 
@@ -199,7 +196,7 @@ abstract class AbstractDoctrineSubscriber
         }
 
         if (isset($value['right_number'][0])) {
-            $hasSelector = ( FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator'] );
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator']);
             $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['right_number'][0])) {
@@ -208,8 +205,7 @@ abstract class AbstractDoctrineSubscriber
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
                 $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
-
-            } else if ($hasSelector && isset($value['right_number'][0]['text'])) {
+            } elseif ($hasSelector && isset($value['right_number'][0]['text'])) {
                 $rightValue = $value['right_number'][0]['text'];
                 $rightCond  = $value['right_number'][0]['condition_operator'];
 

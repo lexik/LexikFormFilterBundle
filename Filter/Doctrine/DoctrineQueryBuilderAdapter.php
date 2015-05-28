@@ -21,7 +21,7 @@ class DoctrineQueryBuilderAdapter
      */
     public function __construct($qb)
     {
-        if ( ! ($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder) ) {
+        if (! ($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder)) {
             throw new \RuntimeException('Invalid Doctrine query builder instance.');
         }
 

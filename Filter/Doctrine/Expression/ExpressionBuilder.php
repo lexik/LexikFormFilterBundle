@@ -55,7 +55,7 @@ abstract class ExpressionBuilder
         if (null === $min) {
             // $max exists
             return $this->expr()->lte($field, (float) $max);
-        } else if (null === $max) {
+        } elseif (null === $max) {
             // $min exists
             return $this->expr()->gte($field, (float) $min);
         }
@@ -101,7 +101,7 @@ abstract class ExpressionBuilder
         if (null === $min) {
             // $max exists
             return $this->expr()->lte($field, $max);
-        } else if (null === $max) {
+        } elseif (null === $max) {
             // $min exists
             return $this->expr()->gte($field,  $min);
         }
@@ -139,7 +139,7 @@ abstract class ExpressionBuilder
 
         if ($min === null) {
             $findExpression = $this->expr()->lte($value, $max);
-        } else if ($max === null) {
+        } elseif ($max === null) {
             $findExpression = $this->expr()->gte($value,  $min);
         } else {
             $findExpression = $this->expr()->andX(
@@ -180,7 +180,7 @@ abstract class ExpressionBuilder
      */
     protected function convertToSqlDate($date, $isMax = false)
     {
-        if ( ! $date instanceof \DateTime) {
+        if (! $date instanceof \DateTime) {
             return;
         }
 
@@ -224,7 +224,7 @@ abstract class ExpressionBuilder
             $value = strtolower($value);
         }
 
-        switch($type) {
+        switch ($type) {
             case FilterOperands::STRING_STARTS:
                 $value .= '%';
                 break;

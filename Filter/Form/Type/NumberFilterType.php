@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -27,7 +26,6 @@ class NumberFilterType extends AbstractType
 
             $builder->add('condition_operator', 'choice', $options['choice_options']);
             $builder->add('text', 'number', $options['number_options']);
-
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_operator' => $options['condition_operator'],
@@ -51,16 +49,16 @@ class NumberFilterType extends AbstractType
                     'required' => false,
                 ),
                 'choice_options'         => array(
-                    'choices'  => FilterOperands::getNumberOperandsChoices(),
-                    'required' => false,
-                    'translation_domain' => 'LexikFormFilterBundle'
+                    'choices'            => FilterOperands::getNumberOperandsChoices(),
+                    'required'           => false,
+                    'translation_domain' => 'LexikFormFilterBundle',
                 ),
                 'data_extraction_method' => function (Options $options) {
                     return $options['compound'] ? 'text' : 'default';
                 },
             ))
             ->setAllowedValues(array(
-                'data_extraction_method' => array('text','default'),
+                'data_extraction_method' => array('text', 'default'),
                 'condition_operator'     => FilterOperands::getNumberOperands(true),
             ))
         ;

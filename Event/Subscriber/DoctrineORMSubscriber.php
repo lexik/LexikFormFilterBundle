@@ -5,9 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
-
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
-
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -84,7 +82,6 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                         array($paramName => array($ids, Connection::PARAM_INT_ARRAY))
                     );
                 }
-
             } else {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
@@ -105,7 +102,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
     {
         if (is_callable(array($value, 'getId'))) {
             return $value->getId();
-        } else if (isset($value->id)) {
+        } elseif (isset($value->id)) {
             return $value->id;
         }
 

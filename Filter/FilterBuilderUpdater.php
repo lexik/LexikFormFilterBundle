@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
@@ -88,12 +87,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         $event = new PrepareEvent($queryBuilder);
         $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
 
-        if ( ! $event->getFilterQuery() instanceof QueryInterface) {
+        if (! $event->getFilterQuery() instanceof QueryInterface) {
             throw new \RuntimeException("Couldn't find any filter query object.");
         }
 
         // init parts (= ['alias' -> 'joins'])
-        if ( ! $alias) {
+        if (! $alias) {
             $alias = $event->getFilterQuery()->getRootAlias();
             $this->parts[$alias] = '__root__'; // the root alias does not target a join
         }
@@ -189,7 +188,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             if (!is_numeric($parentForm->getName())) { // skip collection numeric index
                 $completeName = $parentForm->getName() . '.' . $completeName;
             }
-        } while ( ! $parentForm->isRoot());
+        } while (! $parentForm->isRoot());
 
         // apply the filter by using the closure set with the 'apply_filter' option
         $callable = $form->getConfig()->getAttribute('apply_filter');
@@ -200,14 +199,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
         if ($callable instanceof \Closure) {
             $condition = $callable($filterQuery, $field, $values);
-
         } elseif (is_callable($callable)) {
             $condition = call_user_func($callable, $filterQuery, $field, $values);
-
         } else {
             // trigger a specific or a global event name
             $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $completeName);
-            if ( ! $this->dispatcher->hasListeners($eventName)) {
+            if (! $this->dispatcher->hasListeners($eventName)) {
                 $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
             }
 

@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\DataExtractor;
 
 use Symfony\Component\Form\FormInterface;
-
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DataExtractionMethodInterface;
 
 /**

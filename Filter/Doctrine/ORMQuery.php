@@ -5,7 +5,6 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ORMExpressionBuilder;
-
 use Doctrine\ORM\QueryBuilder;
 
 /**

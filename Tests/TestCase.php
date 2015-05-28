@@ -5,12 +5,10 @@ namespace Lexik\Bundle\FormFilterBundle\Tests;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
-
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\ResolvedFormTypeFactory;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
-
 use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
@@ -29,7 +27,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @var Symfony\Component\Form\FormFactory
      */
     protected $formFactory;
-
 
     public function setUp()
     {

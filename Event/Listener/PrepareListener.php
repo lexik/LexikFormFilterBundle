@@ -5,7 +5,6 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
-
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 
 /**

@@ -4,7 +4,6 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 

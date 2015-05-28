@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -25,7 +24,7 @@ class NumberRangeFilterType extends AbstractType
 
         $builder->setAttribute('filter_value_keys', array(
             'left_number'  => $options['left_number_options'],
-            'right_number' => $options['right_number_options']
+            'right_number' => $options['right_number_options'],
         ));
     }
 
