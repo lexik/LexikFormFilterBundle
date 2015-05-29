@@ -258,7 +258,6 @@ The generated where clause will be: `WHERE (<options.label> OR <name>) AND (<opt
 iv. Filter customization
 -------------------------
 
-
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
@@ -569,6 +568,37 @@ class OptionsFilterType extends AbstractType
         return 'filter_options';
     }
 }
+```
+#### C. Use existing join alias defined on the query builder (ORM).
+
+So as explained above you can add some joins dynamically.
+But in case you've already set some joins on the query builder and you want to use them, you can use the `setParts()` method from the `lexik_form_filter.query_builder_updater` service.
+This method allow you to pre-set aliases to use for each relation (join).
+
+```php
+$form = /* your form filter instance */;
+
+$queryBuilder = $container
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('Entity\Namespace')
+    ->createQueryBuilder('e');
+
+$queryBuilder
+    ->select('e, u, a')
+    ->leftJoin('e.user', 'u')
+    ->innerJoin('u.addresses', 'a');
+
+$qbUpdater = $container->get('lexik_form_filter.query_builder_updater');
+
+// set the joins
+$qbUpdater->setParts(array(
+    'e.user'      => 'u',
+    'u.addresses' => 'a',
+));
+
+// then add filter conditions
+$qbUpdater->addFilterConditions($form, $queryBuilder);
 ```
 
 vi. Doctrine embeddables
