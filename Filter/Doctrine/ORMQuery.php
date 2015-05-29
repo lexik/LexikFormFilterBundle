@@ -82,6 +82,25 @@ class ORMQuery implements QueryInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function hasJoinAlias($joinAlias)
+    {
+        $joinParts = $this->queryBuilder->getDQLPart('join');
+
+        /* @var \Doctrine\ORM\Query\Expr\Join $join */
+        foreach ($joinParts as $rootAlias => $joins) {
+            foreach ($joins as $join) {
+                if ($join->getAlias() === $joinAlias) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get expr class.
      *
      * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
