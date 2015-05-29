@@ -36,4 +36,10 @@ interface QueryInterface
      * @return string
      */
     public function getRootAlias();
+
+    /**
+     * @param string $joinAlias
+     * @return bool
+     */
+    public function hasJoinAlias($joinAlias);
 }

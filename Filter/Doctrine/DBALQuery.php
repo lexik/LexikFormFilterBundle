@@ -82,6 +82,24 @@ class DBALQuery implements QueryInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function hasJoinAlias($joinAlias)
+    {
+        $joinParts = $this->queryBuilder->getQueryPart('join');
+
+        foreach ($joinParts as $rootAlias => $joins) {
+            foreach ($joins as $join) {
+                if ($join['joinAlias'] === $joinAlias) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get expr class.
      *
      * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
