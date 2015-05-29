@@ -90,4 +90,24 @@ class ORMQuery implements QueryInterface
     {
         return $this->expressionBuilder;
     }
+
+    /**
+     * @param string $joinAlias
+     * @return bool
+     */
+    public function hasJoinAlias($joinAlias)
+    {
+        $joinParts = $this->queryBuilder->getDQLPart('join');
+
+        /* @var \Doctrine\ORM\Query\Expr\Join $join */
+        foreach ($joinParts as $rootAlias => $joins) {
+            foreach ($joins as $join) {
+                if ($join->getAlias() === $joinAlias) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
