@@ -82,18 +82,7 @@ class DBALQuery implements QueryInterface
     }
 
     /**
-     * Get expr class.
-     *
-     * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
-     */
-    public function getExpressionBuilder()
-    {
-        return $this->expressionBuilder;
-    }
-
-    /**
-     * @param string $joinAlias
-     * @return bool
+     * {@inheritDoc}
      */
     public function hasJoinAlias($joinAlias)
     {
@@ -108,5 +97,15 @@ class DBALQuery implements QueryInterface
         }
 
         return false;
+    }
+
+    /**
+     * Get expr class.
+     *
+     * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
+     */
+    public function getExpressionBuilder()
+    {
+        return $this->expressionBuilder;
     }
 }
