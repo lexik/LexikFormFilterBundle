@@ -81,17 +81,18 @@ Then in an action, create a form object from the ItemFilterType. Let's say we fi
 namespace Project\Bundle\SuperBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Project\Bundle\SuperBundle\Filter\ItemFilterType;
 
 class DefaultController extends Controller
 {
-    public function testFilterAction()
+    public function testFilterAction(Request $request)
     {
         $form = $this->get('form.factory')->create(new ItemFilterType());
 
-        if ($this->get('request')->query->has($form->getName())) {
+        if ($request->query->has($form->getName())) {
             // manually bind values from the request
-            $form->submit($this->get('request')->query->get($form->getName()));
+            $form->submit($request->query->get($form->getName()));
 
             // initialize a query builder
             $filterBuilder = $this->get('doctrine.orm.entity_manager')

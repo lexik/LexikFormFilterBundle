@@ -12,11 +12,12 @@ i. KNP Paginator example
 namespace Project\Bundle\SuperBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Project\Bundle\SuperBundle\Filter\ItemFilterType;
 
 class DefaultController extends Controller
 {
-    public function testFilterAction()
+    public function testFilterAction(Request $request)
     {
         // initialize a query builder
         $filterBuilder = $this->get('doctrine.orm.entity_manager')
@@ -25,9 +26,9 @@ class DefaultController extends Controller
     
         $form = $this->get('form.factory')->create(new ItemFilterType());
 
-        if ($this->get('request')->query->has($form->getName())) {
+        if ($request->query->has($form->getName())) {
             // manually bind values from the request
-            $form->submit($this->get('request')->query->get($form->getName()));
+            $form->submit($request->query->get($form->getName()));
 
             // build the query from the given form object
             $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $filterBuilder);
@@ -38,7 +39,7 @@ class DefaultController extends Controller
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1)/*page number*/,
+            $request->query->get('page', 1)/*page number*/,
             10/*limit per page*/
         );
 
