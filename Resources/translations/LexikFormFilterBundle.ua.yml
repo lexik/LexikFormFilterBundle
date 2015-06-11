@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Так або Ні"
+    yes:                "Так"
+    no:                 "Ні"
+
+number:
+    equal:              "Дорівнює"
+    greater_than:       "Більше"
+    greater_than_equal: "Більше або дорівнює"
+    lower_than:         "Менше"
+    lower_than_equal:   "Менше або дорівнює"
+
+text:
+    starts:             "Починається з"
+    ends:               "Закінчується на"
+    equals:             "Дорівнює"
+    both:               "Містить"
