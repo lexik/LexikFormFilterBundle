@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Да или Нет"
+    yes:                "Да"
+    no:                 "Нет"
+
+number:
+    equal:              "Равно"
+    greater_than:       "Больше"
+    greater_than_equal: "Больше или равно"
+    lower_than:         "Меньше"
+    lower_than_equal:   "Меньше или равно"
+
+text:
+    starts:             "Начинается с"
+    ends:               "Заканчивается на"
+    equals:             "Равняется"
+    both:               "Содержит"
