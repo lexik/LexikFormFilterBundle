@@ -27,12 +27,11 @@
         "phpunit/phpunit": "~3.7"
     },
     "autoload":     {
-        "psr-0": { "Lexik\\Bundle\\FormFilterBundle": "" }
+        "psr-4": { "Lexik\\FormFilterBundle\\": "" }
     },
     "config": {
         "bin-dir": "bin"
     },
-    "target-dir": "Lexik/Bundle/FormFilterBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "3.x.x-dev"
