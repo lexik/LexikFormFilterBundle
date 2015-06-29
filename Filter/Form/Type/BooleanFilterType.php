@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter to use with boolean values.
@@ -34,7 +34,7 @@ class BooleanFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
@@ -47,9 +47,7 @@ class BooleanFilterType extends AbstractType
                 'translation_domain'     => 'LexikFormFilterBundle',
                 'data_extraction_method' => 'default',
             ))
-            ->setAllowedValues(array(
-                'data_extraction_method' => array('default'),
-            ))
+            ->setAllowedValues('data_extraction_method', array('default'))
         ;
     }
 }
