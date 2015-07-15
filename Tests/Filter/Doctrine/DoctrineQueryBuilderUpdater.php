@@ -283,7 +283,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $container = new ContainerBuilder();
         $container->registerExtension(new LexikFormFilterExtension());
 
-        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../../vendor/symfony/framework-bundle/Symfony/Bundle/FrameworkBundle/Resources/config'));
+        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../../vendor/symfony/framework-bundle/Resources/config'));
         $loadXml->load('services.xml');
 
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../../Resources/config'));
@@ -300,12 +300,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         // dirty fix - force subcriber class to don't get an error in RegisterListenersPass.
         $container->getDefinition('lexik_form_filter.get_filter.doctrine_orm')->setClass($container->getParameter('lexik_form_filter.get_filter.doctrine_orm.class'));
         $container->getDefinition('lexik_form_filter.get_filter.doctrine_dbal')->setClass($container->getParameter('lexik_form_filter.get_filter.doctrine_dbal.class'));
-
-        if (class_exists('Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass')) {
-            $container->addCompilerPass(new \Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RegisterKernelListenersPass()); // SF < 2.3
-        } else {
-            $container->addCompilerPass(new \Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass()); // SF 2.3
-        }
+        $container->addCompilerPass(new \Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass());
 
         $container->compile();
 
