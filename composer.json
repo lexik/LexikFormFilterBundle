@@ -27,7 +27,7 @@
         "phpunit/phpunit": "~3.7"
     },
     "autoload":     {
-        "psr-4": { "Lexik\\FormFilterBundle\\": "" }
+        "psr-4": { "Lexik\\Bundle\\FormFilterBundle\\": "" }
     },
     "config": {
         "bin-dir": "bin"
