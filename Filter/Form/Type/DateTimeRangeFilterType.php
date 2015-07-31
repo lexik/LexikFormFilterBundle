@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter type for date range field.
@@ -30,7 +30,7 @@ class DateTimeRangeFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
@@ -39,9 +39,7 @@ class DateTimeRangeFilterType extends AbstractType
                 'right_datetime_options' => array(),
                 'data_extraction_method' => 'value_keys',
             ))
-            ->setAllowedValues(array(
-                'data_extraction_method' => array('value_keys'),
-            ))
+            ->setAllowedValues('data_extraction_method', array('value_keys'))
         ;
     }
 

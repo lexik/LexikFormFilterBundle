@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter type for numbers.
@@ -31,7 +31,7 @@ class NumberRangeFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
@@ -40,9 +40,7 @@ class NumberRangeFilterType extends AbstractType
                 'right_number_options'   => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
                 'data_extraction_method' => 'value_keys',
             ))
-            ->setAllowedValues(array(
-                'data_extraction_method' => array('value_keys'),
-            ))
+            ->setAllowedValues('data_extraction_method', array('value_keys'))
         ;
     }
 

@@ -4,8 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Form filter for tests.
@@ -36,7 +36,7 @@ class ItemFilterType extends AbstractType
         $builder->add('createdAt', $options['datetime'] ? 'filter_datetime' : 'filter_date');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'with_selector' => false,

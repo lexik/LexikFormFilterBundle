@@ -6,7 +6,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter type for numbers.
@@ -36,7 +36,7 @@ class NumberFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
@@ -57,10 +57,8 @@ class NumberFilterType extends AbstractType
                     return $options['compound'] ? 'text' : 'default';
                 },
             ))
-            ->setAllowedValues(array(
-                'data_extraction_method' => array('text', 'default'),
-                'condition_operator'     => FilterOperands::getNumberOperands(true),
-            ))
+            ->setAllowedValues('data_extraction_method', array('text', 'default'))
+            ->setAllowedValues('condition_operator', FilterOperands::getNumberOperands(true))
         ;
     }
 

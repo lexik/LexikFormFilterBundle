@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter to used to dynamically add joins.
@@ -26,7 +26,7 @@ class SharedableFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {},

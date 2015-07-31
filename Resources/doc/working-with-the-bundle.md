@@ -48,7 +48,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ItemFilterType extends AbstractType
 {
@@ -63,7 +63,7 @@ class ItemFilterType extends AbstractType
         return 'item_filter';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'csrf_protection'   => false,
@@ -206,7 +206,7 @@ class ItemFilterType extends AbstractType
         $builder->add('options', new RelatedOptionsType());
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
@@ -662,22 +662,20 @@ So the `LocaleFilterType` class would look like:
 namespace Super\Namespace\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LocaleFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
                 'data_extraction_method' => 'default',
             ))
-            ->setAllowedValues(array(
-                'data_extraction_method' => array('default'),
-            ))
+            ->setAllowedValues('data_extraction_method', array('default'))
         ;
     }
 
@@ -789,9 +787,8 @@ viii. Enable FilterType form validation
 By default most `FilterForms` are submitted using `GET`, and are defined in class instead of via a formBuilder in the controller. When you injected the data in the `FilterForm` yourself via the `$form->submit($data)` method, all was fine. In order to let the `validator` service function properly, we need to tell the form it does use the `GET` method:
 
 ```php
- public function setDefaultOptions(OptionsResolverInterface $resolver)
+public function configureOptions(OptionsResolver $resolver)
 {
-	parent::setDefaultOptions($resolver);
     $resolver->setDefaults(array(
         'error_bubbling' 	=> true,
 		'csrf_protection'   => false,
