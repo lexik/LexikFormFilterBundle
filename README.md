@@ -1,7 +1,8 @@
 Overview
 ========
 
-This Symfony2 bundle aims to provide classes to build a form filter and then build a doctrine query from this form filter.
+This Symfony2 bundle aims to provide classes to build some form types dedicated to filter an entity.
+One you created your form type you will be able to update a doctrine query builder conditions from a form type.
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
 ![Project Status](http://stillmaintained.com/lexik/LexikFormFilterBundle.png)
@@ -14,12 +15,12 @@ The idea is:
 2. Add form fields by using provided filter types (e.g. use `filter_text` instead of `text` type) (*).
 3. Then call a service to build the query from the form instance and execute your query to get your result :).
 
-(*): In fact you can use any type, but if you want to apply a filter by not using a `filter_xxx` type you will have to create a custom class to apply the filter for this type.
+(*): In fact you can use any type, but if you want to apply a filter by not using a `filter_xxx` type you will have to create a custom listener class to apply the filter for this type.
 
 Documentation
 =============
 
-The `master` branch is compatible with Symfony 2.3 or higher, if you are using Symfony 2.0.x use the `symfony2.0` branch.
+The `master` branch is compatible with Symfony 2.7 or higher, if you are using Symfony 2.0.x use the `symfony2.0` branch.
 
 For installation and how to use the bundle refer to [Resources/doc/index.md](Resources/doc/index.md)
 

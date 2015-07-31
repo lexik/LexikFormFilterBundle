@@ -7,7 +7,7 @@ Add the bundle to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "~3.0" // check packagist.org for more tags
+    "lexik/form-filter-bundle": "~4.0" // check packagist.org for more tags
     // ...
 }
 ```
