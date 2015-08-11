@@ -160,7 +160,7 @@ abstract class ExpressionBuilder
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
-    public function stringLike($field, $value, $type = FilterOperands::STRING_BOTH)
+    public function stringLike($field, $value, $type = FilterOperands::STRING_CONTAINS)
     {
         $value = $this->convertTypeToMask($value, $type);
 
@@ -233,7 +233,7 @@ abstract class ExpressionBuilder
                 $value = '%' . $value;
                 break;
 
-            case FilterOperands::STRING_BOTH:
+            case FilterOperands::STRING_CONTAINS:
                 $value = '%' . $value . '%';
                 break;
 

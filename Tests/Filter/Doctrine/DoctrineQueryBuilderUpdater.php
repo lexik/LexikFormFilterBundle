@@ -289,7 +289,8 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../../../Resources/config'));
         $loadXml->load('services.xml');
         $loadXml->load('form.xml');
-        $loadXml->load('listeners.xml');
+        $loadXml->load('doctrine_dbal.xml');
+        $loadXml->load('doctrine_orm.xml');
 
         $container->setParameter('lexik_form_filter.where_method', null);
 

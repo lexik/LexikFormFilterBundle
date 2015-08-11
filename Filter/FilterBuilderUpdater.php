@@ -87,12 +87,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         $event = new PrepareEvent($queryBuilder);
         $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
 
-        if (! $event->getFilterQuery() instanceof QueryInterface) {
+        if (!$event->getFilterQuery() instanceof QueryInterface) {
             throw new \RuntimeException("Couldn't find any filter query object.");
         }
 
         // init parts (= ['alias' -> 'joins'])
-        if (! $alias) {
+        if (!$alias) {
             $alias = $event->getFilterQuery()->getRootAlias();
             $this->parts[$alias] = '__root__'; // the root alias does not target a join
         }
@@ -176,7 +176,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     {
         $values = $this->prepareFilterValues($form, $formType);
         $values += array('alias' => $alias);
-        $field = $values['alias'] . '.' . $form->getName();
+        $field = trim($values['alias'] . '.' . $form->getName(), '. ');
 
         $condition = null;
 
@@ -188,7 +188,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             if (!is_numeric($parentForm->getName())) { // skip collection numeric index
                 $completeName = $parentForm->getName() . '.' . $completeName;
             }
-        } while (! $parentForm->isRoot());
+        } while (!$parentForm->isRoot());
 
         // apply the filter by using the closure set with the 'apply_filter' option
         $callable = $form->getConfig()->getAttribute('apply_filter');
@@ -204,7 +204,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         } else {
             // trigger a specific or a global event name
             $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $completeName);
-            if (! $this->dispatcher->hasListeners($eventName)) {
+            if (!$this->dispatcher->hasListeners($eventName)) {
                 $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
             }
 

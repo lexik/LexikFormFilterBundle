@@ -22,13 +22,18 @@ class LexikFormFilterExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('form.xml');
-        $loader->load('listeners.xml');
 
-        $configuration = new Configuration();
-        $config        = $this->processConfiguration($configuration, $configs);
+        foreach ($config['listeners'] as $name => $enable) {
+            if ($enable) {
+                $loader->load(sprintf('%s.xml', $name));
+            }
+        }
 
         if (isset($config['force_case_insensitivity'])) {
             $filterPrepareDef = $container->getDefinition('lexik_form_filter.filter_prepare');

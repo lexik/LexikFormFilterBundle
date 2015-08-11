@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="lexik_form_filter.get_filter.doctrine_dbal.class">Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineDBALSubscriber</parameter>
+        <parameter key="lexik_form_filter.apply_filter.doctrine_dbal.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineApplyFilterListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="lexik_form_filter.get_filter.doctrine_dbal" class="%lexik_form_filter.get_filter.doctrine_dbal.class%">
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="lexik_form_filter.apply_filter.doctrine_dbal" class="%lexik_form_filter.apply_filter.doctrine_dbal.class%">
+            <argument>%lexik_form_filter.where_method%</argument>
+            <tag name="kernel.event_listener" event="lexik_filter.apply_filters.dbal" method="onApplyFilterCondition" />
+        </service>
+    </services>
+</container>
