@@ -129,7 +129,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
             // this means we have a relation
             if ($child->getConfig()->hasAttribute('add_shared')) {
-                $join = $alias . '.' . $child->getName();
+                $join = trim($alias . '.' . $child->getName(), '.');
 
                 if (!isset($parts[$join])) {
                     $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
