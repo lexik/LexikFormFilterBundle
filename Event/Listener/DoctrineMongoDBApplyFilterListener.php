@@ -24,16 +24,16 @@ class DoctrineMongoDBApplyFilterListener
         $qb = $event->getQueryBuilder();
         $conditionBuilder = $event->getConditionBuilder();
 
-        $this->computeExpression($qb, $conditionBuilder->getRoot(), true);
+        $this->computeExpression($qb, $conditionBuilder->getRoot());
     }
 
     /**
-     * @param Builder $queryBuilder
+     * @param Builder                $queryBuilder
      * @param ConditionNodeInterface $node
-     * @param bool $root
+     * @param Expr                   $expr
      * @return null
      */
-    protected function computeExpression(Builder $queryBuilder, ConditionNodeInterface $node, $root = false)
+    protected function computeExpression(Builder $queryBuilder, ConditionNodeInterface $node, Expr $expr = null)
     {
         if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
             return null;
@@ -41,21 +41,27 @@ class DoctrineMongoDBApplyFilterListener
 
         $method = ($node->getOperator() === ConditionNodeInterface::EXPR_AND) ? 'addAnd' : 'addOr';
 
-        $expression = (true === $root) ? $queryBuilder : $queryBuilder->expr();
+        $expression = (null === $expr) ? $queryBuilder : $expr;
+        $count = 0;
 
         foreach ($node->getFields() as $condition) {
             if (null !== $condition) {
                 /** @var ConditionInterface $condition */
                 $expression->{$method}($condition->getExpression());
+                $count++;
             }
         }
 
         foreach ($node->getChildren() as $child) {
-            $subExpr = $this->computeExpression($queryBuilder, $child);
+            $subExpr = $queryBuilder->expr();
+            $subCount = $this->computeExpression($queryBuilder, $child, $subExpr);
 
-            if (null !== $subExpr) {
+            if ($subCount > 0) {
                 $expression->{$method}($subExpr);
+                $count++;
             }
         }
+
+        return $count;
     }
 }
