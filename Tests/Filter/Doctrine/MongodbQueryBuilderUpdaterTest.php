@@ -52,8 +52,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
-            'db.items.find({ "$and": [ { "name": new RegExp(".*blabla$", "i") }, { "position": { "$lte": 2 } }, { "createdAt": new ISODate("2013-09-27T00:00:00+02:00") } ] });',
-            'db.items.find({ "$and": [ { "name": new RegExp(".*blabla$", "i") }, { "position": { "$lte": 2 } }, { "createdAt": new ISODate("2013-09-27T13:21:00+02:00") } ] });',
+            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("2013-09-27T00:00:00\+[0-9:]+"\) \} \] \}\);#',
+            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("2013-09-27T13:21:00\+[0-9:]+"\) \} \] \}\);#',
         );
 
         $form = $this->formFactory->create(new ItemFilterType());
@@ -114,7 +114,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[5], $this->toBson($mongoQB->getQuery()));
+        $this->assertRegExp($bson[5], $this->toBson($mongoQB->getQuery()));
 
         // bind a request to the form - datetime + pattern selector
         $form = $this->formFactory->create(new ItemFilterType(), null, array(
@@ -133,7 +133,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[6], $this->toBson($mongoQB->getQuery()));
+        $this->assertRegExp($bson[6], $this->toBson($mongoQB->getQuery()));
     }
 
     public function testDisabledFieldQuery()
@@ -235,8 +235,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
-        $this->assertEquals(
-            'db.items.find({ "$and": [ { "createdAt": { "$gte": new ISODate("2012-05-12T00:00:00+02:00"), "$lt": new ISODate("2012-05-22T00:00:00+02:00") } } ] });',
+        $this->assertRegExp(
+            '#db.items.find\(\{ "\$and": \[ \{ "createdAt": \{ "\$gte": new ISODate\("2012-05-12T00:00:00\+[0-9:]+"\), "\$lt": new ISODate\("2012-05-22T00:00:00\+[0-9:]+"\) \} \} \] \}\);#',
             $this->toBson($mongoQB->getQuery())
         );
     }
@@ -262,8 +262,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
-        $this->assertEquals(
-            'db.items.find({ "$and": [ { "updatedAt": { "$gte": new ISODate("2012-05-12T14:55:00+02:00"), "$lt": new ISODate("2012-06-10T22:12:00+02:00") } } ] });',
+        $this->assertRegExp(
+            '#db\.items\.find\(\{ "\$and": \[ \{ "updatedAt": \{ "\$gte": new ISODate\("2012-05-12T14:55:00\+[0-9:]+"\), "\$lt": new ISODate\("2012-06-10T22:12:00\+[0-9:]+"\) \} \} \] }\);#',
             $this->toBson($mongoQB->getQuery())
         );
     }
