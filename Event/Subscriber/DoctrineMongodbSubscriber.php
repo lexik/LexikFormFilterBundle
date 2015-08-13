@@ -123,7 +123,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
     public function filterDateRange(GetFilterConditionEvent $event)
     {
         /** @var Builder $qb */
-        $qb = $event->getFilterQuery();
+        $qb = $event->getFilterQuery()->getQueryBuilder();
         $values = $event->getValues();
         $value = $values['value'];
 
@@ -165,21 +165,21 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
     public function filterDateTimeRange(GetFilterConditionEvent $event)
     {
         /** @var Builder $qb */
-        $qb = $event->getFilterQuery();
+        $qb = $event->getFilterQuery()->getQueryBuilder();
         $values = $event->getValues();
         $value = $values['value'];
 
-        if (isset($value['left_date'][0]) && isset($value['right_date'][0])) {
+        if (isset($value['left_datetime'][0]) && isset($value['right_datetime'][0])) {
             $expression = $qb->expr()->field($event->getField())->range(
-                $value['left_date'][0],
-                $value['right_date'][0]
+                $value['left_datetime'][0],
+                $value['right_datetime'][0]
             );
 
-        } elseif (isset($value['left_date'][0])) {
-            $expression = $qb->expr()->field($event->getField())->gte($value['left_date'][0]);
+        } elseif (isset($value['left_datetime'][0])) {
+            $expression = $qb->expr()->field($event->getField())->gte($value['left_datetime'][0]);
 
-        } elseif (isset($value['right_date'][0])) {
-            $expression = $qb->expr()->field($event->getField())->lte($value['right_date'][0]);
+        } elseif (isset($value['right_datetime'][0])) {
+            $expression = $qb->expr()->field($event->getField())->lte($value['right_datetime'][0]);
         }
 
         if (isset($expression)) {
@@ -210,7 +210,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
     public function filterNumberRange(GetFilterConditionEvent $event)
     {
         /** @var Builder $qb */
-        $qb = $event->getFilterQuery();
+        $qb = $event->getFilterQuery()->getQueryBuilder();
         $values = $event->getValues();
         $value = $values['value'];
 
@@ -243,6 +243,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
         if (isset($leftValue, $leftOp, $rightValue, $rightOp)) {
             /** @var Expr $expr */
             $expression = $qb->expr()
+                ->field($event->getField())
                 ->operator('$'.$leftOp, $leftValue)
                 ->operator('$'.$rightOp, $rightValue);
 
@@ -274,7 +275,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
-            $pattern = isset($values['condition_pattern']) ? $values['condition_pattern'] : FilterOperands::STRING_EQUALS;
+            $pattern = isset($values['condition_pattern']) ? $values['condition_pattern'] : FilterOperands::STRING_CONTAINS;
 
             switch ($pattern) {
                 case FilterOperands::STRING_STARTS:
