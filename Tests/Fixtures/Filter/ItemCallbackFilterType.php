@@ -21,9 +21,13 @@ class ItemCallbackFilterType extends AbstractType
         $builder->add('position', 'filter_number', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    return $filterQuery->createCondition(
-                        $filterQuery->getExpr()->neq($field, $values['value'])
-                    );
+                    if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+                        $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
+                    } else {
+                        $expr = $filterQuery->getExpr()->neq($field, $values['value']);
+                    }
+
+                    return $filterQuery->createCondition($expr);
                 }
 
                 return null;
@@ -39,9 +43,13 @@ class ItemCallbackFilterType extends AbstractType
     public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)
     {
         if (!empty($values['value'])) {
-            return $filterQuery->createCondition(
-                $filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value']))
-            );
+            if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+                $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
+            } else {
+                $expr = $filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value']));
+            }
+
+            return $filterQuery->createCondition($expr);
         }
 
         return null;

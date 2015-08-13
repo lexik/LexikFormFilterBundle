@@ -19,9 +19,13 @@ class FormType extends AbstractType
         $builder->add('position', 'integer', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    return $filterQuery->createCondition(
-                        $filterQuery->getExpr()->eq($field, $values['value'])
-                    );
+                    if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+                        $expr = $filterQuery->getExpr()->field($field)->equals($values['value']);
+                    } else {
+                        $expr = $filterQuery->getExpr()->eq($field, $values['value']);
+                    }
+
+                    return $filterQuery->createCondition($expr);
                 }
 
                 return null;
