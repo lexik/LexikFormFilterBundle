@@ -24,7 +24,7 @@
         "doctrine/orm": "~2.2"
     },
     "require-dev": {
-        "doctrine/mongodb-odm": "~1.0.0-beta10@dev",
+        "doctrine/mongodb-odm-bundle": "~3.0",
         "phpunit/phpunit": "~3.7"
     },
     "autoload":     {
