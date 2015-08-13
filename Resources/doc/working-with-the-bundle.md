@@ -5,7 +5,7 @@
 i. Simple example
 -----------------
 
-Here an example of how to use the bundle. Let's use the following entity:
+Here an example of how to use the bundle (with doctrine ORM). Let's use the following entity:
 
 ```php
 <?php
@@ -128,7 +128,7 @@ ii. Inner workings
 
 A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type to get the condition for a given filter.
 Then once all condition have been gotten another event will be triggered to add these conditions to the (doctrine) query builder.
-We provide a event/listener that supports Doctrine ORM and DBAL.
+We provide a event/listener that supports Doctrine ORM, DBAL and MongoDB.
 
 The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
 
@@ -147,17 +147,21 @@ The event name that will be triggered to get conditions to apply will be:
 
 * `lexik_form_filter.apply.dbal.filter_text` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
+* `lexik_form_filter.apply.mongodb.filter_text` if you provide a `Doctrine\ODM\MongoDB\Query\Builder`
+
 Then another event will be triggered to add all the conditions to the (doctrine) query builder instance:
 
 * `lexik_filter.apply_filters.orm` if you provide a `Doctrine\ORM\QueryBuilder`
 
 * `lexik_filter.apply_filters.dbal` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
+* `lexik_filter.apply_filters.mongodb` if you provide a `Doctrine\ODM\MongoDB\Query\Builder`
+
 iii. Customize condition operator
 ---------------------------------
 
 By default the `lexik_form_filter.query_builder_updater` service will add conditions by using AND.
-But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
+But you can customize the operator (and/or) to use between each conditions when its added to the (doctrine) query builder.
 To do so you will have to use the `filter_condition_builder` option in your main type class.
 
 Here a simple example, the main type `ItemFilterType` is composed of 2 simple fields and a sub type (RelatedOptionsType).

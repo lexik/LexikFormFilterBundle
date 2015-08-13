@@ -29,7 +29,7 @@ Parent type: _date_
 ---
 **filter_date_range:**
 
-This type is composed of two filter_date types (left_date and right_date).
+This type is composed of two `filter_date` types (left_date and right_date).
 
 Parent type: _form_
 
@@ -46,7 +46,7 @@ Parent type: _datetime_
 ---
 **filter_datetime_range:**
 
-This type is composed of two filter_datetime types (left_datetime and right_datetime).
+This type is composed of two `filter_datetime` types (left_datetime and right_datetime).
 
 Parent type: _form_
 
@@ -69,13 +69,14 @@ Parent type: _number_
 
 Options:
 
-* `condition_operator`: this option allows you to configure the operator you want to use, the default operator is FilterOperands::OPERATOR_EQUAL. See the FilterOperands::OPERATOR_xxx constants for all available operators.
+* `condition_operator`: this option allows you to configure the operator you want to use, the default operator is FilterOperands::OPERATOR_EQUAL. 
+See the FilterOperands::OPERATOR_xxx constants for all available operators (greater than, lower than, ...).
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with the available operators in addition to the input text.
 
 ---
 **filter_number_range:**
 
-This type is composed of two filter_number types (left_number and right_number).
+This type is composed of two `filter_number` types (left_number and right_number).
 
 Parent type: _form_
 
@@ -91,7 +92,8 @@ Parent type: _text_
 
 Options:
 
-* `condition_pattern`: this option allows you to configure the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. See the FilterOperands::STRING_xxx constants for all available patterns.
+* `condition_pattern`: this option allows you to configure the way you to filter the string. The default pattern is FilterOperands::STRING_STARTS. 
+See the FilterOperands::STRING_xxx constants for all available patterns (starts with, ends with or contains).
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with available patterns in addition to the input text.
 
 ***
