@@ -85,7 +85,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     {
         // doctrine query builder without any joins
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
-        $filterQueryBuilder = $this->initQueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 3))));
@@ -99,7 +99,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         // doctrine query builder with joins
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
-        $filterQueryBuilder = $this->initQueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $doctrineQueryBuilder->leftJoin('i.options', 'o');
@@ -131,7 +131,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
                 ;
             },
         ));
-        $filterQueryBuilder = $this->initQueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));
@@ -160,7 +160,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
                     ;
                 },
         ));
-        $filterQueryBuilder = $this->initQueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'dude', 'position' => 1, 'options' => array(array('label' => 'color', 'rank' => 6))));
@@ -179,7 +179,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
             'data_class' => 'Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item',
         ));
-        $filterQueryBuilder = $this->initQueryBuilder();
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'dude', 'options' => array(array('label' => 'color', 'rank' => 6))));

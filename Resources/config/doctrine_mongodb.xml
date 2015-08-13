@@ -15,7 +15,6 @@
         </service>
 
         <service id="lexik_form_filter.apply_filter.doctrine_mongodb" class="%lexik_form_filter.apply_filter.doctrine_mongodb.class%">
-            <argument>%lexik_form_filter.where_method%</argument>
             <tag name="kernel.event_listener" event="lexik_filter.apply_filters.mongodb" method="onApplyFilterCondition" />
         </service>
     </services>

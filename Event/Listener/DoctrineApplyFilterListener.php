@@ -31,7 +31,7 @@ class DoctrineApplyFilterListener
      */
     public function __construct($whereMethod)
     {
-        $this->whereMethod = (null === $whereMethod) ? 'where' : sprintf('%sWhere', strtolower($whereMethod));
+        $this->whereMethod = empty($whereMethod) ? 'where' : sprintf('%sWhere', strtolower($whereMethod));
     }
 
     /**

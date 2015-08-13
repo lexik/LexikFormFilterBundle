@@ -6,6 +6,7 @@ use Doctrine\MongoDB\Query\Expr;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
