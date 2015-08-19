@@ -138,8 +138,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                         throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
                     }
 
-                    $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
-                    $addSharedClosure($qbe);
+                    $addSharedClosure(new FilterBuilderExecuter($filterQuery, $alias, $parts));
                 }
 
                 if (count($parts)) {

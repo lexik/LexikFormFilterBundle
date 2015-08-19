@@ -9,9 +9,6 @@ use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
@@ -19,6 +16,9 @@ use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Mongodb query builder tests.
@@ -302,6 +302,21 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $this->assertEquals(
             'db.items.find({ "$and": [ { "name": "dude" }, { "$and": [ { "options.label": "color" }, { "options.rank": 3 } ] } ] });',
+            $this->toBson($mongoQB->getQuery())
+        );
+
+        // doctrine query builder without any joins and values for embedded field only
+        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+            'doctrine_builder' => 'mongo',
+        ));
+        $form->submit(array('options' => array(array('label' => 'color', 'rank' => 3))));
+
+        $mongoQB = $this->createDoctrineQueryBuilder();
+
+        $filterQueryBuilder->addFilterConditions($form, $mongoQB);
+
+        $this->assertEquals(
+            'db.items.find({ "$and": [ { "$and": [ { "options.label": "color" }, { "options.rank": 3 } ] } ] });',
             $this->toBson($mongoQB->getQuery())
         );
 

@@ -22,8 +22,7 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
     {
         if ('mongo' === $options['doctrine_builder']) {
             $addShared = function (FilterBuilderExecuterInterface $qbe) {
-                $joinClosure = function (Builder $filterBuilder, $alias, $joinAlias, MongoExpr $expr) {};
-                $qbe->addOnce('options', 'options', $joinClosure);
+                $qbe->addOnce('options', 'options', null);
             };
         } else {
             $addShared = function (FilterBuilderExecuterInterface $qbe) {

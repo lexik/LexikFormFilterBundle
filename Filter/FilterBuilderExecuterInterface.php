@@ -10,11 +10,11 @@ interface FilterBuilderExecuterInterface
     /**
      * Add a join.
      *
-     * @param string $join
-     * @param string $alias
+     * @param string   $join
+     * @param string   $alias
      * @param \Closure $callback
      */
-    public function addOnce($join, $alias, \Closure $callback);
+    public function addOnce($join, $alias, \Closure $callback = null);
 
     /**
      * @return string

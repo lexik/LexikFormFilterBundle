@@ -17,11 +17,6 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     protected $alias;
 
     /**
-     * @var object
-     */
-    protected $expr;
-
-    /**
      * @var array
      */
     protected $parts;
@@ -36,7 +31,6 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     public function __construct(QueryInterface $filterQuery, $alias, array & $parts = array())
     {
         $this->filterQuery = $filterQuery;
-        $this->expr        = $filterQuery->getExpr();
         $this->alias       = $alias;
         $this->parts       = & $parts;
     }
@@ -60,13 +54,17 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * {@inheritdoc}
      */
-    public function addOnce($join, $alias, \Closure $callback)
+    public function addOnce($join, $alias, \Closure $callback = null)
     {
         if (isset($this->parts[$join])) {
             return null;
         }
 
         $this->parts[$join] = $alias;
+
+        if (!$callback instanceof \Closure) {
+            return;
+        }
 
         return $callback($this->filterQuery->getQueryBuilder(), $this->alias, $alias, $this->filterQuery->getExpr());
     }
