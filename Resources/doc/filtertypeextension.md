@@ -137,3 +137,7 @@ This option is used to defined the operator (and/or) to use between each conditi
 This option is expected to be closure and recieve one parameter which is an instance of `Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface`.
 
 See [4.iii section](working-with-the-bundle.md#iii-customize-condition-operator) for examples.
+
+***
+
+Next: [7. Working with other bundles](working-with-other-bundles.md)

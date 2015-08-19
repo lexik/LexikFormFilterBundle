@@ -155,3 +155,7 @@ Then another event will be triggered to add all the conditions to the (doctrine)
 * `lexik_filter.apply_filters.dbal` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
 
 * `lexik_filter.apply_filters.mongodb` if you provide a `Doctrine\ODM\MongoDB\Query\Builder`
+
+***
+
+Next: [5. Working with the filters](working-with-the-bundle.md)

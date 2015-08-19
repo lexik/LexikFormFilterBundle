@@ -100,4 +100,4 @@ You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box
 
 ***
 
-Next: [4. Working with the filters](working-with-the-bundle.md)
+Next: [4. Example & inner workings](basics.md)

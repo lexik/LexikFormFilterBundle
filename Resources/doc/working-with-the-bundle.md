@@ -706,4 +706,4 @@ Now the Symfony `requestHandler` will take over and won't `addFilterConditions` 
 
 ***
 
-Next: [5. The FilterTypeExtension](filtertypeextension.md)
+Next: [6. The FilterTypeExtension](filtertypeextension.md)
