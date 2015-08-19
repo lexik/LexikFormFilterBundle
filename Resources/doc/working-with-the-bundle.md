@@ -133,6 +133,7 @@ class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
+        /* --- Doctrine ORM and DBAL --- */
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (empty($values['value'])) {
@@ -150,6 +151,22 @@ class ItemFilterType extends AbstractType
                 // $parameters = array($paramName => array($values['value'], \PDO::PARAM_STR)); // [ name => [value, type] ]
 
                 return $filterQuery->createCondition($expression, $parameters);
+            },
+        ));
+
+        /* --- Doctrine MongoDB --- */
+        $builder->add('name', 'filter_text', array(
+            'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+                if (empty($values['value'])) {
+                    return null;
+                }
+
+                // expression that represent the condition
+                $expression = $filterQuery->getExpr()
+                    ->field($field)
+                    ->equals($values['value']);
+
+                return $filterQuery->createCondition($expression);
             },
         ));
     }
@@ -207,6 +224,9 @@ use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 class ItemPositionFilterConditionListener
 {
+    /**
+     * Doctrine ORM and DBAL
+     */
     public function onGetFilterCondition(GetFilterConditionEvent $event)
     {
         $expr   = $event->getFilterQuery()->getExpr();
@@ -220,6 +240,22 @@ class ItemPositionFilterConditionListener
             $event->setCondition(
                 $expr->eq($event->getField(), ':' . $paramName),
                 array($paramName => $values['value'])
+            );
+        }
+    }
+
+    /**
+     * Doctrine MongoDB
+     */
+    public function onGetFilterCondition(GetFilterConditionEvent $event)
+    {
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (!empty($values['value'])) {
+            // Set the condition on the given event
+            $event->setCondition(
+                $expr->field($event->getField())->equals($values['value'])
             );
         }
     }
@@ -330,7 +366,9 @@ class ItemFilterType extends AbstractType
         $builder->add('rank', 'filter_number');
 
         $builder->add('options', 'filter_collection_adapter', array(
-            'type'      => new OptionsFilterType(),
+            'type'       => new OptionsFilterType(),
+
+            /* --- Doctrine ORM and DBAL --- */
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
@@ -340,6 +378,12 @@ class ItemFilterType extends AbstractType
 
                 // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+            },
+
+            /* --- Doctrine MongoDB --- */
+            'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
+                // if options is an EmbeddedDocument
+                $qbe->addOnce('options', 'options', null);
             },
         ));
     }
@@ -450,8 +494,8 @@ $qbUpdater->setParts(array(
 $qbUpdater->addFilterConditions($form, $queryBuilder);
 ```
 
-iv. Doctrine embeddables
-------------------------
+iv. Doctrine embeddables (ORM)
+------------------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
 In the following code we suppose we use entities defined in the [doctrine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
