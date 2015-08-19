@@ -2,7 +2,9 @@
 3. Provided types
 =================
 
-The bundle provides form types dedicated to filtering. Here the list of these types with their parent type and their specific options.
+The bundle provides form types dedicated to filtering. 
+Here the list of these types with their parent type and their specific options.
+Of course you can use all options defined by the parent type.
 
 Notes: by default the `required` option is set to `false` for all filter_xxx types.
 
