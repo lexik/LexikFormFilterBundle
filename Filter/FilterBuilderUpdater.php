@@ -145,7 +145,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 if (count($parts)) {
                     $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
-                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join]);
+                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join], $parts);
                 }
 
             // Doctrine2 embedded object case
