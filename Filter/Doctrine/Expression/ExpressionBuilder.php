@@ -190,7 +190,7 @@ abstract class ExpressionBuilder
             $date->setTime(0, 0, 0);
         }
 
-        return $this->expr()->literal($date->format(self::SQL_DATE));
+        return $this->expr()->literal($date->format(self::SQL_DATE_TIME));
     }
 
     /**
