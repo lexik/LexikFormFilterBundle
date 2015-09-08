@@ -221,7 +221,7 @@ abstract class ExpressionBuilder
     protected function convertTypeToMask($value, $type)
     {
         if ($this->forceCaseInsensitivity) {
-            $value = strtolower($value);
+            $value = mb_strtolower($value);
         }
 
         switch ($type) {
