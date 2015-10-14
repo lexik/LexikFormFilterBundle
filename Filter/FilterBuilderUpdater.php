@@ -56,8 +56,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     public function __construct(FormDataExtractorInterface $dataExtractor, EventDispatcherInterface $dispatcher)
     {
         $this->dataExtractor = $dataExtractor;
-        $this->dispatcher    = $dispatcher;
-        $this->parts         = array();
+        $this->dispatcher = $dispatcher;
+        $this->parts = new RelationsAliasBag();
     }
 
     /**
@@ -67,7 +67,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     public function setParts(array $parts)
     {
-        $this->parts = $parts;
+        $this->parts = new RelationsAliasBag($parts);
     }
 
     /**
@@ -91,16 +91,15 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             throw new \RuntimeException("Couldn't find any filter query object.");
         }
 
-        // init parts (= ['alias' -> 'joins'])
-        if (! $alias) {
-            $alias = $event->getFilterQuery()->getRootAlias();
-            $this->parts[$alias] = '__root__'; // the root alias does not target a join
-        }
+        $alias = (null !== $alias) ? $alias : $event->getFilterQuery()->getRootAlias();
+
+        // init parts (= ['joins' -> 'alias']) / the root alias does not target a join
+        $this->parts->add('__root__', $alias);
 
         // get conditions nodes defined by the 'filter_condition_builder' option
         // and add filters condition for each node
         $this->conditionBuilder = $this->getConditionBuilder($form);
-        $this->addFilters($form, $event->getFilterQuery(), $alias, $this->parts);
+        $this->addFilters($form, $event->getFilterQuery(), $alias);
 
         // walk condition nodes to add condition on the query builder instance
         $name = sprintf('lexik_filter.apply_filters.%s', $event->getFilterQuery()->getEventPartName());
@@ -117,11 +116,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      * @param FormInterface  $form
      * @param QueryInterface $filterQuery
      * @param string         $alias
-     * @param array          $parts
      *
      * @throws \RuntimeException
      */
-    protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null, array &$parts = array())
+    protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null)
     {
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
@@ -131,22 +129,22 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             if ($child->getConfig()->hasAttribute('add_shared')) {
                 $join = $alias . '.' . $child->getName();
 
-                if (!isset($parts[$join])) {
-                    $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
+                $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
 
-                    if (!$addSharedClosure instanceof \Closure) {
-                        throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
-                    }
-
-                    $qbe = new FilterBuilderExecuter($filterQuery, $alias, $parts);
-                    $addSharedClosure($qbe);
+                if (!$addSharedClosure instanceof \Closure) {
+                    throw new \RuntimeException('Please provide a closure to the "add_shared" option.');
                 }
 
-                if (count($parts)) {
-                    $isCollection = ($formType instanceof CollectionAdapterFilterType);
+                $qbe = new FilterBuilderExecuter($filterQuery, $alias, $this->parts);
+                $addSharedClosure($qbe);
 
-                    $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $parts[$join], $parts);
+                if (!$this->parts->has($join)) {
+                    throw new \RuntimeException(sprintf('No alias found for relation "%s".', $join));
                 }
+
+                $isCollection = ($formType instanceof CollectionAdapterFilterType);
+
+                $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $this->parts->get($join));
 
             // Doctrine2 embedded object case
             } elseif ($formType instanceof EmbeddedFilterTypeInterface) {

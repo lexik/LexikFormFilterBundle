@@ -4,6 +4,9 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
+/**
+ * @author Cédric Girard <c.girard@lexik.fr>
+ */
 class FilterBuilderExecuter implements FilterBuilderExecuterInterface
 {
     /**
@@ -29,16 +32,16 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * Construct.
      *
-     * @param QueryInterface $filterBuilder
-     * @param string         $alias
-     * @param array          $parts
+     * @param QueryInterface    $filterQuery
+     * @param string            $alias
+     * @param RelationsAliasBag $parts
      */
-    public function __construct(QueryInterface $filterQuery, $alias, array & $parts = array())
+    public function __construct(QueryInterface $filterQuery, $alias, RelationsAliasBag $parts)
     {
         $this->filterQuery = $filterQuery;
         $this->expr        = $filterQuery->getExpr();
         $this->alias       = $alias;
-        $this->parts       = & $parts;
+        $this->parts       = $parts;
     }
 
     /**
@@ -60,13 +63,21 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilterQuery()
+    {
+        return $this->filterQuery;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addOnce($join, $alias, \Closure $callback)
     {
-        if (isset($this->parts[$join])) {
+        if ($this->parts->has($join)) {
             return null;
         }
 
-        $this->parts[$join] = $alias;
+        $this->parts->add($join, $alias);
 
         return $callback($this->filterQuery->getQueryBuilder(), $this->alias, $alias, $this->filterQuery->getExpr());
     }
