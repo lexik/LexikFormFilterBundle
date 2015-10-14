@@ -27,7 +27,7 @@ interface FilterBuilderExecuterInterface
     public function getParts();
 
     /**
-     * @return QueryInterface
+     * @return \Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface
      */
     public function getFilterQuery();
 }
