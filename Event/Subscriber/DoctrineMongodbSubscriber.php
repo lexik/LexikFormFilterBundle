@@ -277,26 +277,18 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
         if ('' !== $values['value'] && null !== $values['value']) {
             $pattern = isset($values['condition_pattern']) ? $values['condition_pattern'] : FilterOperands::STRING_CONTAINS;
 
-            switch ($pattern) {
-                case FilterOperands::STRING_STARTS:
-                    $value = new \MongoRegex('/^' . $values['value'] . '.*/i');
-                    break;
+            $patternValues = array(
+                FilterOperands::STRING_STARTS   => new \MongoRegex('/^' . $values['value'] . '.*/i'),
+                FilterOperands::STRING_ENDS     => new \MongoRegex('/.*' . $values['value'] . '$/i'),
+                FilterOperands::STRING_CONTAINS => new \MongoRegex('/.*' . $values['value'] . '.*/i'),
+                FilterOperands::STRING_EQUALS   => $values['value'],
+            );
 
-                case FilterOperands::STRING_ENDS:
-                    $value = new \MongoRegex('/.*' . $values['value'] . '$/i');
-                    break;
-
-                case FilterOperands::STRING_CONTAINS:
-                    $value = new \MongoRegex('/.*' . $values['value'] . '.*/i');
-                    break;
-
-                case FilterOperands::STRING_EQUALS:
-                    $value = $values['value'];
-                    break;
-
-                default:
-                    throw new \InvalidArgumentException('Wrong type constant in string like expression mapper');
+            if (!isset($patternValues[$pattern])) {
+                throw new \InvalidArgumentException('Wrong type constant in string like expression mapper.');
             }
+
+            $value = $patternValues[$pattern];
 
             $event->setCondition($expr->field($event->getField())->equals($value));
         }
