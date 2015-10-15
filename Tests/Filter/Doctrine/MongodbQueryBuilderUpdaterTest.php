@@ -288,8 +288,6 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
     public function testEmbedFormFilter()
     {
-        $filterQueryBuilder = $this->initQueryBuilderUpdater();
-
         // doctrine query builder without any joins
         $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
             'doctrine_builder' => 'mongo',
@@ -298,6 +296,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $mongoQB = $this->createDoctrineQueryBuilder();
 
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
@@ -313,6 +312,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $mongoQB = $this->createDoctrineQueryBuilder();
 
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
@@ -328,6 +328,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $mongoQB = $this->createDoctrineQueryBuilder();
 
+        $filterQueryBuilder = $this->initQueryBuilderUpdater();
         $filterQueryBuilder->setParts(array('options' => 'options'));
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
