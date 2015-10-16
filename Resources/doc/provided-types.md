@@ -58,7 +58,21 @@ Options:
 * `right_datetime_options`: options to pass to the right filter_datetime type.
 
 ---
+**filter_document:**
+
+For Doctrine Mongodb only.
+
+Parent type: _document_
+
+Options:
+
+* `reference_type`: reference type of the relation, `one` or `many` (`one` by default).
+* `reference_name`: name of the referenced document, by default the type will set this value from the field name.
+
+---
 **filter_entity:**
+
+For Doctrine ORM only.
 
 Parent type: _entity_
 

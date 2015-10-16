@@ -118,6 +118,8 @@ The closure takes 3 parameters:
 * the field name.
 * an array of values containing the field value and some other data.
 
+**Doctrine ORM/DBAL:**
+
 ```php
 <?php
 // ItemFilterType.php
@@ -125,15 +127,12 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-
-use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        /* --- Doctrine ORM and DBAL --- */
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (empty($values['value'])) {
@@ -153,8 +152,30 @@ class ItemFilterType extends AbstractType
                 return $filterQuery->createCondition($expression, $parameters);
             },
         ));
+    }
 
-        /* --- Doctrine MongoDB --- */
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
+
+**Doctrine MongoDB:**
+
+```php
+<?php
+// ItemFilterType.php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
         $builder->add('name', 'filter_text', array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (empty($values['value'])) {
@@ -194,8 +215,6 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Doctrine\ORM\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 class ItemFilterType extends AbstractType
 {
@@ -215,7 +234,9 @@ The custom event name will be:
 
 `lexik_form_filter.apply.orm.item_filter.position`
 
-The correspondig listener could looks like:
+The corresponding listener could looks like:
+
+**Doctrine ORM/DBAL:**
 
 ```php
 namespace MyBundle\EventListener;
@@ -224,9 +245,6 @@ use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 
 class ItemPositionFilterConditionListener
 {
-    /**
-     * Doctrine ORM and DBAL
-     */
     public function onGetFilterCondition(GetFilterConditionEvent $event)
     {
         $expr   = $event->getFilterQuery()->getExpr();
@@ -243,10 +261,18 @@ class ItemPositionFilterConditionListener
             );
         }
     }
+}
+```
 
-    /**
-     * Doctrine MongoDB
-     */
+**Doctrine MongoDB:**
+
+```php
+namespace MyBundle\EventListener;
+
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+
+class ItemPositionFilterConditionListener
+{
     public function onGetFilterCondition(GetFilterConditionEvent $event)
     {
         $expr   = $event->getFilterQuery()->getExpr();
@@ -322,8 +348,6 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
  * Embed filter type.
  */
@@ -344,6 +368,8 @@ class OptionsFilterType extends AbstractType
 
 Then we can use it in our `ItemFilterType` type. But we will embed it by using a `filter_collection_adapter` type.
 This type will allow us to use the `add_shared` option to add joins (or other stuff) we needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
+
+**Doctrine ORM/DBAL:**
 
 ```php
 <?php
@@ -367,8 +393,6 @@ class ItemFilterType extends AbstractType
 
         $builder->add('options', 'filter_collection_adapter', array(
             'type'       => new OptionsFilterType(),
-
-            /* --- Doctrine ORM and DBAL --- */
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
@@ -376,14 +400,53 @@ class ItemFilterType extends AbstractType
                     $filterBuilder->leftJoin($alias . '.options', $joinAlias);
                 };
 
-                // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
+                // then use the query builder executor to define the join and its alias.
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
             },
+        ));
+    }
 
-            /* --- Doctrine MongoDB --- */
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
+
+**Doctrine MongoDB:**
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+use Doctrine\ODM\MongoDB\Query\Expr;
+use Doctrine\ODM\MongoDB\Query\Builder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text');
+        $builder->add('rank', 'filter_number');
+
+        $builder->add('options', 'filter_collection_adapter', array(
+            'type'       => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
-                // if options is an EmbeddedDocument
-                $qbe->addOnce('options', 'options', null);
+                $closure = function (Builder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                    // Here you can manipulate the MongoDB query builder if need.
+                    // Documents don't manage joins as in SQL so maybe you won't need to do specific things here.
+                    // ...
+                };
+
+                $qbe->addOnce('options', 'options', $closure);
+                // OR
+                $qbe->addOnce('options', 'options');
             },
         ));
     }
@@ -486,6 +549,7 @@ $qbUpdater = $container->get('lexik_form_filter.query_builder_updater');
 
 // set the joins
 $qbUpdater->setParts(array(
+    '__root__'    => 'e',
     'e.user'      => 'u',
     'u.addresses' => 'a',
 ));
