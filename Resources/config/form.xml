@@ -12,7 +12,6 @@
         <parameter key="lexik_form_filter.type.filter_checkbox.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CheckboxFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_boolean.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_choice.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\ChoiceFilterType</parameter>
-        <parameter key="lexik_form_filter.type.filter_entity.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_date.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_date_range.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateRangeFilterType</parameter>
         <parameter key="lexik_form_filter.type.filter_datetime.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeFilterType</parameter>
@@ -48,11 +47,6 @@
 
         <service id="lexik_form_filter.type.filter_choice" class="%lexik_form_filter.type.filter_choice.class%">
             <tag name="form.type" alias="filter_choice" />
-        </service>
-
-        <service id="lexik_form_filter.type.filter_entity" class="%lexik_form_filter.type.filter_entity.class%">
-            <argument type="service" id="doctrine" />
-            <tag name="form.type" alias="filter_entity" />
         </service>
 
         <service id="lexik_form_filter.type.filter_date" class="%lexik_form_filter.type.filter_date.class%">

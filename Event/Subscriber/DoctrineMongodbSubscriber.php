@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
-use Doctrine\MongoDB\Query\Expr;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
@@ -31,6 +32,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
             'lexik_form_filter.apply.mongodb.filter_number'         => array('filterNumber'),
             'lexik_form_filter.apply.mongodb.filter_number_range'   => array('filterNumberRange'),
             'lexik_form_filter.apply.mongodb.filter_text'           => array('filterText'),
+            'lexik_form_filter.apply.mongodb.filter_document'       => array('filterDocument'),
 
             // Symfony2 types
             'lexik_form_filter.apply.mongodb.text'     => array('filterText'),
@@ -291,6 +293,53 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
             $value = $patternValues[$pattern];
 
             $event->setCondition($expr->field($event->getField())->equals($value));
+        }
+    }
+
+    /**
+     * @param GetFilterConditionEvent $event
+     */
+    public function filterDocument(GetFilterConditionEvent $event)
+    {
+        /** @var Expr $expr */
+        $expr = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (is_object($values['value'])) {
+            $field = $event->getField();
+            $multipleLevels = (false !== strpos($field, '.'));
+
+            if ($multipleLevels) {
+                // replace the form field name by the referenced document name
+                $parts = explode('.', $field);
+                $parts[count($parts)-1] = $values['reference_name'];
+                $field = implode('.', $parts);
+            }
+
+            if ($values['value'] instanceof Collection) {
+                $ids = array();
+
+                foreach ($values['value'] as $object) {
+                    $ids[] = new \MongoId($object->getId());
+                }
+
+                if (count($ids) > 0) {
+                    $event->setCondition($expr->field($field.'.$id')->in($ids));
+                }
+
+            } elseif ($multipleLevels) {
+                $id = new \MongoId($values['value']->getId());
+                $event->setCondition($expr->field($field.'.$id')->equals($id));
+
+            } else {
+                if ('one' === $values['reference_type']) {
+                    $condition = $expr->field($field)->references($values['value']);
+                } else {
+                    $condition = $expr->field($field)->includesReferenceTo($values['value']);
+                }
+
+                $event->setCondition($condition);
+            }
         }
     }
 
