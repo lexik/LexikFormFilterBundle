@@ -439,13 +439,13 @@ class ItemFilterType extends AbstractType
             'type'       => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (Builder $filterBuilder, $alias, $joinAlias, Expr $expr) {
-                    // Here you can manipulate the MongoDB query builder if need.
+                    // Here you can manipulate the MongoDB query builder if needed.
                     // Documents don't manage joins as in SQL so maybe you won't need to do specific things here.
                     // ...
                 };
 
                 $qbe->addOnce('options', 'options', $closure);
-                // OR
+                // OR just add the alias
                 $qbe->addOnce('options', 'options');
             },
         ));
