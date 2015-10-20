@@ -232,6 +232,24 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
     }
 
+    protected function createDateRangeWithTimezoneTest($method, array $dqls)
+    {
+        // use filter type options
+        $form = $this->formFactory->create(new RangeFilterType());
+        $filterQueryBuilder = $this->initQueryBuilder();
+
+        $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
+        $form->submit(array(
+            'startAt' => array(
+                'left_date'  => '2015-10-20',
+                'right_date' => '2015-10-20',
+            ),
+        ));
+
+        $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
+        $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
+    }
+
     public function createDateTimeRangeTest($method, array $dqls)
     {
         // use filter type options
