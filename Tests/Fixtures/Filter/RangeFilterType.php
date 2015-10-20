@@ -33,6 +33,18 @@ class RangeFilterType extends AbstractType
                 'left_datetime_options'  => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
                 'right_datetime_options' => array(),
             ))
+            ->add('startAt', 'filter_date_range', array(
+                'left_date_options' => array(
+                    'widget' => 'single_text',
+                    'model_timezone' => 'UTC',
+                    'view_timezone' => 'Asia/Karachi'
+                ),
+                'right_date_options' => array(
+                    'widget' => 'single_text',
+                    'model_timezone' => 'UTC',
+                    'view_timezone' => 'Asia/Karachi'
+                ),
+            ))
         ;
     }
 
