@@ -185,12 +185,10 @@ abstract class ExpressionBuilder
         }
 
         if ($isMax) {
-            $date->setTime(23, 59, 59);
-        } else {
-            $date->setTime(0, 0, 0);
+            $date->modify('+1 day -1 second');
         }
 
-        return $this->expr()->literal($date->format(self::SQL_DATE));
+        return $this->expr()->literal($date->format(self::SQL_DATE_TIME));
     }
 
     /**
@@ -221,7 +219,7 @@ abstract class ExpressionBuilder
     protected function convertTypeToMask($value, $type)
     {
         if ($this->forceCaseInsensitivity) {
-            $value = strtolower($value);
+            $value = mb_strtolower($value);
         }
 
         switch ($type) {

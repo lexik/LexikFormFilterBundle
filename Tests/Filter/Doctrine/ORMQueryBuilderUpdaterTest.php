@@ -63,7 +63,15 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testDateRange()
     {
         parent::createDateRangeTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.createdAt <= \'2012-05-22\' AND i.createdAt >= \'2012-05-12\'',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.createdAt <= \'2012-05-22 23:59:59\' AND i.createdAt >= \'2012-05-12 00:00:00\'',
+        ));
+    }
+
+    public function testDateRangeWithTimezone()
+    {
+        parent::createDateRangeWithTimezoneTest('getDQL', array(
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.startAt <= \'2015-10-20 18:59:59\' AND i.startAt >= \'2015-10-19 19:00:00\'',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.startAt <= \'2015-10-16 18:59:59\' AND i.startAt >= \'2015-09-30 19:00:00\'',
         ));
     }
 

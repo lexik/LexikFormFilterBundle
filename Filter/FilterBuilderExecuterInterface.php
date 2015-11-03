@@ -22,7 +22,12 @@ interface FilterBuilderExecuterInterface
     public function getAlias();
 
     /**
-     * @return array
+     * @return RelationsAliasBag
      */
     public function getParts();
+
+    /**
+     * @return \Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface
+     */
+    public function getFilterQuery();
 }
