@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="lexik_form_filter.get_filter.doctrine_mongodb.class">Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineMongodbSubscriber</parameter>
+        <parameter key="lexik_form_filter.apply_filter.doctrine_mongodb.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineMongoDBApplyFilterListener</parameter>
+        <parameter key="lexik_form_filter.type.filter_document.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DocumentFilterType</parameter>
+    </parameters>
+
+    <services>
+        <!-- Listeners -->
+        <service id="lexik_form_filter.get_filter.doctrine_mongodb" class="%lexik_form_filter.get_filter.doctrine_mongodb.class%">
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="lexik_form_filter.apply_filter.doctrine_mongodb" class="%lexik_form_filter.apply_filter.doctrine_mongodb.class%">
+            <tag name="kernel.event_listener" event="lexik_filter.apply_filters.mongodb" method="onApplyFilterCondition" />
+        </service>
+
+        <!-- Specific MongoDB types -->
+        <service id="lexik_form_filter.type.filter_document" class="%lexik_form_filter.type.filter_document.class%">
+            <tag name="form.type" alias="filter_document" />
+        </service>
+    </services>
+</container>

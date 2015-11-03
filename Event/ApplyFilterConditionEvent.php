@@ -6,7 +6,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event class used XxxApplyFilterListener classe to compute the WHERE clause from the conditions.
+ * Event class to compute the WHERE clause from the conditions.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */

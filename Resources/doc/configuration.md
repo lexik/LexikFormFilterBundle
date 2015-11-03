@@ -10,13 +10,26 @@ You only need to add the following lines in your `app/config/config.yml`. This f
 ```yaml
 # app/config/config.yml
 twig:
-    form:
-        resources:
-            - LexikFormFilterBundle:Form:form_div_layout.html.twig
+    form_themes:
+        - LexikFormFilterBundle:Form:form_div_layout.html.twig
 ```
 
 Bundle's options
 ----------------
+
+* Enable listeners you need:
+
+The bundle provides some listener to apply conditions on Doctrine ORM, DBAL and MongoDB query builders.
+By default only Doctrine ORM listeners are enabled.
+
+```yaml
+# app/config/config.yml
+lexik_form_filter:
+    listeners:
+        doctrine_orm: true
+        doctrine_dbal: false
+        doctrine_mongodb: false
+```
 
 * Case insensitivity:
 
@@ -34,6 +47,7 @@ anyway, set it to `true`.
 
 * Query builder method:
 
+**For Doctrine ORM and DBAL only.**
 This option will define which method to use on the (doctrine) query builder to add the **entire** condition computed from the form type (this option is not about the operator between each filter condition).
 By default this option is set to `and`, so the bundle will call the `andWhere()` method to set the entire condition on the doctrine query builder.
 If you set it to `null` or `or`, the bundle will use the `where()` or `orWhere()` method to set the entire condition.

@@ -15,10 +15,15 @@ final class FilterOperands
     const OPERATOR_LOWER_THAN         = 'lt';
     const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
 
-    const STRING_STARTS = 1;
-    const STRING_ENDS   = 2;
-    const STRING_EQUALS = 3;
-    const STRING_BOTH   = 4;
+    const STRING_STARTS   = 1;
+    const STRING_ENDS     = 2;
+    const STRING_EQUALS   = 3;
+    const STRING_CONTAINS = 4;
+
+    /**
+     * @deprecated use FilterOperands::STRING_CONTAINS
+     */
+    const STRING_BOTH = 4;
 
     const OPERAND_SELECTOR = 'selection';
 
@@ -57,7 +62,7 @@ final class FilterOperands
             self::STRING_STARTS,
             self::STRING_ENDS,
             self::STRING_EQUALS,
-            self::STRING_BOTH,
+            self::STRING_CONTAINS,
         );
 
         if ($includeSelector) {

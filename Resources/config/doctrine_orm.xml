@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="lexik_form_filter.get_filter.doctrine_orm.class">Lexik\Bundle\FormFilterBundle\Event\Subscriber\DoctrineORMSubscriber</parameter>
+        <parameter key="lexik_form_filter.apply_filter.doctrine_orm.class">Lexik\Bundle\FormFilterBundle\Event\Listener\DoctrineApplyFilterListener</parameter>
+        <parameter key="lexik_form_filter.type.filter_entity.class">Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType</parameter>
+    </parameters>
+
+    <services>
+        <!-- Listeners -->
+        <service id="lexik_form_filter.get_filter.doctrine_orm" class="%lexik_form_filter.get_filter.doctrine_orm.class%">
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="lexik_form_filter.apply_filter.doctrine_orm" class="%lexik_form_filter.apply_filter.doctrine_orm.class%">
+            <argument>%lexik_form_filter.where_method%</argument>
+            <tag name="kernel.event_listener" event="lexik_filter.apply_filters.orm" method="onApplyFilterCondition" />
+        </service>
+
+        <!-- Specific ORM types -->
+        <service id="lexik_form_filter.type.filter_entity" class="%lexik_form_filter.type.filter_entity.class%">
+            <tag name="form.type" alias="filter_entity" />
+        </service>
+    </services>
+</container>

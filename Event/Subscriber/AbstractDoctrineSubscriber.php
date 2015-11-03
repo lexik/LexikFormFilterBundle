@@ -136,8 +136,7 @@ abstract class AbstractDoctrineSubscriber
     {
         $expr   = $event->getFilterQuery()->getExpressionBuilder();
         $values = $event->getValues();
-
-        $value = $values['value'];
+        $value  = $values['value'];
 
         if (isset($value['left_datetime'][0]) || $value['right_datetime'][0]) {
             $event->setCondition($expr->datetimeInRange($event->getField(), $value['left_datetime'][0], $value['right_datetime'][0]));
@@ -178,17 +177,18 @@ abstract class AbstractDoctrineSubscriber
 
         if (isset($value['left_number'][0])) {
             $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator']);
-            $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['left_number'][0])) {
                 $leftValue = $value['left_number'][0];
                 $leftCond  = $value['left_number']['condition_operator'];
 
-                $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
-                $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
             } elseif ($hasSelector && isset($value['left_number'][0]['text'])) {
                 $leftValue = $value['left_number'][0]['text'];
                 $leftCond  = $value['left_number'][0]['condition_operator'];
+            }
+
+            if (isset($leftValue, $leftCond)) {
+                $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
                 $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
@@ -197,17 +197,18 @@ abstract class AbstractDoctrineSubscriber
 
         if (isset($value['right_number'][0])) {
             $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator']);
-            $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
             if (!$hasSelector && isset($value['right_number'][0])) {
                 $rightValue = $value['right_number'][0];
                 $rightCond  = $value['right_number']['condition_operator'];
 
-                $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
-                $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
             } elseif ($hasSelector && isset($value['right_number'][0]['text'])) {
                 $rightValue = $value['right_number'][0]['text'];
                 $rightCond  = $value['right_number'][0]['condition_operator'];
+            }
+
+            if (isset($rightValue, $rightCond)) {
+                $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
                 $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);

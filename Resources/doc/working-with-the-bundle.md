@@ -1,163 +1,11 @@
-
-4. Working with the bundle
+5. Working with the bundle
 ==========================
 
-i. Simple example
------------------
-
-Here an example of how to use the bundle. Let's use the following entity:
-
-```php
-<?php
-// MyEntity.php
-namespace Project\Bundle\SuperBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * @ORM\Entity
- */
-class MyEntity
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $rank;
-}
-```
-
-Create a type extended from AbstractType, add `name` and `rank` and use the filter_xxxx types.
-
-```php
-<?php
-// ItemFilterType.php
-namespace Project\Bundle\SuperBundle\Filter;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-class ItemFilterType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('name', 'filter_text');
-        $builder->add('rank', 'filter_number');
-    }
-
-    public function getName()
-    {
-        return 'item_filter';
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'csrf_protection'   => false,
-            'validation_groups' => array('filtering') // avoid NotBlank() constraint-related message
-        ));
-    }
-}
-```
-
-Then in an action, create a form object from the ItemFilterType. Let's say we filter when the form is submitted with a GET method.
-
-```php
-<?php
-// DefaultController.php
-namespace Project\Bundle\SuperBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Project\Bundle\SuperBundle\Filter\ItemFilterType;
-
-class DefaultController extends Controller
-{
-    public function testFilterAction(Request $request)
-    {
-        $form = $this->get('form.factory')->create(new ItemFilterType());
-
-        if ($request->query->has($form->getName())) {
-            // manually bind values from the request
-            $form->submit($request->query->get($form->getName()));
-
-            // initialize a query builder
-            $filterBuilder = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ProjectSuperBundle:MyEntity')
-                ->createQueryBuilder('e');
-
-            // build the query from the given form object
-            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $filterBuilder);
-
-            // now look at the DQL =)
-            var_dump($filterBuilder->getDql());
-        }
-
-        return $this->render('ProjectSuperBundle:Default:testFilter.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
-}
-```
-
-Basic template
-
-```html
-<!-- testFilter.html.twig -->
-<form method="get" action=".">
-    {{ form_rest(form) }}
-    <input type="submit" name="submit-filter" value="filter" />
-</form>
-```
-
-ii. Inner workings
-------------------
-
-A filter is applied by using events. Basically the `lexik_form_filter.query_builder_updater` service will trigger a default event named according to the form type to get the condition for a given filter.
-Then once all condition have been gotten another event will be triggered to add these conditions to the (doctrine) query builder.
-We provide a event/listener that supports Doctrine ORM and DBAL.
-
-The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.<form_type_name>`.
-
-For example, let's say I use a form type with a name field:
-
-```php
-public function buildForm(FormBuilder $builder, array $options)
-{
-    $builder->add('name', 'filter_text');
-}
-```
-
-The event name that will be triggered to get conditions to apply will be:
-
-* `lexik_form_filter.apply.orm.filter_text` if you provide a `Doctrine\ORM\QueryBuilder`
-
-* `lexik_form_filter.apply.dbal.filter_text` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
-
-Then another event will be triggered to add all the conditions to the (doctrine) query builder instance:
-
-* `lexik_filter.apply_filters.orm` if you provide a `Doctrine\ORM\QueryBuilder`
-
-* `lexik_filter.apply_filters.dbal` if you provide a `Doctrine\DBAL\Query\QueryBuilder`
-
-iii. Customize condition operator
----------------------------------
+i. Customize condition operator
+-------------------------------
 
 By default the `lexik_form_filter.query_builder_updater` service will add conditions by using AND.
-But you can customize the operator (and/or) to use between conditions when its added to the (doctrine) query builder.
+But you can customize the operator (and/or) to use between each conditions when its added to the (doctrine) query builder.
 To do so you will have to use the `filter_condition_builder` option in your main type class.
 
 Here a simple example, the main type `ItemFilterType` is composed of 2 simple fields and a sub type (RelatedOptionsType).
@@ -256,8 +104,8 @@ $resolver->setDefaults(array(
 
 The generated where clause will be: `WHERE (<options.label> OR <name>) AND (<options.rank> OR <date>)`.
 
-iv. Filter customization
--------------------------
+ii. Filter customization
+------------------------
 
 #### A. With the `apply_filter` option:
 
@@ -270,6 +118,8 @@ The closure takes 3 parameters:
 * the field name.
 * an array of values containing the field value and some other data.
 
+**Doctrine ORM/DBAL:**
+
 ```php
 <?php
 // ItemFilterType.php
@@ -277,8 +127,6 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-
-use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 class ItemFilterType extends AbstractType
@@ -313,6 +161,44 @@ class ItemFilterType extends AbstractType
 }
 ```
 
+**Doctrine MongoDB:**
+
+```php
+<?php
+// ItemFilterType.php
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text', array(
+            'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+                if (empty($values['value'])) {
+                    return null;
+                }
+
+                // expression that represent the condition
+                $expression = $filterQuery->getExpr()
+                    ->field($field)
+                    ->equals($values['value']);
+
+                return $filterQuery->createCondition($expression);
+            },
+        ));
+    }
+
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
+
 #### B. By listening an event
 
 Another way to override the default way to apply the filter is to listen a custom event name.
@@ -329,8 +215,6 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Doctrine\ORM\QueryBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 class ItemFilterType extends AbstractType
 {
@@ -350,7 +234,9 @@ The custom event name will be:
 
 `lexik_form_filter.apply.orm.item_filter.position`
 
-The correspondig listener could looks like:
+The corresponding listener could looks like:
+
+**Doctrine ORM/DBAL:**
 
 ```php
 namespace MyBundle\EventListener;
@@ -372,6 +258,30 @@ class ItemPositionFilterConditionListener
             $event->setCondition(
                 $expr->eq($event->getField(), ':' . $paramName),
                 array($paramName => $values['value'])
+            );
+        }
+    }
+}
+```
+
+**Doctrine MongoDB:**
+
+```php
+namespace MyBundle\EventListener;
+
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+
+class ItemPositionFilterConditionListener
+{
+    public function onGetFilterCondition(GetFilterConditionEvent $event)
+    {
+        $expr   = $event->getFilterQuery()->getExpr();
+        $values = $event->getValues();
+
+        if (!empty($values['value'])) {
+            // Set the condition on the given event
+            $event->setCondition(
+                $expr->field($event->getField())->equals($values['value'])
             );
         }
     }
@@ -415,8 +325,8 @@ class ItemFilterType extends AbstractType
 }
 ```
 
-v. Working with entity associations and embeddeding filters
------------------------------------------------------------
+iii. Working with entity associations and embeddeding filters
+-------------------------------------------------------------
 
 You can embed a filter inside another one. It could be a way to filter elements associated to the "root" one.
 
@@ -437,8 +347,6 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Embed filter type.
@@ -461,6 +369,8 @@ class OptionsFilterType extends AbstractType
 Then we can use it in our `ItemFilterType` type. But we will embed it by using a `filter_collection_adapter` type.
 This type will allow us to use the `add_shared` option to add joins (or other stuff) we needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
 
+**Doctrine ORM/DBAL:**
+
 ```php
 <?php
 
@@ -482,7 +392,7 @@ class ItemFilterType extends AbstractType
         $builder->add('rank', 'filter_number');
 
         $builder->add('options', 'filter_collection_adapter', array(
-            'type'      => new OptionsFilterType(),
+            'type'       => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
@@ -490,8 +400,53 @@ class ItemFilterType extends AbstractType
                     $filterBuilder->leftJoin($alias . '.options', $joinAlias);
                 };
 
-                // then use the query builder executor to define the join, the join's alias and things to do on the doctrine query builder.
+                // then use the query builder executor to define the join and its alias.
                 $qbe->addOnce($qbe->getAlias().'.options', 'opt', $closure);
+            },
+        ));
+    }
+
+    public function getName()
+    {
+        return 'item_filter';
+    }
+}
+```
+
+**Doctrine MongoDB:**
+
+```php
+<?php
+
+namespace Project\Bundle\SuperBundle\Filter;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+
+use Doctrine\ODM\MongoDB\Query\Expr;
+use Doctrine\ODM\MongoDB\Query\Builder;
+
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+
+class ItemFilterType extends AbstractType
+{
+    public function buildForm(FormBuilder $builder, array $options)
+    {
+        $builder->add('name', 'filter_text');
+        $builder->add('rank', 'filter_number');
+
+        $builder->add('options', 'filter_collection_adapter', array(
+            'type'       => new OptionsFilterType(),
+            'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
+                $closure = function (Builder $filterBuilder, $alias, $joinAlias, Expr $expr) {
+                    // Here you can manipulate the MongoDB query builder if needed.
+                    // Documents don't manage joins as in SQL so maybe you won't need to do specific things here.
+                    // ...
+                };
+
+                $qbe->addOnce('options', 'options', $closure);
+                // OR just add the alias
+                $qbe->addOnce('options', 'options');
             },
         ));
     }
@@ -594,6 +549,7 @@ $qbUpdater = $container->get('lexik_form_filter.query_builder_updater');
 
 // set the joins
 $qbUpdater->setParts(array(
+    '__root__'    => 'e',
     'e.user'      => 'u',
     'u.addresses' => 'a',
 ));
@@ -602,8 +558,8 @@ $qbUpdater->setParts(array(
 $qbUpdater->addFilterConditions($form, $queryBuilder);
 ```
 
-vi. Doctrine embeddables
-------------------------
+iv. Doctrine embeddables (ORM)
+------------------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
 In the following code we suppose we use entities defined in the [doctrine tutorial](http://doctrine-orm.readthedocs.org/en/latest/tutorials/embeddables.html).
@@ -648,8 +604,8 @@ class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterf
 }
 ```
 
-vii. Create your own filter type
---------------------------------
+v. Create your own filter type
+------------------------------
 
 Let's see that through a simple example, we suppose I want to create a `LocaleFilterType` class to filter fields which contain a locale as value.
 
@@ -781,8 +737,8 @@ class FilterSubscriber implements EventSubscriberInterface
 }
 ```
 
-viii. Enable FilterType form validation
----------------------------------------
+vi. Enable FilterType form validation
+-------------------------------------
 
 By default most `FilterForms` are submitted using `GET`, and are defined in class instead of via a formBuilder in the controller. When you injected the data in the `FilterForm` yourself via the `$form->submit($data)` method, all was fine. In order to let the `validator` service function properly, we need to tell the form it does use the `GET` method:
 
@@ -814,4 +770,4 @@ Now the Symfony `requestHandler` will take over and won't `addFilterConditions` 
 
 ***
 
-Next: [5. The FilterTypeExtension](filtertypeextension.md)
+Next: [6. The FilterTypeExtension](filtertypeextension.md)

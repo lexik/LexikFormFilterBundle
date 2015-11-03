@@ -6,14 +6,15 @@
 
     <parameters>
         <parameter key="lexik_form_filter.query_builder_updater.class">Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderUpdater</parameter>
-
         <parameter key="lexik_form_filter.form_data_extractor.class">Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractor</parameter>
         <parameter key="lexik_form_filter.data_extraction_method.default.class">Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\DefaultExtractionMethod</parameter>
         <parameter key="lexik_form_filter.data_extraction_method.text.class">Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\TextExtractionMethod</parameter>
         <parameter key="lexik_form_filter.data_extraction_method.key_values.class">Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\Method\ValueKeysExtractionMethod</parameter>
+        <parameter key="lexik_form_filter.filter_prepare.class">Lexik\Bundle\FormFilterBundle\Event\Listener\PrepareListener</parameter>
     </parameters>
 
     <services>
+        <!-- query builder updater -->
         <service id="lexik_form_filter.query_builder_updater" class="%lexik_form_filter.query_builder_updater.class%">
             <argument type="service" id="lexik_form_filter.form_data_extractor" />
             <argument type="service" id="event_dispatcher" />
@@ -32,6 +33,11 @@
 
         <service id="lexik_form_filter.data_extraction_method.key_values" class="%lexik_form_filter.data_extraction_method.key_values.class%">
             <tag name="lexik_form_filter.data_extraction_method" />
+        </service>
+
+        <!-- Prepare listener -->
+        <service id="lexik_form_filter.filter_prepare" class="%lexik_form_filter.filter_prepare.class%">
+            <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
     </services>
 </container>

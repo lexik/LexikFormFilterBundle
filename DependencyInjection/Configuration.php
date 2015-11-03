@@ -24,6 +24,15 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('lexik_form_filter');
         $rootNode
             ->children()
+                ->arrayNode('listeners')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('doctrine_dbal')->defaultFalse()->end()
+                        ->booleanNode('doctrine_orm')->defaultTrue()->end()
+                        ->booleanNode('doctrine_mongodb')->defaultFalse()->end()
+                    ->end()
+                ->end()
+
                 ->scalarNode('where_method')
                     ->defaultValue('and')
                     ->info('Defined the doctrine query builder method the bundle will use to add the entire filter condition.')
