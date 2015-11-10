@@ -15,9 +15,9 @@ require: {
 Or install directly through composer with:
 
 ```
-composer.phar require lexik/translation-bundle ~4.0
+composer.phar require lexik/form-filter-bundle ~4.0
 # For latest version
-composer.phar require lexik/translation-bundle dev-master
+composer.phar require lexik/form-filter-bundle dev-master
 ```
 
 Then run a composer update:
