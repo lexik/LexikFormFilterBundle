@@ -16,7 +16,7 @@ matrix:
         - php: 5.6
           env: SYMFONY_VERSION=2.8.*@dev
         - php: 5.6
-          env: SYMFONY_VERSION='3.0.*@dev as 2.8.x-dev'
+          env: SYMFONY_VERSION='3.0.x-dev as 2.8'
 
 services:
     - mongodb
