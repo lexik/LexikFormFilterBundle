@@ -69,6 +69,6 @@ class CollectionAdapterFilterType extends AbstractType
      */
     public function getParent()
     {
-        return SharedableFilterType();
+        return SharedableFilterType::class;
     }
 }
