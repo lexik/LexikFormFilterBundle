@@ -28,7 +28,7 @@ class RangeFilterType extends AbstractType
                 'right_number_options' => array('condition_operator' => FilterOperands::OPERAND_SELECTOR),
             ))
             ->add('default_position', NumberRangeFilterType::class)
-            ->add('createdAt', 'filter_date_range', array(
+            ->add('createdAt', DateRangeFilterType::class, array(
                 'left_date_options'  => array('widget' => 'single_text'),
                 'right_date_options' => array('widget' => 'choice'),
             ))
