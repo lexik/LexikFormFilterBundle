@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -31,14 +32,6 @@ class DateTimeFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'datetime';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'filter_datetime';
+        return DateTimeType::class;
     }
 }

@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -31,14 +32,6 @@ class CheckboxFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'checkbox';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'filter_checkbox';
+        return CheckboxType::class;
     }
 }

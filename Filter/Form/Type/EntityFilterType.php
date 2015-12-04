@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,14 +32,6 @@ class EntityFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'entity';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'filter_entity';
+        return EntityType::class;
     }
 }

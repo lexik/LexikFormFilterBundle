@@ -4,6 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,8 +26,8 @@ class NumberFilterType extends AbstractType
             // if the form is compound we don't need the NumberToLocalizedStringTransformer added in the parent type.
             $builder->resetViewTransformers();
 
-            $builder->add('condition_operator', 'choice', $options['choice_options']);
-            $builder->add('text', 'number', $options['number_options']);
+            $builder->add('condition_operator', ChoiceType::class, $options['choice_options']);
+            $builder->add('text', NumberType::class, $options['number_options']);
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_operator' => $options['condition_operator'],
@@ -67,14 +69,6 @@ class NumberFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'number';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'filter_number';
+        return NumberType::class;
     }
 }
