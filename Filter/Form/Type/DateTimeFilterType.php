@@ -34,4 +34,12 @@ class DateTimeFilterType extends AbstractType
     {
         return DateTimeType::class;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_date_time';
+    }
 }

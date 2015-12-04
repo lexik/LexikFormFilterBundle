@@ -71,4 +71,12 @@ class NumberFilterType extends AbstractType
     {
         return NumberType::class;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_number';
+    }
 }

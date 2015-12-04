@@ -32,4 +32,12 @@ class SharedableFilterType extends AbstractType
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {},
         ));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_sharedable';
+    }
 }

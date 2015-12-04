@@ -42,4 +42,12 @@ class DateTimeRangeFilterType extends AbstractType
             ->setAllowedValues('data_extraction_method', array('value_keys'))
         ;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_date_time_range';
+    }
 }

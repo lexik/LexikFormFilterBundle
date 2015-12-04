@@ -71,4 +71,12 @@ class CollectionAdapterFilterType extends AbstractType
     {
         return SharedableFilterType::class;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_collection_adapter';
+    }
 }

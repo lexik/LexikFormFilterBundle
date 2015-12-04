@@ -34,4 +34,12 @@ class EntityFilterType extends AbstractType
     {
         return EntityType::class;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_entity';
+    }
 }

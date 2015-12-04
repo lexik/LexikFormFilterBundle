@@ -34,4 +34,12 @@ class CheckboxFilterType extends AbstractType
     {
         return CheckboxType::class;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_checkbox';
+    }
 }
