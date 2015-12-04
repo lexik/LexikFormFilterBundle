@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,10 +17,10 @@ class ItemCallbackFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'filter_text', array(
+        $builder->add('name', TextFilterType::class, array(
             'apply_filter' => array($this, 'fieldNameCallback'),
         ));
-        $builder->add('position', 'filter_number', array(
+        $builder->add('position', NumberFilterType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
                     if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
@@ -33,11 +35,6 @@ class ItemCallbackFilterType extends AbstractType
                 return null;
             },
         ));
-    }
-
-    public function getName()
-    {
-        return 'item_filter';
     }
 
     public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)

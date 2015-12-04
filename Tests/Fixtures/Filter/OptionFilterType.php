@@ -4,6 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
 
 /**
  * Form filter for tests.
@@ -14,12 +16,7 @@ class OptionFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', 'filter_text');
-        $builder->add('rank', 'filter_number');
-    }
-
-    public function getName()
-    {
-        return 'options_filter';
+        $builder->add('label', TextFilterType::class);
+        $builder->add('rank', NumberFilterType::class);
     }
 }

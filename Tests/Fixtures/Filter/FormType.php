@@ -5,6 +5,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 /**
  * Form filter for tests.
@@ -15,8 +17,8 @@ class FormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
-        $builder->add('position', 'integer', array(
+        $builder->add('name', TextType::class);
+        $builder->add('position', IntegerType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
                     if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
@@ -31,10 +33,5 @@ class FormType extends AbstractType
                 return null;
             },
         ));
-    }
-
-    public function getName()
-    {
-        return 'my_form';
     }
 }

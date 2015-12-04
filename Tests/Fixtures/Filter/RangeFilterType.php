@@ -5,6 +5,9 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateRangeFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeRangeFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberRangeFilterType;
 
 /**
  * Form filter for tests.
@@ -16,24 +19,24 @@ class RangeFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('position', 'filter_number_range', array(
+            ->add('position', NumberRangeFilterType::class, array(
                 'left_number_options'  => array('condition_operator' => FilterOperands::OPERATOR_GREATER_THAN),
                 'right_number_options' => array('condition_operator' => FilterOperands::OPERATOR_LOWER_THAN),
             ))
-            ->add('position_selector', 'filter_number_range', array(
+            ->add('position_selector', NumberRangeFilterType::class, array(
                 'left_number_options'  => array('condition_operator' => FilterOperands::OPERAND_SELECTOR),
                 'right_number_options' => array('condition_operator' => FilterOperands::OPERAND_SELECTOR),
             ))
-            ->add('default_position', 'filter_number_range')
+            ->add('default_position', NumberRangeFilterType::class)
             ->add('createdAt', 'filter_date_range', array(
                 'left_date_options'  => array('widget' => 'single_text'),
                 'right_date_options' => array('widget' => 'choice'),
             ))
-            ->add('updatedAt', 'filter_datetime_range', array(
+            ->add('updatedAt', DateTimeRangeFilterType::class, array(
                 'left_datetime_options'  => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
                 'right_datetime_options' => array(),
             ))
-            ->add('startAt', 'filter_date_range', array(
+            ->add('startAt', DateRangeFilterType::class, array(
                 'left_date_options' => array(
                     'widget' => 'single_text',
                     'model_timezone' => 'UTC',
@@ -46,10 +49,5 @@ class RangeFilterType extends AbstractType
                 ),
             ))
         ;
-    }
-
-    public function getName()
-    {
-        return 'item_filter';
     }
 }
