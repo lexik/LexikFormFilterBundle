@@ -12,6 +12,12 @@ matrix:
     allow_failures:
         - php: 7.0
         - php: hhvm
+        - env: SYMFONY_VERSION=3.0
+    include:
+        - php: 5.6
+          env: SYMFONY_VERSION=2.8
+        - php: 5.6
+          env: SYMFONY_VERSION=3.0
 
 services:
     - mongodb
@@ -24,6 +30,6 @@ before_script:
     - composer self-update
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require symfony/form:${SYMFONY_VERSION} --no-update
-    - composer update --dev
+    - composer update --prefer-source
 
 script: phpunit
