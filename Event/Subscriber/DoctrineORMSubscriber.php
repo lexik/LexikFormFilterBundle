@@ -5,6 +5,8 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -68,6 +70,23 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
 
         if (is_object($values['value'])) {
             $paramName = $this->generateParameterName($event->getField());
+            $filterField = $event->getField();
+
+            /**
+             * @var QueryBuilder $queryBuilder
+             */
+            $queryBuilder = $event->getQueryBuilder();
+
+            if ($dqlFrom = $event->getQueryBuilder()->getDQLPart('from')) {
+                $rootPart = reset($dqlFrom);
+                $fieldName = ltrim($event->getField(), $rootPart->getAlias() . '.');
+                $metadata = $queryBuilder->getEntityManager()->getClassMetadata($rootPart->getFrom());
+
+                if (isset($metadata->associationMappings[$fieldName]) AND (!$metadata->associationMappings[$fieldName]['isOwningSide'] OR $metadata->associationMappings[$fieldName]['type'] == ClassMetadataInfo::MANY_TO_MANY)) {
+                    $queryBuilder->leftJoin($event->getField(), $fieldName);
+                    $filterField = $fieldName;
+                }
+            }
 
             if ($values['value'] instanceof Collection) {
                 $ids = array();
@@ -78,13 +97,13 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
 
                 if (count($ids) > 0) {
                     $event->setCondition(
-                        $expr->in($event->getField(), ':'.$paramName),
+                        $expr->in($filterField, ':'.$paramName),
                         array($paramName => array($ids, Connection::PARAM_INT_ARRAY))
                     );
                 }
             } else {
                 $event->setCondition(
-                    $expr->eq($event->getField(), ':'.$paramName),
+                    $expr->eq($filterField, ':'.$paramName),
                     array($paramName => array($this->getValueIdentifier($values['value']), Type::INTEGER))
                 );
             }
