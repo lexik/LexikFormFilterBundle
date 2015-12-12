@@ -34,4 +34,9 @@ class FormType extends AbstractType
             },
         ));
     }
+
+    public function getBlockPrefix()
+    {
+        return 'my_form';
+    }
 }

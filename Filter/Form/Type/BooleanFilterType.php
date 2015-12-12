@@ -19,6 +19,22 @@ class BooleanFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'filter_boolean';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -34,21 +50,5 @@ class BooleanFilterType extends AbstractType
             ))
             ->setAllowedValues('data_extraction_method', array('default'))
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return ChoiceType::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'filter_boolean';
     }
 }

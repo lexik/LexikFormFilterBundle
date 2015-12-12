@@ -50,4 +50,9 @@ class RangeFilterType extends AbstractType
             ))
         ;
     }
+
+    public function getBlockPrefix()
+    {
+        return 'item_filter';
+    }
 }

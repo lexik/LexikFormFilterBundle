@@ -48,6 +48,6 @@ class DateTimeRangeFilterType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'filter_date_time_range';
+        return 'filter_datetime_range';
     }
 }

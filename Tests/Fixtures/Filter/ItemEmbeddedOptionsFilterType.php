@@ -6,10 +6,10 @@ use Doctrine\MongoDB\Query\Builder;
 use Doctrine\MongoDB\Query\Expr as MongoExpr;
 use Doctrine\ORM\Query\Expr as ORMExpr;
 use Doctrine\ORM\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -49,5 +49,10 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
         $resolver->setDefaults(array(
             'doctrine_builder' => null,
         ));
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'item_filter';
     }
 }

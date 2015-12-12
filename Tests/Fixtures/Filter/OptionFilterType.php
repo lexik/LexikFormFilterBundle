@@ -19,4 +19,9 @@ class OptionFilterType extends AbstractType
         $builder->add('label', TextFilterType::class);
         $builder->add('rank', NumberFilterType::class);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'options_filter';
+    }
 }

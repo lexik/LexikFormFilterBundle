@@ -40,6 +40,6 @@ class DateTimeFilterType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'filter_date_time';
+        return 'filter_datetime';
     }
 }

@@ -37,6 +37,11 @@ class ItemCallbackFilterType extends AbstractType
         ));
     }
 
+    public function getBlockPrefix()
+    {
+        return 'item_filter';
+    }
+
     public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)
     {
         if (!empty($values['value'])) {
