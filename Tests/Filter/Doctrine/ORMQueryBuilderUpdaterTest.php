@@ -92,7 +92,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testEmbedFormFilter()
     {
         // doctrine query builder without any joins
-        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -106,7 +106,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $this->assertEquals(array('p_opt_rank' => 3), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // doctrine query builder with joins
-        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType());
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -126,7 +126,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testCustomConditionBuilder()
     {
         // doctrine query builder without any joins + custom condition builder
-        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, array(
             'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
                 $builder
                     ->root('or')
@@ -152,7 +152,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
         $this->assertEquals(array('p_opt_rank' => 6), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // doctrine query builder without any joins + custom condition builder
-        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, array(
             'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
                     $builder
                         ->root('and')
@@ -184,7 +184,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testWithDataClass()
     {
         // doctrine query builder without any joins + a data_class
-        $form = $this->formFactory->create(new ItemEmbeddedOptionsFilterType(), null, array(
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, array(
             'data_class' => 'Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item',
         ));
         $filterQueryBuilder = $this->initQueryBuilderUpdater();

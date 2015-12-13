@@ -16,7 +16,6 @@ services:
 
 env:
     - SYMFONY_VERSION=2.8.*
-    - SYMFONY_VERSION=3.0.*
 
 before_script:
     - phpenv config-add travis-php.ini
