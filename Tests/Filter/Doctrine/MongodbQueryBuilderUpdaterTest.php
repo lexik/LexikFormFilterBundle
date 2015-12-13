@@ -244,7 +244,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
     public function testDateTimeRange()
     {
         // use filter type options
-        $form = $this->formFactory->create(classRangeFilterType::class);
+        $form = $this->formFactory->create(RangeFilterType::class);
         $form->submit(array(
             'updatedAt' => array(
                 'left_datetime' => array(
