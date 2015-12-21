@@ -20,6 +20,11 @@ abstract class ExpressionBuilder
     protected $forceCaseInsensitivity;
 
     /**
+     * @var string
+     */
+    protected $encoding;
+
+    /**
      * Get expression object.
      */
     public function expr()
@@ -29,10 +34,12 @@ abstract class ExpressionBuilder
 
     /**
      * @param boolean $forceCaseInsensitivity
+     * @param string|null $encoding
      */
-    public function __construct($forceCaseInsensitivity)
+    public function __construct($forceCaseInsensitivity, $encoding = null)
     {
         $this->forceCaseInsensitivity = $forceCaseInsensitivity;
+        $this->encoding = $encoding;
     }
 
     /**
@@ -219,7 +226,7 @@ abstract class ExpressionBuilder
     protected function convertTypeToMask($value, $type)
     {
         if ($this->forceCaseInsensitivity) {
-            $value = mb_strtolower($value);
+            $value = $this->encoding ? mb_strtolower($value, $this->encoding) : mb_strtolower($value);
         }
 
         switch ($type) {

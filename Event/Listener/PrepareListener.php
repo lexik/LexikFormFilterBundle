@@ -16,6 +16,11 @@ class PrepareListener
     protected $forceCaseInsensitivity = null;
 
     /**
+     * @var string|null
+     */
+    protected $encoding;
+
+    /**
      * @param boolean $value
      * @return PrepareListener $this
      * @throws \InvalidArgumentException
@@ -51,6 +56,26 @@ class PrepareListener
     }
 
     /**
+     * @return null|string
+     */
+    public function getEncoding()
+    {
+        return $this->encoding;
+    }
+
+    /**
+     * @param null|string $encoding
+     *
+     * @return PrepareListener
+     */
+    public function setEncoding($encoding)
+    {
+        $this->encoding = $encoding;
+
+        return $this;
+    }
+
+    /**
      * Filter builder prepare event
      *
      * @param PrepareEvent $event
@@ -67,7 +92,7 @@ class PrepareListener
 
         foreach ($queryClasses as $builderClass => $queryClass) {
             if (class_exists($builderClass) && $qb instanceof $builderClass) {
-                $query = new $queryClass($qb, $this->getForceCaseInsensitivity($qb));
+                $query = new $queryClass($qb, $this->getForceCaseInsensitivity($qb), $this->encoding);
 
                 $event->setFilterQuery($query);
                 $event->stopPropagation();

@@ -46,6 +46,11 @@ class Configuration implements ConfigurationInterface
                     ->info('Whether to do case insensitive LIKE comparisons.')
                     ->defaultNull()
                 ->end()
+
+                ->scalarNode('encoding')
+                    ->info('Encoding for case insensitive LIKE comparisons.')
+                    ->defaultNull()
+                ->end()
             ->end();
 
         return $treeBuilder;
