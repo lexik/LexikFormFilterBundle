@@ -4,3 +4,4 @@ vendor
 composer.phar
 composer.lock
 bin
+.idea

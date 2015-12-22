@@ -88,7 +88,7 @@ final class FilterOperands
             }
         }
 
-        return $choices;
+        return array_flip($choices);
     }
 
     /**
@@ -107,6 +107,6 @@ final class FilterOperands
             }
         }
 
-        return $choices;
+        return array_flip($choices);
     }
 }

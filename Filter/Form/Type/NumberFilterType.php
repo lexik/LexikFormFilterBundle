@@ -52,6 +52,7 @@ class NumberFilterType extends AbstractType
                 ),
                 'choice_options'         => array(
                     'choices'            => FilterOperands::getNumberOperandsChoices(),
+                    'choices_as_values'  => true,
                     'required'           => false,
                     'translation_domain' => 'LexikFormFilterBundle',
                 ),
