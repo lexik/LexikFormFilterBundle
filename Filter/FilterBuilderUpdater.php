@@ -203,7 +203,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             // trigger a specific or a global event name
             $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), $completeName);
             if (!$this->dispatcher->hasListeners($eventName)) {
-                $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getName());
+                $eventName = sprintf('lexik_form_filter.apply.%s.%s', $filterQuery->getEventPartName(), is_string($callable) ? $callable : $formType->getBlockPrefix());
             }
 
             $event = new GetFilterConditionEvent($filterQuery, $field, $values);

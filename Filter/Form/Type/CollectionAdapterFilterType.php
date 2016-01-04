@@ -44,9 +44,9 @@ class CollectionAdapterFilterType extends AbstractType
             $index = 0;
             $childOptions = array_replace(array(
                 'property_path' => sprintf('[%d]', $index),
-            ), $options['options']);
+            ), $options['entry_options']);
 
-            $form->add($index, $options['type'], $childOptions);
+            $form->add($index, $options['entry_type'], $childOptions);
         });
     }
 
@@ -56,12 +56,12 @@ class CollectionAdapterFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'type'         => null,
-            'options'      => array(),
-            'default_data' => array(),
+            'entry_type'    => null,
+            'entry_options' => array(),
+            'default_data'  => array(),
         ));
 
-        $resolver->setRequired(array('type'));
+        $resolver->setRequired(array('entry_type'));
     }
 
     /**
@@ -69,13 +69,13 @@ class CollectionAdapterFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'filter_sharedable';
+        return SharedableFilterType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_collection_adapter';
     }

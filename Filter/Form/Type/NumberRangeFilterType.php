@@ -19,8 +19,8 @@ class NumberRangeFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('left_number', 'filter_number', $options['left_number_options']);
-        $builder->add('right_number', 'filter_number', $options['right_number_options']);
+        $builder->add('left_number', NumberFilterType::class, $options['left_number_options']);
+        $builder->add('right_number', NumberFilterType::class, $options['right_number_options']);
 
         $builder->setAttribute('filter_value_keys', array(
             'left_number'  => $options['left_number_options'],
@@ -47,7 +47,7 @@ class NumberRangeFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_number_range';
     }

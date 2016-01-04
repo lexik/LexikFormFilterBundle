@@ -18,8 +18,8 @@ class DateTimeRangeFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('left_datetime', 'filter_datetime', $options['left_datetime_options']);
-        $builder->add('right_datetime', 'filter_datetime', $options['right_datetime_options']);
+        $builder->add('left_datetime', DateTimeFilterType::class, $options['left_datetime_options']);
+        $builder->add('right_datetime', DateTimeFilterType::class, $options['right_datetime_options']);
 
         $builder->setAttribute('filter_value_keys', array(
             'left_datetime'  => $options['left_datetime_options'],
@@ -46,7 +46,7 @@ class DateTimeRangeFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_datetime_range';
     }

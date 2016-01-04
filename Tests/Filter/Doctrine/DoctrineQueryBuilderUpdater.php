@@ -61,7 +61,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
     protected function createBuildQueryTest($method, array $dqls)
     {
-        $form = $this->formFactory->create(new ItemFilterType());
+        $form = $this->formFactory->create(ItemFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         // without binding the form
@@ -78,7 +78,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[1], $doctrineQueryBuilder->{$method}());
 
         // bind a request to the form - 2 params
-        $form = $this->formFactory->create(new ItemFilterType());
+        $form = $this->formFactory->create(ItemFilterType::class);
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'blabla', 'position' => 2));
@@ -88,7 +88,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals(array('p_i_position' => 2), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - 3 params
-        $form = $this->formFactory->create(new ItemFilterType());
+        $form = $this->formFactory->create(ItemFilterType::class);
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
@@ -98,7 +98,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals(array('p_i_position' => 2, 'p_i_enabled' => true), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - 3 params (use checkbox for enabled field)
-        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+        $form = $this->formFactory->create(ItemFilterType::class, null, array(
             'checkbox' => true,
         ));
 
@@ -110,7 +110,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals(array('p_i_position' => 2, 'p_i_enabled' => 1), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - date + pattern selector
-        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+        $form = $this->formFactory->create(ItemFilterType::class, null, array(
             'with_selector' => true,
         ));
 
@@ -126,7 +126,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - datetime + pattern selector
-        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+        $form = $this->formFactory->create(ItemFilterType::class, null, array(
             'with_selector' => true,
             'datetime'      => true,
         ));
@@ -148,7 +148,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
     protected function createDisabledFieldTest($method, array $dqls)
     {
-        $form = $this->formFactory->create(new ItemFilterType(), null, array(
+        $form = $this->formFactory->create(ItemFilterType::class, null, array(
             'with_selector' => false,
             'disabled_name' => true,
         ));
@@ -163,7 +163,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
     protected function createApplyFilterOptionTest($method, array $dqls)
     {
-        $form = $this->formFactory->create(new ItemCallbackFilterType());
+        $form = $this->formFactory->create(ItemCallbackFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -176,7 +176,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     protected function createNumberRangeTest($method, array $dqls)
     {
         // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -193,7 +193,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     protected function createNumberRangeCompoundTest($method, array $dqls)
     {
         // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -213,7 +213,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     protected function createNumberRangeDefaultValuesTest($method, array $dqls)
     {
         // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -230,7 +230,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     protected function createDateRangeTest($method, array $dqls)
     {
         // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -248,7 +248,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     protected function createDateRangeWithTimezoneTest($method, array $dqls)
     {
         // same dates
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $form->submit(array(
             'startAt' => array(
                 'left_date'  => '2015-10-20',
@@ -263,7 +263,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals($dqls[0], $doctrineQueryBuilder->{$method}());
 
         // different dates
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $form->submit(array(
             'startAt' => array(
                 'left_date'  => '2015-10-01',
@@ -281,7 +281,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     public function createDateTimeRangeTest($method, array $dqls)
     {
         // use filter type options
-        $form = $this->formFactory->create(new RangeFilterType());
+        $form = $this->formFactory->create(RangeFilterType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();
@@ -304,7 +304,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
 
     public function createFilterStandardTypeTest($method, array $dqls)
     {
-        $form = $this->formFactory->create(new FormType());
+        $form = $this->formFactory->create(FormType::class);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();

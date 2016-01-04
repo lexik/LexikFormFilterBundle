@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
+use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,13 +51,13 @@ class DocumentFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'document';
+        return DocumentType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_document';
     }

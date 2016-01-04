@@ -4,6 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
@@ -21,8 +23,8 @@ class TextFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (true === $options['compound']) {
-            $builder->add('condition_pattern', 'choice', $options['choice_options']);
-            $builder->add('text', 'text', $options['text_options']);
+            $builder->add('condition_pattern', ChoiceType::class, $options['choice_options']);
+            $builder->add('text', TextType::class, $options['text_options']);
         } else {
             $builder->setAttribute('filter_options', array(
                 'condition_pattern' => $options['condition_pattern'],
@@ -48,6 +50,7 @@ class TextFilterType extends AbstractType
                 ),
                 'choice_options'         => array(
                     'choices'            => FilterOperands::getStringOperandsChoices(),
+                    'choices_as_values'  => true,
                     'required'           => false,
                     'translation_domain' => 'LexikFormFilterBundle',
                 ),
@@ -65,13 +68,13 @@ class TextFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_text';
     }

@@ -7,6 +7,9 @@ use Doctrine\MongoDB\Query\Expr as MongoExpr;
 use Doctrine\ORM\Query\Expr as ORMExpr;
 use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,10 +36,10 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
             };
         }
 
-        $builder->add('name', 'filter_text');
-        $builder->add('position', 'filter_number');
-        $builder->add('options', 'filter_collection_adapter', array(
-            'type'       => new OptionFilterType(),
+        $builder->add('name', TextFilterType::class);
+        $builder->add('position', NumberFilterType::class);
+        $builder->add('options', CollectionAdapterFilterType::class, array(
+            'entry_type' => OptionFilterType::class,
             'add_shared' => $addShared,
         ));
     }
@@ -48,7 +51,7 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
