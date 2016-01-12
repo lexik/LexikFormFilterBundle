@@ -43,6 +43,14 @@ class LexikFormFilterExtension extends Extension
             );
         }
 
+        if (isset($config['encoding'])) {
+            $filterPrepareDef = $container->getDefinition('lexik_form_filter.filter_prepare');
+            $filterPrepareDef->addMethodCall(
+                'setEncoding',
+                array($config['encoding'])
+            );
+        }
+
         $container->setParameter('lexik_form_filter.where_method', $config['where_method']);
     }
 }
