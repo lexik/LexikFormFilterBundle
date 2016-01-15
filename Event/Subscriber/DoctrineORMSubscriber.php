@@ -72,9 +72,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
             $paramName = $this->generateParameterName($event->getField());
             $filterField = $event->getField();
 
-            /**
-             * @var QueryBuilder $queryBuilder
-             */
+            /** @var QueryBuilder $queryBuilder */
             $queryBuilder = $event->getQueryBuilder();
 
             if ($dqlFrom = $event->getQueryBuilder()->getDQLPart('from')) {
@@ -82,8 +80,11 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 $fieldName = ltrim($event->getField(), $rootPart->getAlias() . '.');
                 $metadata = $queryBuilder->getEntityManager()->getClassMetadata($rootPart->getFrom());
 
-                if (isset($metadata->associationMappings[$fieldName]) AND (!$metadata->associationMappings[$fieldName]['isOwningSide'] OR $metadata->associationMappings[$fieldName]['type'] == ClassMetadataInfo::MANY_TO_MANY)) {
-                    $queryBuilder->leftJoin($event->getField(), $fieldName);
+                if (isset($metadata->associationMappings[$fieldName]) && (!$metadata->associationMappings[$fieldName]['isOwningSide'] || $metadata->associationMappings[$fieldName]['type'] === ClassMetadataInfo::MANY_TO_MANY)) {
+                    if (!$event->getFilterQuery()->hasJoinAlias($fieldName)) {
+                        $queryBuilder->leftJoin($event->getField(), $fieldName);
+                    }
+
                     $filterField = $fieldName;
                 }
             }
