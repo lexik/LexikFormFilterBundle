@@ -76,8 +76,6 @@ For Doctrine ORM only.
 
 Parent type: _entity_
 
-**This type does not support many-to-many relations.**
-
 ---
 **filter_number:**
 
