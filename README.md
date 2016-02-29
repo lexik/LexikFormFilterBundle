@@ -5,7 +5,6 @@ This Symfony2 bundle aims to provide classes to build some form types dedicated 
 Once you created your form type you will be able to update a doctrine query builder conditions from a form type.
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
-![Project Status](http://stillmaintained.com/lexik/LexikFormFilterBundle.png)
 [![Latest Stable Version](https://poser.pugx.org/lexik/form-filter-bundle/v/stable.svg)](https://packagist.org/packages/lexik/form-filter-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c/mini.png)](https://insight.sensiolabs.com/projects/1dc9c6d5-369d-4940-84a2-f0941ae5d16c)
 
