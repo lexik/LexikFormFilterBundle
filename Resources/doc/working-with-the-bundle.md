@@ -18,16 +18,17 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class RelatedOptionsType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('label', 'filter_text');
-        $builder->add('rank', 'filter_number');
+        $builder->add('label', Filters\TextFilterType::class);
+        $builder->add('rank', Filters\NumberFilterType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'related_options';
     }
@@ -42,6 +43,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\OptionsResolver\ConditionBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 
@@ -49,8 +51,8 @@ class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text');
-        $builder->add('date', 'filter_date');
+        $builder->add('name', Filters\TextFilterType::class);
+        $builder->add('date', Filters\NumberFilterType::class);
         $builder->add('options', new RelatedOptionsType());
     }
 
@@ -72,7 +74,7 @@ class ItemFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -128,12 +130,13 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text', array(
+        $builder->add('name', Filters\TextFilterType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (empty($values['value'])) {
                     return null;
@@ -154,7 +157,7 @@ class ItemFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -171,12 +174,13 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text', array(
+        $builder->add('name', Filters\TextFilterType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (empty($values['value'])) {
                     return null;
@@ -192,7 +196,7 @@ class ItemFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -215,15 +219,16 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('position', 'filter_number');
+        $builder->add('position', Filters\NumberFilterType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -308,17 +313,18 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text', array(
+        $builder->add('name', Filters\TextFilterType::class, array(
             'apply_filter' => false, // disable filter
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -347,6 +353,7 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 /**
  * Embed filter type.
@@ -355,18 +362,18 @@ class OptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', 'filter_text');
-        $builder->add('color', 'filter_text');
+        $builder->add('label', Filters\TextFilterType::class);
+        $builder->add('color', Filters\TextFilterType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'options_filter';
     }
 }
 ```
 
-Then we can use it in our `ItemFilterType` type. But we will embed it by using a `filter_collection_adapter` type.
+Then we can use it in our `ItemFilterType` type. But we will embed it by using a `CollectionAdapterFilterType` type.
 This type will allow us to use the `add_shared` option to add joins (or other stuff) we needed to apply conditions on fields from the embedded type (`OptionsFilterType` here).
 
 **Doctrine ORM/DBAL:**
@@ -378,20 +385,19 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text');
-        $builder->add('rank', 'filter_number');
+        $builder->add('name', Filters\TextFilterType::class);
+        $builder->add('rank', Filters\NumberFilterType::class);
 
-        $builder->add('options', 'filter_collection_adapter', array(
+        $builder->add('options', Filters\CollectionAdapterFilterType::class, array(
             'type'       => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
@@ -406,7 +412,7 @@ class ItemFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -422,20 +428,19 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-
 use Doctrine\ODM\MongoDB\Query\Expr;
 use Doctrine\ODM\MongoDB\Query\Builder;
-
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'filter_text');
-        $builder->add('rank', 'filter_number');
+        $builder->add('name', Filters\TextFilterType::class);
+        $builder->add('rank', Filters\NumberFilterType::class);
 
-        $builder->add('options', 'filter_collection_adapter', array(
+        $builder->add('options', Filters\CollectionAdapterFilterType::class, array(
             'type'       => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (Builder $filterBuilder, $alias, $joinAlias, Expr $expr) {
@@ -451,7 +456,7 @@ class ItemFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -461,30 +466,31 @@ class ItemFilterType extends AbstractType
 #### B. Single object
 
 So let's say we need to filter some Option by their related Item's name.
-We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `filter_entity` as we need to filter on field that belong to Item.
+We can create a `OptionsFilterType` type and add the item field which will be a `ItemFilterType` and not a `EntityFilterType` as we need to filter on field that belong to Item.
 
 Let's start with the `ItemFilterType`, the only thing we have to do is to change the default parent type of our by using the `getParent()` method.
-This will allow us to use the `add_shared` option as in the `filter_collection_adapter` type (by default this option is not available on a type).
+This will allow us to use the `add_shared` option as in the `CollectionAdapterFilterType` type (by default this option is not available on a type).
 
 ```php
 namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'filter_text');
+        $builder->add('name', Filters\TextFilterType::class);
     }
 
     public function getParent()
     {
-        return 'filter_sharedable'; // this allow us to use the "add_shared" option
+        return Filters\SharedableFilterType::class; // this allow us to use the "add_shared" option
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_item';
     }
@@ -519,7 +525,7 @@ class OptionsFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_options';
     }
@@ -590,15 +596,15 @@ namespace Project\Bundle\SuperBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EmbeddedFilterTypeInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class AddressFilterType extends AbstractType implements EmbeddedFilterTypeInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('street', 'filter_text');
-        $builder->add('postalCode', 'filter_text');
+        $builder->add('street', Filters\TextFilterType::class);
+        $builder->add('postalCode', Filters\NumberFilterType::class);
         // ...
     }
 }
@@ -619,6 +625,7 @@ namespace Super\Namespace\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 
 class LocaleFilterType extends AbstractType
 {
@@ -640,13 +647,13 @@ class LocaleFilterType extends AbstractType
      */
     public function getParent()
     {
-        return 'locale';
+        return LocaleType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_locale';
     }
@@ -657,11 +664,11 @@ Then defined the `LocaleFilterType` as a service and don't forget to add the `fo
 
 ```xml
 <service id="something.type.filter_locale" class="Super\Namespace\Type\LocaleFilterType">
-    <tag name="form.type" alias="filter_locale" />
+    <tag name="form.type" />
 </service>
 ```
 
-Now we can use the `filter_locale` type, but no filter will be applied. To apply a filter we need to listen some event, so let's create a subscriber:
+Now we can use the `LocaleFilterType` type, but no filter will be applied. To apply a filter we need to listen some event, so let's create a subscriber:
 
 ```php
 namespace Super\Namespace\Listener;
@@ -686,9 +693,9 @@ class FilterSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Apply a filter for a filter_locale type.
+     * Apply a filter for a LocaleFilterType type.
      *
-     * This method should work whih both ORM and DBAL query builder.
+     * This method should work with both ORM and DBAL query builder.
      */
     public function filterLocale(GetFilterConditionEvent $event)
     {

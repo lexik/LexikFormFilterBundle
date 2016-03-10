@@ -7,7 +7,7 @@ Add the bundle to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/form-filter-bundle": "~4.0" // check packagist.org for more tags
+    "lexik/form-filter-bundle": "~5.0" // check packagist.org for more tags
     // ...
 }
 ```
@@ -15,7 +15,7 @@ require: {
 Or install directly through composer with:
 
 ```
-composer.phar require lexik/form-filter-bundle ~4.0
+composer.phar require lexik/form-filter-bundle ~5.0
 # For latest version
 composer.phar require lexik/form-filter-bundle dev-master
 ```

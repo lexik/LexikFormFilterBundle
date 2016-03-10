@@ -6,59 +6,59 @@ The bundle provides form types dedicated to filtering.
 Here the list of these types with their parent type and their specific options.
 Of course you can use all options defined by the parent type.
 
-Notes: by default the `required` option is set to `false` for all filter_xxx types.
+Notes: by default the `required` option is set to `false` for all filter types.
 
 ---
-**filter_boolean:**
+**BooleanFilterType:**
 
 Parent type: _boolean_
 
 ---
-**filter_checkbox:**
+**CheckboxFilterType:**
 
 Parent type: _checkbox_
 
 ---
-**filter_choice:**
+**ChoiceFilterType:**
 
 Parent type: _choice_
 
 ---
-**filter_date:**
+**DateFilterType:**
 
 Parent type: _date_
 
 ---
-**filter_date_range:**
+**DateRangeFilterType:**
 
-This type is composed of two `filter_date` types (left_date and right_date).
+This type is composed of two `DateFilterType` types (left_date and right_date).
 
 Parent type: _form_
 
 Options:
 
-* `left_date_options`: options to pass to the left filter_date type.
-* `right_date_options`: options to pass to the right filter_date type.
+* `left_date_options`: options to pass to the left DateFilterType type.
+* `right_date_options`: options to pass to the right DateFilterType type.
 
 ---
-**filter_datetime:**
+**DateTimeFilterType:**
 
 Parent type: _datetime_
 
 ---
-**filter_datetime_range:**
+**DateTimeRangeFilterType:**
 
-This type is composed of two `filter_datetime` types (left_datetime and right_datetime).
+This type is composed of two `DateTimeFilterType` types (left_datetime and right_datetime).
 
 Parent type: _form_
 
 Options:
 
-* `left_datetime_options`: options to pass to the left filter_datetime type.
-* `right_datetime_options`: options to pass to the right filter_datetime type.
+* `left_datetime_options`: options to pass to the left DateTimeFilterType type.
+* `right_datetime_options`: options to pass to the right DateTimeFilterType type.
 
 ---
-**filter_document:**
+**DocumentFilterType:**
 
 For Doctrine Mongodb only.
 
@@ -70,14 +70,14 @@ Options:
 * `reference_name`: name of the referenced document, by default the type will set this value from the field name.
 
 ---
-**filter_entity:**
+**EntityFilterType:**
 
 For Doctrine ORM only.
 
 Parent type: _entity_
 
 ---
-**filter_number:**
+**NumberFilterType:**
 
 Parent type: _number_
 
@@ -88,19 +88,19 @@ See the FilterOperands::OPERATOR_xxx constants for all available operators (grea
 You can also use FilterOperands::OPERAND_SELECTOR, this will display a combo box with the available operators in addition to the input text.
 
 ---
-**filter_number_range:**
+**NumberRangeFilterType:**
 
-This type is composed of two `filter_number` types (left_number and right_number).
+This type is composed of two `NumberFilterType` types (left_number and right_number).
 
 Parent type: _form_
 
 Options:
 
-* `left_number_options`: options to pass to the left filter_number type.
-* `right_number_options`: options to pass to the right filter_number type.
+* `left_number_options`: options to pass to the left NumberFilterType type.
+* `right_number_options`: options to pass to the right NumberFilterType type.
 
 ---
-**filter_text:**
+**TextFilterType:**
 
 Parent type: _text_
 

@@ -5,7 +5,7 @@
 Twig
 ----
 
-You only need to add the following lines in your `app/config/config.yml`. This file contains the template blocks for the filter_xxx types.
+You only need to add the following lines in your `app/config/config.yml`. This file contains the template blocks for the filter types.
 
 ```yaml
 # app/config/config.yml

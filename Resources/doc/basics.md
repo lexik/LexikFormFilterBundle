@@ -38,7 +38,7 @@ class MyEntity
 }
 ```
 
-Create a type extended from AbstractType, add `name` and `rank` and use the filter_xxxx types.
+Create a type extended from AbstractType, add `name` and `rank` and use the filter types.
 
 ```php
 <?php
@@ -48,16 +48,17 @@ namespace Project\Bundle\SuperBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class ItemFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'filter_text');
-        $builder->add('rank', 'filter_number');
+        $builder->add('name', Filters\TextFilterType::class);
+        $builder->add('rank', Filters\NumberFilterType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'item_filter';
     }
@@ -134,9 +135,11 @@ The default event name pattern is `lexik_form_filter.apply.<query_builder_type>.
 For example, let's say I use a form type with a name field:
 
 ```php
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
+
 public function buildForm(FormBuilder $builder, array $options)
 {
-    $builder->add('name', 'filter_text');
+    $builder->add('name', Filters\TextFilterType::class);
 }
 ```
 
