@@ -176,7 +176,7 @@ abstract class AbstractDoctrineSubscriber
         $params = array();
 
         if (isset($value['left_number'][0])) {
-            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['left_number']['condition_operator']);
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR === $value['left_number']['condition_operator']);
 
             if (!$hasSelector && isset($value['left_number'][0])) {
                 $leftValue = $value['left_number'][0];
@@ -196,7 +196,7 @@ abstract class AbstractDoctrineSubscriber
         }
 
         if (isset($value['right_number'][0])) {
-            $hasSelector = (FilterOperands::OPERAND_SELECTOR == $value['right_number']['condition_operator']);
+            $hasSelector = (FilterOperands::OPERAND_SELECTOR === $value['right_number']['condition_operator']);
 
             if (!$hasSelector && isset($value['right_number'][0])) {
                 $rightValue = $value['right_number'][0];
