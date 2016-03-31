@@ -79,14 +79,6 @@ class GetFilterConditionEvent extends Event
     }
 
     /**
-     * @return mixed
-     */
-    public function getAlias()
-    {
-        return $this->alias;
-    }
-
-    /**
      * @param string $expression
      * @param array  $parameters
      */
