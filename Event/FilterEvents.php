@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
 /**
  * Available filter events.
  *
- * @author Cédric Girard <c.girard@lexi.fr>
+ * @author Cédric Girard <c.girard@lexik.fr>
  */
 class FilterEvents
 {
