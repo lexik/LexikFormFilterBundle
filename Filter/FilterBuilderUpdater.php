@@ -271,10 +271,12 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, $parentName = '')
     {
         foreach ($form->all() as $child) {
+            $formType = $child->getConfig()->getType()->getInnerType();
+
             $name = ('' !== $parentName) ? $parentName.'.'.$child->getName() : $child->getName();
 
-            if ($child->getConfig()->hasAttribute('add_shared')) {
-                $isCollection = ($child->getConfig()->getType()->getInnerType() instanceof CollectionAdapterFilterType);
+            if ($child->getConfig()->hasAttribute('add_shared') || $formType instanceof EmbeddedFilterTypeInterface) {
+                $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
                 $this->buildDefaultConditionNode(
                     $isCollection ? $child->get(0) : $child,
