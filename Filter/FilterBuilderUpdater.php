@@ -183,7 +183,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         $parentForm = $form;
         do {
             $parentForm = $parentForm->getParent();
-            if (!is_numeric($parentForm->getName())) { // skip collection numeric index
+            if (!is_numeric($parentForm->getName()) && $parentForm->getConfig()->getMapped()) { // skip collection numeric index and not mapped fields
                 $completeName = $parentForm->getName() . '.' . $completeName;
             }
         } while (!$parentForm->isRoot());
