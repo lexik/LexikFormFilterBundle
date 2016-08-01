@@ -303,7 +303,7 @@ Note that before triggering the default event name, the `lexik_form_filter.query
 
 #### C. Disable filtering for one field
 
-For any reason if you need to don't apply some filter condition for a given field, you can set the `apply_filter` option to `false`.
+If you want to skip a field for any reason you can set the `apply_filter` option to `false`.
 This will make the bundle skip the field, so no condition will be added for this field.
 
 ```php
