@@ -37,8 +37,7 @@ class TextFilterType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-            ->setDefaults(array(
+        $defaults = array(
                 'required'               => false,
                 'condition_pattern'      => FilterOperands::STRING_EQUALS,
                 'compound'               => function (Options $options) {
@@ -50,14 +49,20 @@ class TextFilterType extends AbstractType
                 ),
                 'choice_options'         => array(
                     'choices'            => FilterOperands::getStringOperandsChoices(),
-                    'choices_as_values'  => true,
                     'required'           => false,
                     'translation_domain' => 'LexikFormFilterBundle',
                 ),
                 'data_extraction_method' => function (Options $options) {
                     return $options['compound'] ? 'text' : 'default';
                 },
-            ))
+        );
+                
+        if(version_compare(Kernel::VERSION, '3.1.0') < 0) {
+            $defaults['choice_options']['choices_as_values'] = true; // must be removed for use in Symfony 3.1, needed for 2.8
+        }
+        
+        $resolver
+            ->setDefaults($defaults)
             ->setAllowedValues('data_extraction_method', array('text', 'default'))
             ->setAllowedValues('condition_pattern', FilterOperands::getStringOperands(true))
         ;
