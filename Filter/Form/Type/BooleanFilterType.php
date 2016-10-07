@@ -2,9 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
