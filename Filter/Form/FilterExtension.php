@@ -2,8 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form;
 
-use Symfony\Component\Form\AbstractExtension;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
+use Symfony\Component\Form\AbstractExtension;
 
 /**
  * Load all filter types.
@@ -27,7 +28,7 @@ class FilterExtension extends AbstractExtension
             new Type\DateTimeRangeFilterType(),
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
-            new Type\TextFilterType(\Lexik\Bundle\FormFilterBundle\Filter\FilterOperands::STRING_STARTS),
+            new Type\TextFilterType(),
             new Type\CollectionAdapterFilterType(),
             new Type\SharedableFilterType(),
         );
