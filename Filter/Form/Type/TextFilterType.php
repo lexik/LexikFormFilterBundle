@@ -20,6 +20,13 @@ class TextFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    private $conditionPattern;
+    
+    public function __construct($conditionPattern)
+    {
+        $this->conditionPattern = $conditionPattern;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (true === $options['compound']) {
@@ -40,7 +47,7 @@ class TextFilterType extends AbstractType
         $resolver
             ->setDefaults(array(
                 'required'               => false,
-                'condition_pattern'      => FilterOperands::STRING_EQUALS,
+                'condition_pattern'      => $this->conditionPattern,
                 'compound'               => function (Options $options) {
                     return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
                 },
