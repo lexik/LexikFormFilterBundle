@@ -27,7 +27,7 @@ class FilterExtension extends AbstractExtension
             new Type\DateTimeRangeFilterType(),
             new Type\NumberFilterType(),
             new Type\NumberRangeFilterType(),
-            new Type\TextFilterType(),
+            new Type\TextFilterType(\Lexik\Bundle\FormFilterBundle\Filter\FilterOperands::STRING_STARTS),
             new Type\CollectionAdapterFilterType(),
             new Type\SharedableFilterType(),
         );
