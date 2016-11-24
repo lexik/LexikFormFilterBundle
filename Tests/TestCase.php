@@ -56,7 +56,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
-        $reader = new AnnotationReader($cache);
+        $reader = new AnnotationReader();
         $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Entity',
         ));
@@ -89,7 +89,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
-        $reader = new AnnotationReader($cache);
+        $reader = new AnnotationReader();
         $xmlDriver = new \Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Document',
         ));
