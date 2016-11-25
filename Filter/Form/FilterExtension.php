@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type;
 use Symfony\Component\Form\AbstractExtension;
 
