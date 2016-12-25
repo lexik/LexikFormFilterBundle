@@ -88,7 +88,7 @@ class DefaultController extends Controller
 {
     public function testFilterAction(Request $request)
     {
-        $form = $this->get('form.factory')->create(new ItemFilterType());
+        $form = $this->get('form.factory')->create(ItemFilterType::class);
 
         if ($request->query->has($form->getName())) {
             // manually bind values from the request

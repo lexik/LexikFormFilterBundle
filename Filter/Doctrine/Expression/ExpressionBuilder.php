@@ -190,12 +190,14 @@ abstract class ExpressionBuilder
         if (! $date instanceof \DateTime) {
             return;
         }
+        
+        $copy = clone $date;
 
         if ($isMax) {
-            $date->modify('+1 day -1 second');
+            $copy->modify('+1 day -1 second');
         }
 
-        return $this->expr()->literal($date->format(self::SQL_DATE_TIME));
+        return $this->expr()->literal($copy->format(self::SQL_DATE_TIME));
     }
 
     /**
