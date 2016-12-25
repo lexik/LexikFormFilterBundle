@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,8 +41,7 @@ class NumberFilterType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-            ->setDefaults(array(
+        $defaults = array(
                 'required'               => false,
                 'condition_operator'     => FilterOperands::OPERATOR_EQUAL,
                 'compound'               => function (Options $options) {
@@ -52,14 +52,20 @@ class NumberFilterType extends AbstractType
                 ),
                 'choice_options'         => array(
                     'choices'            => FilterOperands::getNumberOperandsChoices(),
-                    'choices_as_values'  => true,
                     'required'           => false,
                     'translation_domain' => 'LexikFormFilterBundle',
                 ),
                 'data_extraction_method' => function (Options $options) {
                     return $options['compound'] ? 'text' : 'default';
                 },
-            ))
+        );
+                
+        if(version_compare(Kernel::VERSION, '3.1.0') < 0) {
+            $defaults['choice_options']['choices_as_values'] = true; // must be removed for use in Symfony 3.1, needed for 2.8
+        }
+        
+        $resolver
+            ->setDefaults($defaults)
             ->setAllowedValues('data_extraction_method', array('text', 'default'))
             ->setAllowedValues('condition_operator', FilterOperands::getNumberOperands(true))
         ;
