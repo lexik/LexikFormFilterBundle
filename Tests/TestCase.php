@@ -56,7 +56,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
-        $reader = new AnnotationReader($cache);
+        if (class_exists('Doctrine\Common\Annotations\DocParser')) {
+            $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
+        } else {
+            $reader = new AnnotationReader($cache);
+        }
+
         $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Entity',
         ));
@@ -89,7 +94,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
-        $reader = new AnnotationReader($cache);
+        if (class_exists('Doctrine\Common\Annotations\DocParser')) {
+            $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
+        } else {
+            $reader = new AnnotationReader($cache);
+        }
+
         $xmlDriver = new \Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Document',
         ));
