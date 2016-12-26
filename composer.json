@@ -25,6 +25,7 @@
     },
     "require-dev": {
         "doctrine/mongodb-odm-bundle": "~3.0",
+        "alcaeus/mongo-php-adapter": "~1.0",
         "phpunit/phpunit": "~3.7"
     },
     "autoload":     {
