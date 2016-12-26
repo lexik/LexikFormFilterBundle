@@ -59,6 +59,17 @@ lexik_form_filter:
     where_method: ~  # null | and | or
 ```
 
+* Globally define the `condition_pattern` for the `TextFilterType`:
+
+This option allow you to define the default text pattern the `TextFilterType` will use.
+
+```yaml
+# app/config/config.yml
+lexik_form_filter:
+    condition_pattern: text.starts
+```
+Available values for this option are: `text.contains`, `text.starts`, `text.ends`, `text.equal`.
+
 ***
 
 Next: [3. Provided form types](provided-types.md)

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\DependencyInjection;
 
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -39,6 +40,15 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifNotInArray(array(null, 'and', 'or'))
                         ->thenInvalid('Invalid value, please use "null", "and", "or".')
+                    ->end()
+                ->end()
+
+                ->scalarNode('condition_pattern')
+                    ->defaultValue('text.starts')
+                    ->info('Default condition pattern for TextFilterType')
+                    ->validate()
+                        ->ifNotInArray(array(null, 'text.equals', 'text.ends', 'text.contains', 'text.equal'))
+                        ->thenInvalid('Invalid value, please use "null", "text.contains", "text.starts", "text.ends", "text.equal".')
                     ->end()
                 ->end()
 

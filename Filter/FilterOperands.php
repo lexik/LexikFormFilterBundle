@@ -109,4 +109,22 @@ final class FilterOperands
 
         return array_flip($choices);
     }
+
+    /**
+     * Returns class constant string operand by given string.
+     *
+     * @param String $operand
+     * @return int
+     */
+    public static function getStringOperandByString($operand)
+    {
+        if ($operand === null) {
+            return self::STRING_STARTS;
+        }
+
+        $name = strtoupper(str_replace('text.', 'STRING_', $operand));
+        $reflection = new \ReflectionClass(__CLASS__);
+
+        return $reflection->getConstant($name);
+    }
 }

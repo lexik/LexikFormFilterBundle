@@ -8,8 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Filter type for strings.
@@ -18,6 +18,19 @@ use Symfony\Component\OptionsResolver\Options;
  */
 class TextFilterType extends AbstractType
 {
+    /**
+     * @var int
+     */
+    private $conditionPattern;
+
+    /**
+     * @param int $conditionPattern
+     */
+    public function __construct($conditionPattern = FilterOperands::STRING_EQUALS)
+    {
+        $this->conditionPattern = $conditionPattern;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,23 +52,23 @@ class TextFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $defaults = array(
-                'required'               => false,
-                'condition_pattern'      => FilterOperands::STRING_EQUALS,
-                'compound'               => function (Options $options) {
-                    return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
-                },
-                'text_options'           => array(
-                    'required' => false,
-                    'trim'     => true,
-                ),
-                'choice_options'         => array(
-                    'choices'            => FilterOperands::getStringOperandsChoices(),
-                    'required'           => false,
-                    'translation_domain' => 'LexikFormFilterBundle',
-                ),
-                'data_extraction_method' => function (Options $options) {
-                    return $options['compound'] ? 'text' : 'default';
-                },
+            'required'               => false,
+            'condition_pattern'      => $this->conditionPattern,
+            'compound'               => function (Options $options) {
+                return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
+            },
+            'text_options'           => array(
+                'required' => false,
+                'trim'     => true,
+            ),
+            'choice_options'         => array(
+                'choices'            => FilterOperands::getStringOperandsChoices(),
+                'required'           => false,
+                'translation_domain' => 'LexikFormFilterBundle',
+            ),
+            'data_extraction_method' => function (Options $options) {
+                return $options['compound'] ? 'text' : 'default';
+            },
         );
                 
         if(version_compare(Kernel::VERSION, '3.1.0') < 0) {
