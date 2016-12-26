@@ -13,8 +13,8 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new PrepareListener();
 
-        $pgPlatform = $this->getMock('Doctrine\DBAL\Platforms\PostgreSqlPlatform');
-        $myPlatform = $this->getMock('Doctrine\DBAL\Platforms\MySqlPlatform');
+        $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
+        $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
         $connection    = $this->getMock(
             'Doctrine\DBAL\Connection',
