@@ -27,6 +27,7 @@
     <services>
         <!-- Filter Types -->
         <service id="lexik_form_filter.type.filter_text" class="%lexik_form_filter.type.filter_text.class%">
+            <argument>%lexik_form_filter.text.condition_pattern%</argument>
             <tag name="form.type" />
         </service>
 

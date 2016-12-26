@@ -7,6 +7,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Configuration;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -52,5 +53,6 @@ class LexikFormFilterExtension extends Extension
         }
 
         $container->setParameter('lexik_form_filter.where_method', $config['where_method']);
+        $container->setParameter('lexik_form_filter.text.condition_pattern', FilterOperands::getStringOperandByString($config['condition_pattern']));
     }
 }
