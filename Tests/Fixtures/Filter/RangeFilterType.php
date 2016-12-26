@@ -39,12 +39,12 @@ class RangeFilterType extends AbstractType
             ->add('startAt', DateRangeFilterType::class, array(
                 'left_date_options' => array(
                     'widget' => 'single_text',
-                    'model_timezone' => 'UTC',
+                    'model_timezone' => 'Europe/Paris',
                     'view_timezone' => 'Asia/Karachi'
                 ),
                 'right_date_options' => array(
                     'widget' => 'single_text',
-                    'model_timezone' => 'UTC',
+                    'model_timezone' => 'Europe/Paris',
                     'view_timezone' => 'Asia/Karachi'
                 ),
             ))

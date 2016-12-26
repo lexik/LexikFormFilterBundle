@@ -47,7 +47,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
     public function testBuildQuery()
     {
         $bson = array(
-            'db.items.find();',
+            '#db.items.find\({? }?\);#',
             'db.items.find({ "$and": [ { "name": "blabla" } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
@@ -63,7 +63,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $mongoQB = $this->createDoctrineQueryBuilder();
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[0], $this->toBson($mongoQB->getQuery()));
+        $this->assertRegExp($bson[0], $this->toBson($mongoQB->getQuery()));
 
         // bind a request to the form - 1 params
         $mongoQB = $this->createDoctrineQueryBuilder();
