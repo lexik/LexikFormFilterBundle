@@ -28,8 +28,8 @@ env:
 
 before_script:
     - phpenv config-add travis-php.ini
-    - if [ "$TRAVIS_PHP_VERSION" == *"5."* ]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis-php.ini; fi;
-    - if [ "$TRAVIS_PHP_VERSION" != *"5."* ]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis-php.ini; fi;
+    - if [ "$TRAVIS_PHP_VERSION" =~ ^5\. ]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis-php.ini; fi;
+    - if ! [ "$TRAVIS_PHP_VERSION" =~ ^5\. ]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis-php.ini; fi;
     - composer self-update
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require symfony/form:${SYMFONY_VERSION} --no-update
