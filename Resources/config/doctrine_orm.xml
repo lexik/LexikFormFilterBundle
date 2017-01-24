@@ -23,7 +23,8 @@
 
         <!-- Specific ORM types -->
         <service id="lexik_form_filter.type.filter_entity" class="%lexik_form_filter.type.filter_entity.class%">
-            <tag name="form.type" alias="filter_entity" />
+            <argument type="service" id="doctrine" />
+            <tag name="form.type" />
         </service>
     </services>
 </container>
