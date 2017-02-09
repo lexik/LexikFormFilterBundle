@@ -398,7 +398,7 @@ class ItemFilterType extends AbstractType
         $builder->add('rank', Filters\NumberFilterType::class);
 
         $builder->add('options', Filters\CollectionAdapterFilterType::class, array(
-            'type'       => new OptionsFilterType(),
+            'entry_type' => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // add the join clause to the doctrine query builder
@@ -441,7 +441,7 @@ class ItemFilterType extends AbstractType
         $builder->add('rank', Filters\NumberFilterType::class);
 
         $builder->add('options', Filters\CollectionAdapterFilterType::class, array(
-            'type'       => new OptionsFilterType(),
+            'entry_type' => new OptionsFilterType(),
             'add_shared' => function (FilterBuilderExecuterInterface $qbe)  {
                 $closure = function (Builder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     // Here you can manipulate the MongoDB query builder if needed.
