@@ -40,6 +40,7 @@ If you want to avoid that, there is a configuration option:
 # app/config/config.yml
 lexik_form_filter:
     force_case_insensitivity: false
+    encoding: ~ # Encoding for case insensitive LIKE comparisons. For example: UTF-8
 ```
 
 If you use Postgres and you want your LIKE comparisons to be case sensitive
