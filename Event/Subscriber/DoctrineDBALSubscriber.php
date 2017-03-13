@@ -29,7 +29,7 @@ class DoctrineDBALSubscriber extends AbstractDoctrineSubscriber implements Event
             'lexik_form_filter.apply.dbal.filter_number_range'   => array('filterNumberRange'),
             'lexik_form_filter.apply.dbal.filter_text'           => array('filterText'),
 
-            // Symfony2 field types
+            // Symfony field types
             'lexik_form_filter.apply.dbal.text'     => array('filterText'),
             'lexik_form_filter.apply.dbal.email'    => array('filterValue'),
             'lexik_form_filter.apply.dbal.integer'  => array('filterValue'),

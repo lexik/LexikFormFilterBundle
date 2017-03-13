@@ -36,7 +36,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
             'lexik_form_filter.apply.orm.filter_number_range'   => array('filterNumberRange'),
             'lexik_form_filter.apply.orm.filter_text'           => array('filterText'),
 
-            // Symfony2 types
+            // Symfony types
             'lexik_form_filter.apply.orm.text'     => array('filterText'),
             'lexik_form_filter.apply.orm.email'    => array('filterValue'),
             'lexik_form_filter.apply.orm.integer'  => array('filterValue'),
