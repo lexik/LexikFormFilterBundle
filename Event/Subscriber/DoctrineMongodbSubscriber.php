@@ -34,7 +34,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
             'lexik_form_filter.apply.mongodb.filter_text'           => array('filterText'),
             'lexik_form_filter.apply.mongodb.filter_document'       => array('filterDocument'),
 
-            // Symfony2 types
+            // Symfony types
             'lexik_form_filter.apply.mongodb.text'     => array('filterText'),
             'lexik_form_filter.apply.mongodb.email'    => array('filterValue'),
             'lexik_form_filter.apply.mongodb.integer'  => array('filterValue'),

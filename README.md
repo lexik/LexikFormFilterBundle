@@ -1,7 +1,7 @@
 Overview
 ========
 
-This Symfony2 bundle aims to provide classes to build some form types dedicated to filter an entity.
+This Symfony bundle aims to provide classes to build some form types dedicated to filter an entity.
 Once you created your form type you will be able to update a doctrine query builder conditions from a form type.
 
 [![Build Status](https://travis-ci.org/lexik/LexikFormFilterBundle.png?branch=master)](https://travis-ci.org/lexik/LexikFormFilterBundle)
