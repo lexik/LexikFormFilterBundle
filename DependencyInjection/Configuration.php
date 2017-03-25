@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('text.starts')
                     ->info('Default condition pattern for TextFilterType')
                     ->validate()
-                        ->ifNotInArray(array(null, 'text.equal', 'text.ends', 'text.contains', 'text.starts'))
+                        ->ifNotInArray(array(null, 'text.equals', 'text.ends', 'text.contains', 'text.starts'))
                         ->thenInvalid('Invalid value, please use "null", "text.contains", "text.starts", "text.ends", "text.equal".')
                     ->end()
                 ->end()
