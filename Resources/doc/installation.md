@@ -1,6 +1,5 @@
-
-1. Installation
-===============
+[1] Installation
+================
 
 Add the bundle to your `composer.json` file:
 

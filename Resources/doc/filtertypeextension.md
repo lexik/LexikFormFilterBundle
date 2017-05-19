@@ -1,6 +1,5 @@
-
-5. The FilterTypeExtension
-==========================
+[5] The FilterTypeExtension
+===========================
 
 The bundle loads a custom type extension to add the `apply_filter`,  `data_extraction_method`, and `filter_condition_builder` options to **all form types**. These options are used when a filter condition is applied to the query builder.
 

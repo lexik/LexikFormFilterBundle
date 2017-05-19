@@ -1,6 +1,5 @@
-
-2. Configuration
-================
+[2] Configuration
+=================
 
 Twig
 ----

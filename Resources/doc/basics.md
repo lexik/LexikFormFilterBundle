@@ -1,5 +1,5 @@
-4. Example & inner working
-==========================
+[4] Example & inner working
+===========================
 
 i. Simple example
 -----------------

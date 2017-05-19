@@ -1,5 +1,5 @@
-5. Working with the bundle
-==========================
+[5] Working with the bundle
+===========================
 
 i. Customize condition operator
 -------------------------------

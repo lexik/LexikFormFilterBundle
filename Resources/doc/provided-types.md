@@ -1,6 +1,5 @@
-
-3. Provided types
-=================
+[3] Provided types
+==================
 
 The bundle provides form types dedicated to filtering. 
 Here the list of these types with their parent type and their specific options.
