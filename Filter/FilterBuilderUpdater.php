@@ -124,10 +124,11 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
+            $name = $this->getFormName($child);
 
             // this means we have a relation
             if ($child->getConfig()->hasAttribute('add_shared')) {
-                $join = trim($alias . '.' . $child->getName(), '.');
+                $join = trim($alias . '.' . $name, '.');
 
                 $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
 
@@ -148,7 +149,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
             // Doctrine2 embedded object case
             } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
-                $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
+                $this->addFilters($child, $filterQuery, $alias . '.' . $name);
 
             // default case
             } else {
@@ -174,17 +175,19 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     {
         $values = $this->prepareFilterValues($form, $formType);
         $values += array('alias' => $alias);
-        $field = trim($values['alias'] . '.' . $form->getName(), '. ');
+        $name = $this->getFormName($form);
+        $field = trim($values['alias'] . '.' . $name, '. ');
 
         $condition = null;
 
         // build a complete form name including parents
-        $completeName = $form->getName();
+        $completeName = $name;
         $parentForm = $form;
         do {
             $parentForm = $parentForm->getParent();
-            if (!is_numeric($parentForm->getName()) && $parentForm->getConfig()->getMapped()) { // skip collection numeric index and not mapped fields
-                $completeName = $parentForm->getName() . '.' . $completeName;
+            $parentName = $this->getFormName($parentForm);
+            if (!is_numeric($parentName) && $parentForm->getConfig()->getMapped()) { // skip collection numeric index and not mapped fields
+                $completeName = $parentName . '.' . $completeName;
             }
         } while (!$parentForm->isRoot());
 
@@ -273,7 +276,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            $name = ('' !== $parentName) ? $parentName.'.'.$child->getName() : $child->getName();
+            $name = $this->getFormName($child);
+            if ('' !== $parentName) {
+                $name = $parentName . '.' . $name;
+            }
 
             if ($child->getConfig()->hasAttribute('add_shared') || $formType instanceof EmbeddedFilterTypeInterface) {
                 $isCollection = ($formType instanceof CollectionAdapterFilterType);
@@ -287,5 +293,17 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 $root->field($name);
             }
         }
+    }
+
+    protected function getFormName(FormInterface $form)
+    {
+        $name = $form->getName();
+        $propertyPath = $form->getConfig()->getOption('property_path', null);
+
+        if (!is_null($propertyPath)) {
+            $name = $propertyPath;
+        }
+
+        return $name;
     }
 }
