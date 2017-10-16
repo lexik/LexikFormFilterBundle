@@ -16,13 +16,12 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
         $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
         $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
-        $connection    = $this->getMock(
-            'Doctrine\DBAL\Connection',
-            array(),
-            array(),
-            '',
-            false
-        );
+        $connection = $this
+            ->getMockBuilder('Doctrine\DBAL\Connection')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
         $connection->expects($this->any())
             ->method('getDatabasePlatform')
             ->will($this->onConsecutiveCalls(
@@ -40,11 +39,12 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getConnection')
             ->will($this->returnValue($connection));
 
-        $queryBuilder  = $this->getMock(
-            '\Doctrine\ORM\QueryBuilder',
-            array('getEntityManager'),
-            array($entityManager)
-        );
+        $queryBuilder = $this
+            ->getMockBuilder('\Doctrine\ORM\QueryBuilder')
+            ->setConstructorArgs(array($entityManager))
+            ->setMethods(array('getEntityManager'))
+            ->getMock()
+        ;
 
         $queryBuilder->expects($this->any())
             ->method('getEntityManager')
@@ -53,11 +53,12 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($listener->getForceCaseInsensitivity($queryBuilder));
         $this->assertFalse($listener->getForceCaseInsensitivity($queryBuilder));
 
-        $queryBuilder  = $this->getMock(
-            'Doctrine\DBAL\Query\QueryBuilder',
-            array('getConnection'),
-            array($connection)
-        );
+        $queryBuilder = $this
+            ->getMockBuilder('Doctrine\DBAL\Query\QueryBuilder')
+            ->setConstructorArgs(array($connection))
+            ->setMethods(array('getConnection'))
+            ->getMock()
+        ;
 
         $queryBuilder->expects($this->any())
             ->method('getConnection')
