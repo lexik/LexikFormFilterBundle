@@ -14,9 +14,9 @@ php:
 matrix:
     exclude:
         - php: 5.6
-          env: DEPENDENCIES='beta' SYMFONY_VERSION='4.0.*'
+          env: DEPENDENCIES='beta' SYMFONY_VERSION='4.0.*' STABLE=beta
         - php: 7.0
-          env: DEPENDENCIES='beta' SYMFONY_VERSION='4.0.*'
+          env: DEPENDENCIES='beta' SYMFONY_VERSION='4.0.*' STABLE=beta
     fast_finish: true
 
 services:
