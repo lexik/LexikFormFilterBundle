@@ -23,6 +23,7 @@ env:
     - SYMFONY_VERSION=3.1.*
     - SYMFONY_VERSION=3.2.*
     - SYMFONY_VERSION=3.3.*
+    - DEPENDENCIES='beta' SYMFONY_VERSION='4.0.*'
 
 before_script:
     - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
