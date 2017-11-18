@@ -3,8 +3,9 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Event\Listener;
 
 use Lexik\Bundle\FormFilterBundle\Event\Listener\PrepareListener;
+use PHPUnit\Framework\TestCase;
 
-class PrepareListenerTest extends \PHPUnit_Framework_TestCase
+class PrepareListenerTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
