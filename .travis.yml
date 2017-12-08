@@ -39,7 +39,7 @@ before_script:
     - if [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - composer self-update
-    - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer require alcaeus/mongo-php-adapter:1.0.* --ignore-platform-reqs; fi;
+    - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer config "platform.ext-mongo" "1.6.16" && composer require alcaeus/mongo-php-adapter; fi;
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require symfony/form:${SYMFONY_VERSION} --no-update
     - composer update
