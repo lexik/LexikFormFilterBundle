@@ -36,7 +36,7 @@
         </service>
 
         <!-- Prepare listener -->
-        <service id="lexik_form_filter.filter_prepare" class="%lexik_form_filter.filter_prepare.class%">
+        <service id="lexik_form_filter.filter_prepare" class="%lexik_form_filter.filter_prepare.class%" public="true">
             <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
     </services>
