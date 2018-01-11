@@ -17,7 +17,7 @@ class PrepareListenerTest extends TestCase
         $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
         $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
-        $connection    = $this->getMock(
+        $connection    = $this->getMockClass(
             'Doctrine\DBAL\Connection',
             array(),
             array(),
@@ -41,7 +41,7 @@ class PrepareListenerTest extends TestCase
             ->method('getConnection')
             ->will($this->returnValue($connection));
 
-        $queryBuilder  = $this->getMock(
+        $queryBuilder  = $this->getMockClass(
             '\Doctrine\ORM\QueryBuilder',
             array('getEntityManager'),
             array($entityManager)
@@ -54,7 +54,7 @@ class PrepareListenerTest extends TestCase
         $this->assertTrue($listener->getForceCaseInsensitivity($queryBuilder));
         $this->assertFalse($listener->getForceCaseInsensitivity($queryBuilder));
 
-        $queryBuilder  = $this->getMock(
+        $queryBuilder  = $this->getMockClass(
             'Doctrine\DBAL\Query\QueryBuilder',
             array('getConnection'),
             array($connection)
