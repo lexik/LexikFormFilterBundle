@@ -112,7 +112,7 @@ ii. Filter customization
 #### A. With the `apply_filter` option:
 
 All filter types have an `apply_filter` option which is a closure.
-If this option is defined the `QueryBuilderUpdater` won't trigger any event, but if will call the given closure instead.
+If this option is defined the `QueryBuilderUpdater` won't trigger any event, but it will call the given closure instead.
 
 The closure takes 3 parameters:
 
