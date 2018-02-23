@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
@@ -243,10 +242,10 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     /**
      * Get the conditon builder object for the given form.
      *
-     * @param Form $form
+     * @param FormInterface $form
      * @return ConditionBuilderInterface
      */
-    protected function getConditionBuilder(Form $form)
+    protected function getConditionBuilder(FormInterface $form)
     {
         $builderClosure = $form->getConfig()->getAttribute('filter_condition_builder');
 
@@ -264,11 +263,11 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     /**
      * Create a default node hierarchy by using AND operator.
      *
-     * @param Form                   $form
+     * @param FormInterface          $form
      * @param ConditionNodeInterface $root
      * @param string                 $parentName
      */
-    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, $parentName = '')
+    protected function buildDefaultConditionNode(FormInterface $form, ConditionNodeInterface $root, $parentName = '')
     {
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
