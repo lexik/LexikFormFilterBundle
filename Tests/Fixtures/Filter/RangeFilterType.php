@@ -30,21 +30,21 @@ class RangeFilterType extends AbstractType
             ->add('default_position', NumberRangeFilterType::class)
             ->add('createdAt', DateRangeFilterType::class, array(
                 'left_date_options'  => array('widget' => 'single_text'),
-                'right_date_options' => array('widget' => 'choice'),
+                'right_date_options' => array('widget' => 'choice', 'years' => range(2010, 2020)),
             ))
             ->add('updatedAt', DateTimeRangeFilterType::class, array(
                 'left_datetime_options'  => array('date_widget' => 'single_text', 'time_widget' => 'single_text'),
-                'right_datetime_options' => array(),
+                'right_datetime_options' => array('years' => range(2010, 2020)),
             ))
             ->add('startAt', DateRangeFilterType::class, array(
                 'left_date_options' => array(
                     'widget' => 'single_text',
-                    'model_timezone' => 'Europe/Paris',
+                    'model_timezone' => 'UTC',
                     'view_timezone' => 'Asia/Karachi'
                 ),
                 'right_date_options' => array(
                     'widget' => 'single_text',
-                    'model_timezone' => 'Europe/Paris',
+                    'model_timezone' => 'UTC',
                     'view_timezone' => 'Asia/Karachi'
                 ),
             ))
