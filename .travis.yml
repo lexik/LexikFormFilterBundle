@@ -35,13 +35,13 @@ before_install:
 
 before_script:
     - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo memory_limit = -1 >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
     - if [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - composer self-update
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer require alcaeus/mongo-php-adapter:1.0.* --ignore-platform-reqs; fi;
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require symfony/form:${SYMFONY_VERSION} --no-update
-    - echo memory_limit = -1 >> $INI
     - composer update
 
 script:
