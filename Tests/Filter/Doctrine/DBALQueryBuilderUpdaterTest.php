@@ -67,8 +67,8 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testDateRangeWithTimezone()
     {
         parent::createDateRangeWithTimezoneTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-20 23:59:59\') AND (i.startAt >= \'2015-10-20 00:00:00\')',
-            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-16 23:59:59\') AND (i.startAt >= \'2015-10-01 00:00:00\')',
+            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-20 18:59:59\') AND (i.startAt >= \'2015-10-19 19:00:00\')',
+            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-16 18:59:59\') AND (i.startAt >= \'2015-09-30 19:00:00\')',
         ));
     }
 

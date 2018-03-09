@@ -44,4 +44,4 @@ before_script:
     - composer update
 
 script:
-    - phpunit
+    - bin/phpunit
