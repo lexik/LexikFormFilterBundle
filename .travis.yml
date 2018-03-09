@@ -34,6 +34,7 @@ before_install:
     - if [[ "$STABLE" != "" ]]; then composer config minimum-stability $STABLE; fi;
 
 before_script:
+    - echo "memory_limit=2GB" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
     - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - if [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
@@ -41,7 +42,7 @@ before_script:
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer require alcaeus/mongo-php-adapter:1.0.* --ignore-platform-reqs; fi;
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require symfony/form:${SYMFONY_VERSION} --no-update
-    - composer update --dev
+    - composer update
 
 script:
     - bin/phpunit
