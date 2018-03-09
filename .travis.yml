@@ -12,6 +12,9 @@ php:
     - 7.1
 
 matrix:
+    include:
+        - php: hhvm
+          dist: trusty
     fast_finish: true
 
 services:
