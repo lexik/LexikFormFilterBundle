@@ -34,7 +34,6 @@ before_install:
     - if [[ "$STABLE" != "" ]]; then composer config minimum-stability $STABLE; fi;
 
 before_script:
-    - echo "memory_limit=2GB" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
     - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - if [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
