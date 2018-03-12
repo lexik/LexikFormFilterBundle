@@ -15,7 +15,7 @@
 
     <services>
         <!-- query builder updater -->
-        <service id="lexik_form_filter.query_builder_updater" class="%lexik_form_filter.query_builder_updater.class%">
+        <service id="lexik_form_filter.query_builder_updater" class="%lexik_form_filter.query_builder_updater.class%" public="true">
             <argument type="service" id="lexik_form_filter.form_data_extractor" />
             <argument type="service" id="event_dispatcher" />
         </service>
@@ -36,7 +36,7 @@
         </service>
 
         <!-- Prepare listener -->
-        <service id="lexik_form_filter.filter_prepare" class="%lexik_form_filter.filter_prepare.class%">
+        <service id="lexik_form_filter.filter_prepare" class="%lexik_form_filter.filter_prepare.class%" public="true">
             <tag name="kernel.event_listener" event="lexik_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
     </services>

@@ -15,7 +15,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Symfony\Component\Form\FormFactory

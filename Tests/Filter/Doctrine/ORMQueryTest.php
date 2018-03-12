@@ -3,11 +3,12 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class ORMQueryTest extends \PHPUnit_Framework_TestCase
+class ORMQueryTest extends TestCase
 {
     public function testHasJoinAlias()
     {

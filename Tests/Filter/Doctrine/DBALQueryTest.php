@@ -4,11 +4,12 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DBALQueryTest extends \PHPUnit_Framework_TestCase
+class DBALQueryTest extends TestCase
 {
     public function testHasJoinAlias()
     {

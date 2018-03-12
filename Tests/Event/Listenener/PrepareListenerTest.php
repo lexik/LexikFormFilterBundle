@@ -3,8 +3,9 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Event\Listener;
 
 use Lexik\Bundle\FormFilterBundle\Event\Listener\PrepareListener;
+use PHPUnit\Framework\TestCase;
 
-class PrepareListenerTest extends \PHPUnit_Framework_TestCase
+class PrepareListenerTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -16,12 +17,10 @@ class PrepareListenerTest extends \PHPUnit_Framework_TestCase
         $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
         $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
-        $connection = $this
-            ->getMockBuilder('Doctrine\DBAL\Connection')
+        $connection    = $this->getMockBuilder(
+            'Doctrine\DBAL\Connection')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
+            ->getMock();
         $connection->expects($this->any())
             ->method('getDatabasePlatform')
             ->will($this->onConsecutiveCalls(
