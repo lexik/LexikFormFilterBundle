@@ -514,7 +514,7 @@ class OptionsFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('item', new ItemFilterType(), array(
+        $builder->add('item', ItemFilterType::class, array(
             'add_shared' => function (FilterBuilderExecuterInterface $qbe) {
                 $closure = function (QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
                     $filterBuilder->leftJoin($alias . '.item', $joinAlias);
