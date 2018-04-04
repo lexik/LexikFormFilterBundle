@@ -14,7 +14,9 @@
     </parameters>
 
     <services>
-        <!-- query builder updater -->
+        <!-- query builder updater and aliases for autowiring-->
+        <service id="Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderUpdater" alias="lexik_form_filter.query_builder_updater" public="false"/>
+        <service id="Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface" alias="lexik_form_filter.query_builder_updater" public="false"/>
         <service id="lexik_form_filter.query_builder_updater" class="%lexik_form_filter.query_builder_updater.class%" public="true">
             <argument type="service" id="lexik_form_filter.form_data_extractor" />
             <argument type="service" id="event_dispatcher" />
