@@ -91,8 +91,8 @@ abstract class ExpressionBuilder
      * Returns gte expression if min is null
      *
      * @param string        $field field name
-     * @param null|DateTime $min   start date
-     * @param null|DateTime $max   end date
+     * @param null|\DateTime $min   start date
+     * @param null|\DateTime $max   end date
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
@@ -125,9 +125,9 @@ abstract class ExpressionBuilder
      * Returns lte expression if max is null
      * Returns gte expression if min is null
      *
-     * @param  string|DateTime $value alias.fieldName or mysql date string format or DateTime
-     * @param  string|DateTime $min alias.fieldName or mysql date string format or DateTime
-     * @param  string|DateTime $max alias.fieldName or mysql date string format or DateTime
+     * @param  string|\DateTime $value alias.fieldName or mysql date string format or DateTime
+     * @param  string|\DateTime $min alias.fieldName or mysql date string format or DateTime
+     * @param  string|\DateTime $max alias.fieldName or mysql date string format or DateTime
      * @return \Doctrine\ORM\Query\Expr\Comparison|string
      */
     public function dateTimeInRange($value, $min = null, $max = null)
@@ -180,7 +180,7 @@ abstract class ExpressionBuilder
     /**
      * Normalize DateTime boundary
      *
-     * @param  DateTime $date
+     * @param  \DateTime $date
      * @param  bool     $isMax
      *
      * @return \Doctrine\ORM\Query\Expr\Literal|string
@@ -203,7 +203,7 @@ abstract class ExpressionBuilder
     /**
      * Normalize date time boundary
      *
-     * @param DateTime|string $date
+     * @param \DateTime|string $date
      * @return \Doctrine\ORM\Query\Expr\Literal
      */
     protected function convertToSqlDateTime($date)
