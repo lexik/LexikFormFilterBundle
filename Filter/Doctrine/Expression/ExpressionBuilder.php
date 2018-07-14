@@ -177,6 +177,24 @@ abstract class ExpressionBuilder
         );
     }
 
+
+    /**
+     * Get string equal expression
+     *
+     * @param  string $field field name
+     * @param  string $value string value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     */
+    public function stringEquals($field, $value){
+        $value = $this->formatCase($value);
+
+        return $this->expr()->eq(
+            $this->forceCaseInsensitivity ? $this->expr()->lower($field) : $field,
+            $this->expr()->literal($value)
+        );
+    }
+
     /**
      * Normalize DateTime boundary
      *
@@ -227,9 +245,7 @@ abstract class ExpressionBuilder
      */
     protected function convertTypeToMask($value, $type)
     {
-        if ($this->forceCaseInsensitivity) {
-            $value = $this->encoding ? mb_strtolower($value, $this->encoding) : mb_strtolower($value);
-        }
+        $value = $this->formatCase($value);
 
         switch ($type) {
             case FilterOperands::STRING_STARTS:
@@ -251,6 +267,19 @@ abstract class ExpressionBuilder
                 throw new \InvalidArgumentException('Wrong type constant in string like expression mapper');
         }
 
+        return $value;
+    }
+
+
+    /**
+     * Reformat case value
+     * @param $value
+     * @return string
+     */
+    protected function formatCase($value){
+        if ($this->forceCaseInsensitivity) {
+            return $this->encoding ? mb_strtolower($value, $this->encoding) : mb_strtolower($value);
+        }
         return $value;
     }
 }

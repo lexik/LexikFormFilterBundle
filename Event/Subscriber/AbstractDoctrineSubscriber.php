@@ -230,7 +230,8 @@ abstract class AbstractDoctrineSubscriber
 
         if ('' !== $values['value'] && null !== $values['value']) {
             if (isset($values['condition_pattern'])) {
-                $event->setCondition($expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']));
+                $condition =  FilterOperands::STRING_EQUALS === $values['condition_pattern'] ? $expr->stringEquals($event->getField(), $values['value']) : $expr->stringLike($event->getField(), $values['value'], $values['condition_pattern']);
+                $event->setCondition($condition);
             } else {
                 $event->setCondition($expr->stringLike($event->getField(), $values['value']));
             }
