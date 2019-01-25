@@ -118,12 +118,12 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form->submit(array(
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
-            'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
+            'createdAt' => array('year' => 2019, 'month' => 9, 'day' => 27),
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2019-09-27')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - datetime + pattern selector
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -136,14 +136,14 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array(
-                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
+                'date' => array('year' => 2019, 'month' => 9, 'day' => 27),
                 'time' => array('hour' => 13, 'minute' => 21),
             ),
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27 13:21:00')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2019-09-27 13:21:00')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createDisabledFieldTest($method, array $dqls)
