@@ -108,7 +108,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                     $expr->eq($filterField, ':'.$paramName),
                     array($paramName => array(
                         $this->getEntityIdentifier($values['value'], $queryBuilder->getEntityManager()),
-                        Types::INTEGER
+                        $this->getEntityIdentifierType($values['value'], $queryBuilder->getEntityManager()),
                     ))
                 );
             }
@@ -136,5 +136,24 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
         }
 
         return array_shift($identifierValues);
+    }
+    
+    /**
+     * @param object $value
+     * @return string
+     * @throws \RuntimeException
+     */
+    protected function getEntityIdentifierType($value, EntityManagerInterface $em)
+    {
+        $class = get_class($value);
+        $metadata = $em->getClassMetadata($class);
+
+        $identifierType = $metadata->getIdentifierFieldNames($value);
+
+        if (empty($identifierType)) {
+            throw new \RuntimeException(sprintf('Can\'t get identifier value for class "%s".', $class));
+        }
+
+        return $metadata->getTypeOfField(array_shift($identifierType));
     }
 }
