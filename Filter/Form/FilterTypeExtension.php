@@ -41,10 +41,10 @@ class FilterTypeExtension extends AbstractTypeExtension
     }
 
     /**
-     * {@inheritdoc}
+     * @return iterable
      */
-    public function getExtendedType()
+    public static function getExtendedTypes()
     {
-        return FormType::class;
+        return [FormType::class];
     }
 }
