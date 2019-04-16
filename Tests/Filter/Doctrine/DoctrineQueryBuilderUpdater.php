@@ -2,9 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
@@ -35,11 +35,6 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
     }
 
     /**
-     * @return QueryBuilder
-     */
-    abstract protected function createDoctrineQueryBuilder();
-
-    /**
      * Get query parameters from the query builder.
      *
      * @param $qb
@@ -51,7 +46,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
             return $qb->getParameters();
         }
 
-        if ($qb instanceof QueryBuilder) {
+        if ($qb instanceof \Doctrine\ORM\QueryBuilder) {
             $params = array();
 
             foreach ($qb->getParameters() as $parameter) {
@@ -115,7 +110,6 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $this->assertEquals(array('p_i_position' => 2, 'p_i_enabled' => 1), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - date + pattern selector
-        $year = \date('Y');
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
             'with_selector' => true,
         ));
@@ -124,12 +118,12 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
         $form->submit(array(
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
-            'createdAt' => array('year' => $year, 'month' => 9, 'day' => 27),
+            'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[5], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime("{$year}-09-27")), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
 
         // bind a request to the form - datetime + pattern selector
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -142,14 +136,14 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array(
-                'date' => array('year' => $year, 'month' => 9, 'day' => 27),
+                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
                 'time' => array('hour' => 13, 'minute' => 21),
             ),
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $doctrineQueryBuilder);
         $this->assertEquals($dqls[6], $doctrineQueryBuilder->{$method}());
-        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime("{$year}-09-27 13:21:00")), $this->getQueryBuilderParameters($doctrineQueryBuilder));
+        $this->assertEquals(array('p_i_position' => 2, 'p_i_createdAt' => new \DateTime('2013-09-27 13:21:00')), $this->getQueryBuilderParameters($doctrineQueryBuilder));
     }
 
     protected function createDisabledFieldTest($method, array $dqls)
