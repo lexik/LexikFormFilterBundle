@@ -1,48 +1,42 @@
 language: php
 
-sudo: false
-
 cache:
     directories:
-        - $HOME/.composer/cache
+        - $HOME/.composer/cache/files
 
 php:
-    - 5.6
     - 7.0
     - 7.1
+    - 7.2
+    - 7.3
+
+env:
+    global:
+        - MONGO_EXTENSION="mongodb.so"
+        - COMPOSER_FLAGS=""
 
 matrix:
-    exclude:
+    include:
         - php: 5.6
-          env: SYMFONY_VERSION=4.0.*
-        - php: 7.0
-          env: SYMFONY_VERSION=4.0.*
+          env: MONGO_EXTENSION="mongo.so" SYMFONY_VERSION="symfony/lts:^2"
+        - php: 7.1
+          env: SYMFONY_VERSION="symfony/lts:^3"
     fast_finish: true
 
 services:
     - mongodb
 
-env:
-    - SYMFONY_VERSION=2.8.*
-    - SYMFONY_VERSION=3.0.*
-    - SYMFONY_VERSION=3.1.*
-    - SYMFONY_VERSION=3.2.*
-    - SYMFONY_VERSION=3.3.*
-    - SYMFONY_VERSION=4.0.*
-
 before_install:
-    - if [[ "$STABLE" != "" ]]; then composer config minimum-stability $STABLE; fi;
+    - echo "extension = $MONGO_EXTENSION" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    - echo 'memory_limit = -1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 before_script:
-    - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo memory_limit = -1 >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - if [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongo.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
-    - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then echo 'extension = "mongodb.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
-    - composer self-update
-    - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer config "platform.ext-mongo" "1.6.16" && composer require alcaeus/mongo-php-adapter; fi;
-    - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
-    - composer require symfony/form:${SYMFONY_VERSION} --no-update
-    - composer update
+    - composer config platform.ext-mongo 1.6.16
+    - if [ "$SYMFONY_VERSION" != "" ]; then travis_wait composer require --no-update $SYMFONY_VERSION; fi;
+    - travis_wait composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
+    - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer require alcaeus/mongo-php-adapter; fi;
 
 script:
-    - bin/phpunit
+    - composer validate --no-check-lock --strict
+    - bin/phpunit --coverage-text

@@ -11,14 +11,10 @@ use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilte
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\QueryBuilderUpdater;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Mongodb query builder tests.
@@ -46,14 +42,16 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
     public function testBuildQuery()
     {
+        $year = \date('Y');
+
         $bson = array(
             '#db.items.find\(({ })?\);#',
             'db.items.find({ "$and": [ { "name": "blabla" } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
             'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
-            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("2013-09-27T00:00:00\+[0-9:]+"\) \} \] \}\);#',
-            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("2013-09-27T13:21:00\+[0-9:]+"\) \} \] \}\);#',
+            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("' . $year . '-09-27T00:00:00\+[0-9:]+"\) \} \] \}\);#',
+            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("' . $year . '-09-27T13:21:00\+[0-9:]+"\) \} \] \}\);#',
         );
 
         $form = $this->formFactory->create(ItemFilterType::class);
@@ -110,7 +108,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $form->submit(array(
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
-            'createdAt' => array('year' => 2013, 'month' => 9, 'day' => 27),
+            'createdAt' => array('year' => $year, 'month' => 9, 'day' => 27),
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
@@ -127,7 +125,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             'name'      => array('text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS),
             'position'  => array('text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL),
             'createdAt' => array(
-                'date' => array('year' => 2013, 'month' => 9, 'day' => 27),
+                'date' => array('year' => $year, 'month' => 9, 'day' => 27),
                 'time' => array('hour' => 13, 'minute' => 21),
             ),
         ));
