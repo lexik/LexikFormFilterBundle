@@ -18,7 +18,7 @@ use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Symfony\Component\Form\FormFactory
+     * @var FormFactory
      */
     protected $formFactory;
 
@@ -30,7 +30,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Create a form factory instance.
      *
-     * @return \Symfony\Component\Form\FormFactory
+     * @return FormFactory
      */
     public function getFormFactory()
     {
