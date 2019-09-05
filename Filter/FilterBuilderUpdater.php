@@ -298,11 +298,11 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     protected function dispatch($eventName, $event)
     {
         if ($this->dispatcher instanceof EventDispatcherInterface) {
-            // Event dispatcher 4.3+
-            return $this->dispatcher->dispatch($event, $eventName);
-        } else {
             // Event dispatcher < 4.3
             return $this->dispatcher->dispatch($eventName, $event);
+        } else {
+            // Event dispatcher 4.3+
+            return $this->dispatcher->dispatch($event, $eventName);
         }
     }
 }
