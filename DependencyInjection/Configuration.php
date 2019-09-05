@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\DependencyInjection;
 
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
