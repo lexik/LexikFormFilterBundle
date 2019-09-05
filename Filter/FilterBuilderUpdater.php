@@ -290,16 +290,18 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * @param string|object $eventName
-     * @param string|object $event
+     * @param string $eventName
+     * @param object $event
      *
      * @return mixed
      */
     protected function dispatch($eventName, $event)
     {
         if ($this->dispatcher instanceof EventDispatcherInterface) {
+            // Event dispatcher 4.3+
             return $this->dispatcher->dispatch($event, $eventName);
         } else {
+            // Event dispatcher < 4.3
             return $this->dispatcher->dispatch($eventName, $event);
         }
     }
