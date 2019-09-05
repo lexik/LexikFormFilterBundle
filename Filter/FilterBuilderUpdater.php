@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\Event as ContractsEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
@@ -298,7 +297,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     protected function dispatch($eventName, $event)
     {
-        if ($event instanceof ContractsEvent) {
+        if ($this->dispatcher instanceof EventDispatcherInterface) {
             return $this->dispatcher->dispatch($event, $eventName);
         } else {
             return $this->dispatcher->dispatch($eventName, $event);
