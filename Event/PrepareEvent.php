@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Get alias and expression builder for filter builder
