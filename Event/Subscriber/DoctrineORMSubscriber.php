@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
@@ -68,6 +69,10 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
     {
         $expr   = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
+
+        if (is_array($values['value']) && count($values['value']) > 0 && is_object($values['value'][0])) {
+            $values['value'] = new ArrayCollection($values['value']);
+        }
 
         if (is_object($values['value'])) {
             $paramName = $this->generateParameterName($event->getField());

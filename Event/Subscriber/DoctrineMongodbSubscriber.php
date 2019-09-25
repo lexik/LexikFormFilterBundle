@@ -305,6 +305,10 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
         $expr = $event->getFilterQuery()->getExpr();
         $values = $event->getValues();
 
+        if (is_array($values['value']) && count($values['value']) > 0 && is_object($values['value'][0])) {
+            $values['value'] = new ArrayCollection($values['value']);
+        }
+
         if (is_object($values['value'])) {
             $field = $event->getField();
             $multipleLevels = (false !== strpos($field, '.'));
