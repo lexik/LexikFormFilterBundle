@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 /**
