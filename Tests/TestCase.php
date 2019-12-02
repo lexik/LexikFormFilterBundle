@@ -4,6 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\ResolvedFormTypeFactory;
 use Symfony\Component\Form\FormFactory;
@@ -140,6 +142,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../vendor/symfony/framework-bundle/Resources/config'));
         $loadXml->load('services.xml');
+        $loadXml->load('web.xml');
+        $loadXml->load('error_renderer.xml');
+        #$loadXml->load('serializer.xml');
+        $loadXml->load('cache.xml');
+
+        $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../vendor/doctrine/doctrine-bundle/Resources/config'));
+        $loadXml->load('dbal.xml');
 
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loadXml->load('services.xml');

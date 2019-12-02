@@ -24,15 +24,20 @@
         "symfony/form": "~2.8|~3.0|^4.0|^5.0"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "^1.12|^2.0",
         "doctrine/mongodb-odm-bundle": "^3.0",
-        "phpunit/phpunit": "~5.0|^7.5"
+        "phpunit/phpunit": "~5.0|^7.5",
+        "symfony/phpunit-bridge": "^3.0|^4.3"
     },
     "autoload":     {
         "psr-4": { "Lexik\\Bundle\\FormFilterBundle\\": "" }
     },
     "config": {
         "bin-dir": "bin",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "ext-mongo": "1.6.16"
+        }
     },
     "extra": {
         "branch-alias": {
