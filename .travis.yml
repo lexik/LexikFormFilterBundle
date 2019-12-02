@@ -19,9 +19,9 @@ env:
 matrix:
     include:
         - php: 5.6
-          env: MONGO_EXTENSION="mongo.so" SYMFONY_VERSION="symfony/^2.8"
+          env: MONGO_EXTENSION="mongo.so" SYMFONY_VERSION="^2.8"
         - php: 7.2
-          env: MONGO_EXTENSION="mongo.so" SYMFONY_VERSION="symfony/^3.4"
+          env: MONGO_EXTENSION="mongo.so" SYMFONY_VERSION="^3.4"
         - php: 7.3
           env: SYMFONY_VERSION="^4.4"
         - php: 7.3
