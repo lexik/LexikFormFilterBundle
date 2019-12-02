@@ -39,9 +39,9 @@ before_install:
 before_script:
     - composer config platform.ext-mongo 1.6.16
     - |
-    if [ "$SYMFONY_VERSION" != "" ]; then
-       sed -ri 's/"symfony\/(.+)": "(.+)"/"symfony\/\1": "'$SYMFONY_VERSION'"/' composer.json;
-    fi;
+      if [ "$SYMFONY_VERSION" != "" ]; then
+        sed -ri 's/"symfony\/(.+)": "(.+)"/"symfony\/\1": "'$SYMFONY_VERSION'"/' composer.json;
+      fi;
     - travis_wait composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
     - if ! [[ $TRAVIS_PHP_VERSION =~ ^5 ]]; then composer require alcaeus/mongo-php-adapter; fi;
 
