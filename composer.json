@@ -23,8 +23,7 @@
         "alcaeus/mongo-php-adapter": "^1.1",
         "doctrine/orm": "^2.4.8",
         "symfony/form": "^3.4|^4.0|^5.0",
-        "symfony/framework-bundle": "^3.4|^4.0|^5.5.00",
-        "symfony/symfony": "4.4.*"
+        "symfony/framework-bundle": "^3.4|^4.0|^5.5.00"
     },
     "require-dev": {
         "doctrine/mongodb-odm-bundle": "^3.0|^4.0",
