@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
@@ -11,6 +12,8 @@ use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 use Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
@@ -163,6 +166,23 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $container->registerExtension(new FrameworkExtension());
         $container->registerExtension(new LexikFormFilterExtension());
+        $extension = new DoctrineExtension();
+        $container->registerExtension($extension);
+        $extension->load([[
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'driver' => 'pdo_mysql',
+                        'charset' => 'UTF8',
+                    ],
+                ],
+                'default_connection' => 'default',
+            ], 'orm' => [
+                'default_entity_manager' => 'default',
+                'resolve_target_entities' => ['Symfony\Component\Security\Core\User\UserInterface' => 'stdClass'],
+            ],
+        ],
+        ], $container);
 
         $container->setParameter('lexik_form_filter.where_method', null);
 
@@ -170,13 +190,32 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $container->loadFromExtension($extension, $config);
         }
 
-        $container->getCompilerPassConfig()->setOptimizationPasses(array());
-        $container->getCompilerPassConfig()->setRemovingPasses(array());
+        $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveChildDefinitionsPass()]);
+        $container->getCompilerPassConfig()->setRemovingPasses([]);
         $container->addCompilerPass(new FormDataExtractorPass());
         $container->addCompilerPass(new RegisterListenersPass());
 
         $container->compile();
 
         return $container;
+    }
+}
+
+class TestCaseAllPublicCompilerPass implements CompilerPassInterface
+{
+    public function process(ContainerBuilder $container)
+    {
+        foreach ($container->getDefinitions() as $id => $definition) {
+            if (strpos($id, 'doctrine') === false) {
+                continue;
+            }
+            $definition->setPublic(true);
+        }
+        foreach ($container->getAliases() as $id => $alias) {
+            if (strpos($id, 'doctrine') === false) {
+                continue;
+            }
+            $alias->setPublic(true);
+        }
     }
 }
