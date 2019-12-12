@@ -564,7 +564,7 @@ $qbUpdater->setParts(array(
 $qbUpdater->addFilterConditions($form, $queryBuilder);
 ```
 
-iv. Doctrine embeddables (ORM)
+iv. Doctrine embeddables ORM
 ------------------------------
 
 Here an example about how to create embedded filter types with Doctrine2 embeddables objects.
