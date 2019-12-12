@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +22,7 @@ class FormType extends AbstractType
         $builder->add('position', IntegerType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+                    if ($filterQuery->getExpr() instanceof Expr) {
                         $expr = $filterQuery->getExpr()->field($field)->equals($values['value']);
                     } else {
                         $expr = $filterQuery->getExpr()->eq($field, $values['value']);

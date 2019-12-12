@@ -2,8 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Doctrine\Bundle\MongoDBBundle\DataCollector\PrettyDataCollector;
-use Doctrine\MongoDB\Query\Query;
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
@@ -13,8 +12,6 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Mongodb query builder tests.
@@ -26,32 +23,25 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
      */
     protected $dm;
 
-    /**
-     * @var PrettyDataCollector
-     */
-    protected $collector;
-
     public function setUp()
     {
         parent::setUp();
 
-        // log queries to compare them as bson
-        $this->collector = new PrettyDataCollector();
-        $this->dm = $this->getMongodbDocumentManager(array($this->collector, 'logQuery'));
+        $this->dm = $this->getMongodbDocumentManager();
     }
 
     public function testBuildQuery()
     {
-        $year = \date('Y');
+        $year = '2019';
 
         $bson = array(
-            '#db.items.find\(({ })?\);#',
-            'db.items.find({ "$and": [ { "name": "blabla" } ] });',
-            'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } } ] });',
-            'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
-            'db.items.find({ "$and": [ { "name": "blabla" }, { "position": { "$gt": 2 } }, { "enabled": true } ] });',
-            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("' . $year . '-09-27T00:00:00\+[0-9:]+"\) \} \] \}\);#',
-            '#db.items.find\(\{ "\$and": \[ \{ "name": new RegExp\("\.\*blabla\$", "i"\) \}, \{ "position": \{ "\$lte": 2 \} \}, \{ "createdAt": new ISODate\("' . $year . '-09-27T13:21:00\+[0-9:]+"\) \} \] \}\);#',
+            '{}',
+            '{"$and":[{"name":"blabla"}]}',
+            '{"$and":[{"name":"blabla"},{"position":{"$gt":2}}]}',
+            '{"$and":[{"name":"blabla"},{"position":{"$gt":2}},{"enabled":true}]}',
+            '{"$and":[{"name":"blabla"},{"position":{"$gt":2}},{"enabled":true}]}',
+            '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569535200000"}}}]}',
+            '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569583260000"}}}]}'
         );
 
         $form = $this->formFactory->create(ItemFilterType::class);
@@ -61,14 +51,14 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $mongoQB = $this->createDoctrineQueryBuilder();
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertRegExp($bson[0], $this->toBson($mongoQB->getQuery()));
+        $this->assertRegExp($bson[0], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - 1 params
         $mongoQB = $this->createDoctrineQueryBuilder();
         $form->submit(array('name' => 'blabla', 'position' => ''));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[1], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[1], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - 2 params
         $form = $this->formFactory->create(ItemFilterType::class);
@@ -77,7 +67,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $form->submit(array('name' => 'blabla', 'position' => 2));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[2], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[2], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - 3 params
         $form = $this->formFactory->create(ItemFilterType::class);
@@ -86,7 +76,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => BooleanFilterType::VALUE_YES));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[3], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[3], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - 3 params (use checkbox for enabled field)
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -97,7 +87,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $form->submit(array('name' => 'blabla', 'position' => 2, 'enabled' => 'yes'));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[4], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[4], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - date + pattern selector
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -112,7 +102,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertRegExp($bson[5], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[5], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - datetime + pattern selector
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -131,7 +121,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertRegExp($bson[6], $this->toBson($mongoQB->getQuery()));
+        $this->assertEquals($bson[6], $this->toBson($mongoQB->getQueryArray()));
     }
 
     public function testDisabledFieldQuery()
@@ -147,8 +137,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "position": { "$gt": 2 } } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"position":{"$gt":2}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -162,8 +152,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "name": { "$ne": "blabla" } }, { "position": { "$ne": 2 } } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"name":{"$ne":"blabla"}},{"position":{"$ne":2}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -178,8 +168,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "position": { "$gt": 1, "$lt": 3 } } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"position":{"$gt":1,"$lt":3}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -197,8 +187,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "position_selector": { "$gt": 4, "$lte": 8 } } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"position_selector":{"$gt":4,"$lte":8}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -213,8 +203,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "default_position": { "$gte": 1, "$lte": 3 } } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"default_position":{"$gte":1,"$lte":3}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -229,13 +219,17 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             ),
         ));
 
+
+        $leftTimestamp = (new \DateTime('2012-05-12'))->getTimestamp() * 1000;
+        $rightTimestamp = (new \DateTime('2012-05-22'))->getTimestamp() * 1000;
+
         $mongoQB = $this->createDoctrineQueryBuilder();
 
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
-        $this->assertRegExp(
-            '#db.items.find\(\{ "\$and": \[ \{ "createdAt": \{ "\$gte": new ISODate\("2012-05-12T00:00:00\+[0-9:]+"\), "\$lt": new ISODate\("2012-05-22T00:00:00\+[0-9:]+"\) \} \} \] \}\);#',
-            $this->toBson($mongoQB->getQuery())
+        $this->assertEquals(
+            '{"$and":[{"createdAt":{"$gte":{"$date":{"$numberLong":"'.$leftTimestamp.'"}},"$lt":{"$date":{"$numberLong":"'.$rightTimestamp.'"}}}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -256,13 +250,16 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             ),
         ));
 
+        $leftTimestamp = (new \DateTime('2012-05-12 14:55:00'))->getTimestamp() * 1000;
+        $rightTimestamp = (new \DateTime('2012-06-10 22:12:00'))->getTimestamp() * 1000;
+
         $mongoQB = $this->createDoctrineQueryBuilder();
 
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
-        $this->assertRegExp(
-            '#db\.items\.find\(\{ "\$and": \[ \{ "updatedAt": \{ "\$gte": new ISODate\("2012-05-12T14:55:00\+[0-9:]+"\), "\$lt": new ISODate\("2012-06-10T22:12:00\+[0-9:]+"\) \} \} \] }\);#',
-            $this->toBson($mongoQB->getQuery())
+        $this->assertEquals(
+            '{"$and":[{"updatedAt":{"$gte":{"$date":{"$numberLong":"'.$leftTimestamp.'"}},"$lt":{"$date":{"$numberLong":"'.$rightTimestamp.'"}}}}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -279,8 +276,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "name": new RegExp(".*hey dude.*", "i") }, { "position": 99 } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -298,8 +295,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "name": "dude" }, { "$and": [ { "options.label": "color" }, { "options.rank": 3 } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"name":"dude"},{"$and":[{"options.label":"color"},{"options.rank":3}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
 
         // doctrine query builder without any joins and values for embedded field only
@@ -314,8 +311,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "$and": [ { "options.label": "color" }, { "options.rank": 3 } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"$and":[{"options.label":"color"},{"options.rank":3}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
 
         // pre-fill parts
@@ -331,8 +328,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "name": "dude" }, { "$and": [ { "options.label": "size" }, { "options.rank": 5 } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"name":"dude"},{"$and":[{"options.label":"size"},{"options.rank":5}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -362,8 +359,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$or": [ { "options.label": "color" }, { "$and": [ { "options.rank": 6 }, { "name": "dude" } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$or":[{"options.label":"color"},{"$and":[{"options.rank":6},{"name":"dude"}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
 
         // doctrine query builder without any joins + custom condition builder
@@ -391,8 +388,8 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "$or": [ { "name": "dude" }, { "options.label": "color" } ] }, { "$or": [ { "options.rank": 6 }, { "position": 1 } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"$or":[{"name":"dude"},{"options.label":"color"}]},{"$or":[{"options.rank":6},{"position":1}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
@@ -409,27 +406,20 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            'db.items.find({ "$and": [ { "name": "dude" }, { "$and": [ { "options.label": "color" }, { "options.rank": 6 } ] } ] });',
-            $this->toBson($mongoQB->getQuery())
+            '{"$and":[{"name":"dude"},{"$and":[{"options.label":"color"},{"options.rank":6}]}]}',
+            $this->toBson($mongoQB->getQueryArray())
         );
     }
 
-    protected function createDoctrineQueryBuilder()
+    protected function createDoctrineQueryBuilder(): Builder
     {
         return $this->dm
             ->getRepository('Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Document\Item')
             ->createQueryBuilder();
     }
 
-    protected function toBson(Query $query)
+    protected function toBson(array $query)
     {
-        $query->execute();
-
-        $this->collector->collect(new Request(), new Response());
-        $q = $this->collector->getQueries();
-
-        array_shift($q);
-
-        return isset($q[count($q)-1]) ? $q[count($q)-1] : null;
+        return json_encode($query);
     }
 }

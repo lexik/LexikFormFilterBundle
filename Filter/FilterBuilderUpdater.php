@@ -5,7 +5,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
@@ -85,7 +85,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     {
         // create the right QueryInterface object
         $event = new PrepareEvent($queryBuilder);
-        $this->dispatcher->dispatch(FilterEvents::PREPARE, $event);
+
+        $this->dispatcher->dispatch($event, FilterEvents::PREPARE);
 
         if (!$event->getFilterQuery() instanceof QueryInterface) {
             throw new \RuntimeException("Couldn't find any filter query object.");
@@ -103,7 +104,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
         // walk condition nodes to add condition on the query builder instance
         $name = sprintf('lexik_filter.apply_filters.%s', $event->getFilterQuery()->getEventPartName());
-        $this->dispatcher->dispatch($name, new ApplyFilterConditionEvent($queryBuilder, $this->conditionBuilder));
+
+        $this->dispatcher->dispatch(new ApplyFilterConditionEvent($queryBuilder, $this->conditionBuilder), $name);
 
         $this->conditionBuilder = null;
 
@@ -207,7 +209,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             }
 
             $event = new GetFilterConditionEvent($filterQuery, $field, $values);
-            $this->dispatcher->dispatch($eventName, $event);
+
+            $this->dispatcher->dispatch($event, $eventName);
 
             $condition = $event->getCondition();
         }
