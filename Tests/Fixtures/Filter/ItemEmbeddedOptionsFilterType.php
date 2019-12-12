@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Doctrine\MongoDB\Query\Builder;
-use Doctrine\MongoDB\Query\Expr as MongoExpr;
 use Doctrine\ORM\Query\Expr as ORMExpr;
 use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterBuilderExecuterInterface;

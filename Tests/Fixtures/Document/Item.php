@@ -42,7 +42,7 @@ class Item
     protected $updatedAt;
 
     /**
-     * @Mongo\EmbedMany(targetDocument="Options", strategy="set")
+     * @Mongo\EmbedMany(targetDocument="Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Document\Options", strategy="set")
      */
     protected $options;
 

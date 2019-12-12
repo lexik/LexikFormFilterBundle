@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Doctrine\MongoDB\Query\Builder;
-use Doctrine\MongoDB\Query\Expr;
+use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;

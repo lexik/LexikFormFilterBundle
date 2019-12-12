@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
@@ -23,7 +24,7 @@ class ItemCallbackFilterType extends AbstractType
         $builder->add('position', NumberFilterType::class, array(
             'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                 if (!empty($values['value'])) {
-                    if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+                    if ($filterQuery->getExpr() instanceof Expr) {
                         $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
                     } else {
                         $expr = $filterQuery->getExpr()->neq($field, $values['value']);
@@ -45,7 +46,7 @@ class ItemCallbackFilterType extends AbstractType
     public function fieldNameCallback(QueryInterface $filterQuery, $field, $values)
     {
         if (!empty($values['value'])) {
-            if ($filterQuery->getExpr() instanceof \Doctrine\MongoDB\Query\Expr) {
+            if ($filterQuery->getExpr() instanceof Expr) {
                 $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
             } else {
                 $expr = $filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value']));

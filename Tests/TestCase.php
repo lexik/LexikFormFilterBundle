@@ -4,7 +4,13 @@ namespace Lexik\Bundle\FormFilterBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\MongoDBBundle\DependencyInjection\DoctrineMongoDBExtension;
+use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\ODM\MongoDB\Configuration;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
@@ -91,43 +97,25 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return $em;
     }
 
-    /**
-     * @return \Doctrine\ODM\MongoDB\DocumentManager
-     */
-    public function getMongodbDocumentManager($loggerCallback)
+    public function getMongodbDocumentManager(): DocumentManager
     {
-        $cache = new \Doctrine\Common\Cache\ArrayCache();
+        $cache = new ArrayCache();
 
-        if (class_exists('Doctrine\Common\Annotations\DocParser')) {
-            $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
-        } else {
-            $reader = new AnnotationReader($cache);
-        }
-
-        $xmlDriver = new \Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver($reader, array(
-            __DIR__.'/Fixtures/Document',
-        ));
-
-        $config = new \Doctrine\ODM\MongoDB\Configuration();
+        $config = new Configuration();
         $config->setMetadataCacheImpl($cache);
-        $config->setMetadataDriverImpl($xmlDriver);
+        $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), [__DIR__.'/Fixtures/Document/']));
+
+        $config->setAutoGenerateProxyClasses(Configuration::AUTOGENERATE_FILE_NOT_EXISTS);
         $config->setProxyDir(sys_get_temp_dir());
-        $config->setProxyNamespace('Proxy');
-        $config->setAutoGenerateProxyClasses(true);
-        $config->setClassMetadataFactoryName('Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory');
-        $config->setDefaultDB('lexik_form_filter_bundle_test');
         $config->setHydratorDir(sys_get_temp_dir());
+
+        $config->setProxyNamespace('Proxy');
+        $config->setDefaultDB('lexik_form_filter_bundle_test');
         $config->setHydratorNamespace('Doctrine\ODM\MongoDB\Hydrator');
         $config->setAutoGenerateHydratorClasses(true);
         $config->setDefaultCommitOptions(array());
-        $config->setLoggerCallable($loggerCallback);
 
-        $options = array();
-        $conn = new \Doctrine\MongoDB\Connection(null, $options, $config);
-
-        $dm = \Doctrine\ODM\MongoDB\DocumentManager::create($conn, $config);
-
-        return $dm;
+        return DocumentManager::create(null, $config);
     }
 
     protected function initQueryBuilderUpdater()
@@ -166,6 +154,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $container->registerExtension(new FrameworkExtension());
         $container->registerExtension(new LexikFormFilterExtension());
+
         $extension = new DoctrineExtension();
         $container->registerExtension($extension);
         $extension->load([[
@@ -201,21 +190,3 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 }
 
-class TestCaseAllPublicCompilerPass implements CompilerPassInterface
-{
-    public function process(ContainerBuilder $container)
-    {
-        foreach ($container->getDefinitions() as $id => $definition) {
-            if (strpos($id, 'doctrine') === false) {
-                continue;
-            }
-            $definition->setPublic(true);
-        }
-        foreach ($container->getAliases() as $id => $alias) {
-            if (strpos($id, 'doctrine') === false) {
-                continue;
-            }
-            $alias->setPublic(true);
-        }
-    }
-}
