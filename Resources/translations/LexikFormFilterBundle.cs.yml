@@ -13,5 +13,5 @@ number:
 text:
     starts:             "Začíná na"
     ends:               "Končí na"
-    equals:             "Schoduje se"
+    equals:             "Rovno"
     both:               "Obsahuje"
