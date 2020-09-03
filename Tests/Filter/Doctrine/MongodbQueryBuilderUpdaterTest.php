@@ -40,8 +40,14 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             '{"$and":[{"name":"blabla"},{"position":{"$gt":2}}]}',
             '{"$and":[{"name":"blabla"},{"position":{"$gt":2}},{"enabled":true}]}',
             '{"$and":[{"name":"blabla"},{"position":{"$gt":2}},{"enabled":true}]}',
-            '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569535200000"}}}]}',
-            '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569583260000"}}}]}'
+            [
+                '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569535200000"}}}]}',
+                '{"$and":[{"name":"\/.*blabla$\/i"},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569535200000"}}}]}'
+            ],
+            [
+                '{"$and":[{"name":{"regex":".*blabla$","flags":"i"}},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569583260000"}}}]}',
+                '{"$and":[{"name":"\/.*blabla$\/i"},{"position":{"$lte":2}},{"createdAt":{"$date":{"$numberLong":"1569583260000"}}}]}'
+            ],
         );
 
         $form = $this->formFactory->create(ItemFilterType::class);
@@ -102,7 +108,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[5], $this->toBson($mongoQB->getQueryArray()));
+        $this->assertContains($this->toBson($mongoQB->getQueryArray()), $bson[5]);
 
         // bind a request to the form - datetime + pattern selector
         $form = $this->formFactory->create(ItemFilterType::class, null, array(
@@ -121,7 +127,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         ));
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertEquals($bson[6], $this->toBson($mongoQB->getQueryArray()));
+        $this->assertContains($this->toBson($mongoQB->getQueryArray()), $bson[6]);
     }
 
     public function testDisabledFieldQuery()
@@ -275,9 +281,12 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
-        $this->assertEquals(
-            '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}',
-            $this->toBson($mongoQB->getQueryArray())
+        $this->assertContains(
+            $this->toBson($mongoQB->getQueryArray()),
+            [
+                '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}',
+                '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}'
+            ]
         );
     }
 
