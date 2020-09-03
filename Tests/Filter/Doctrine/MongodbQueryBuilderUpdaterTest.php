@@ -285,7 +285,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
             $this->toBson($mongoQB->getQueryArray()),
             [
                 '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}',
-                '{"$and":[{"name":{"regex":".*hey dude.*","flags":"i"}},{"position":99}]}'
+                '{"$and":[{"name":"\/.*hey dude.*\/i"},{"position":99}]}'
             ]
         );
     }
