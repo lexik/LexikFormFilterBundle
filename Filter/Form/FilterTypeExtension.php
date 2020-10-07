@@ -37,6 +37,7 @@ class FilterTypeExtension extends AbstractTypeExtension
             'apply_filter'             => null,
             'data_extraction_method'   => 'default',
             'filter_condition_builder' => null,
+            'filter_field_name'        => null,
         ));
     }
 

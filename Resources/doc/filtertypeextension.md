@@ -140,6 +140,10 @@ This option is expected to be closure and recieve one parameter which is an inst
 
 See [4.iii section](working-with-the-bundle.md#iii-customize-condition-operator) for examples.
 
+##### The `filter_field_name` option:
+
+This option is used to define the field name on which the condition is applied.
+
 ***
 
 Next: [7. Working with other bundles](working-with-other-bundles.md)

@@ -176,7 +176,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     {
         $values = $this->prepareFilterValues($form, $formType);
         $values += array('alias' => $alias);
-        $field = trim($values['alias'] . '.' . $form->getName(), '. ');
+        $field = $form->getConfig()->getAttribute('filter_field_name') ?? trim($values['alias'] . '.' . $form->getName(), '. ');
 
         $condition = null;
 
