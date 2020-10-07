@@ -26,6 +26,10 @@ class FilterTypeExtension extends AbstractTypeExtension
         if ($options['filter_condition_builder'] instanceof \Closure) {
             $builder->setAttribute('filter_condition_builder', $options['filter_condition_builder']);
         }
+
+        if (null !== $options['filter_field_name']) {
+            $builder->setAttribute('filter_field_name', $options['filter_field_name']);
+        }
     }
 
     /**
