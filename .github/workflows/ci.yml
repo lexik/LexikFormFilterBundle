@@ -46,9 +46,9 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ matrix.os }}-composer-
-          - name: Install dependencies
-            if: (!startsWith(matrix.php, '7.2'))
-            run: |
-              composer install --no-interaction
+      - name: Install dependencies
+        if: (!startsWith(matrix.php, '7.2'))
+        run: |
+          composer install --no-interaction
       - name: "Run PHPUnit Tests"
         run: "composer test"
