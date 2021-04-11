@@ -4,6 +4,11 @@ on:
   pull_request:
   push:
 
+env:
+  fail-fast: true
+  PHPUNIT_FLAGS: "-v"
+  SYMFONY_DEPRECATIONS_HELPER: 40
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
