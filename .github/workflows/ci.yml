@@ -27,7 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: curl,mbstring,xdebug
+          extensions: curl,mbstring,xdebug,mongo,mongodb
           coverage: xdebug
           tools: composer
       - name: Show PHP version
