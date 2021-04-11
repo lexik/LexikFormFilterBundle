@@ -32,6 +32,9 @@ jobs:
           tools: composer
       - name: Show PHP version
         run: php -v && composer -V
+      - name: Download Composer cache dependencies from cache
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Install Symfony ${{ matrix.symfony }}
         run: composer require symfony/symfony:${{ matrix.symfony }} --no-update
       - name: Cache Composer dependencies
