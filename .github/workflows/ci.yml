@@ -45,6 +45,8 @@ jobs:
           restore-keys: ${{ matrix.os }}-composer-
       - name: Install dependencies
         run: |
+          composer config platform.ext-mongo 1.6.16
+          composer require alcaeus/mongo-php-adapter --no-update
           composer install --no-interaction
       - name: "Run PHPUnit Tests"
         run: "composer test"
