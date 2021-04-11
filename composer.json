@@ -5,7 +5,6 @@
     "keywords": ["Symfony", "bundle", "form", "filter", "doctrine"],
     "homepage": "https://github.com/lexik/LexikFormFilterBundle",
     "license": "MIT",
-    "prefer-stable": true,
     "authors": [
         {
             "name": "Cedric Girard",
