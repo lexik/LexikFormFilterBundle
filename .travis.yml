@@ -6,6 +6,10 @@ cache:
     directories:
         - $HOME/.composer/cache/files
 
+php:
+    - 7.4
+    - 8.0
+
 env:
     global:
         - MONGO_EXTENSION="mongodb.so"
