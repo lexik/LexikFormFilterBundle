@@ -1,0 +1,59 @@
+name: "CI Tests"
+
+on:
+  pull_request:
+  push:
+
+env:
+  fail-fast: true
+  PHPUNIT_FLAGS: "-v"
+  SYMFONY_DEPRECATIONS_HELPER: 40
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    name: PHP v${{ matrix.php }} with Mongo v${{ matrix.mongodb }}
+    strategy:
+      matrix:
+        include:
+          - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "4.4.*"}
+          - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "5.1.*"}
+          - { os: ubuntu-latest, php: 7.4, mongodb: 3.6, symfony: "5.2.*"}
+          - { os: ubuntu-latest, php: 8.0, mongodb: 3.6, symfony: "5.x-dev"}
+    services:
+      mongo:
+        image: mongo:${{ matrix.mongodb }}
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Installing php"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl,mbstring,xdebug,mongodb
+          ini-values: date.timezone="Europe/Paris"
+          coverage: xdebug
+          tools: composer
+      - name: Show PHP version
+        run: php -v && composer -V
+      - name: Download Composer cache dependencies from cache
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Install Symfony ${{ matrix.symfony }}
+        run: composer require symfony/symfony:${{ matrix.symfony }} --no-update
+      - name: Cache Composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.os }}-composer-
+      - name: Install dependencies
+        run: |
+          perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json
+          composer config platform.ext-mongo 1.6.16
+          composer require alcaeus/mongo-php-adapter --no-update
+          composer install --no-interaction
+      - name: "Run PHPUnit Tests"
+        run: "composer test"
