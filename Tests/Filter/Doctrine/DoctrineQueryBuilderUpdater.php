@@ -26,7 +26,7 @@ abstract class DoctrineQueryBuilderUpdater extends TestCase
      */
     protected $conn;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

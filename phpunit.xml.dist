@@ -27,10 +27,6 @@
         </whitelist>
     </filter>
 
-    <php>
-        <server name="SYMFONY_PHPUNIT_VERSION" value="7.5"/>
-    </php>
-
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
     </listeners>

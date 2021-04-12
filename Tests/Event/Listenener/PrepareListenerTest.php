@@ -7,9 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class PrepareListenerTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetForceCaseInsensitivity()
     {
         $listener = new PrepareListener();
@@ -71,6 +68,8 @@ class PrepareListenerTest extends TestCase
 
         $this->assertSame($listener, $listener->setForceCaseInsensitivity(false));
         $this->assertFalse($listener->getForceCaseInsensitivity('should not matter here'));
+
+        self::expectException(\InvalidArgumentException::class);
 
         $listener->setForceCaseInsensitivity('some string');
     }

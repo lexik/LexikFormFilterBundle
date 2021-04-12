@@ -35,7 +35,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected $formFactory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formFactory = $this->getFormFactory();
     }

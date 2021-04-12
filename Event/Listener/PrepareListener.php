@@ -20,11 +20,6 @@ class PrepareListener
      */
     protected $encoding;
 
-    /**
-     * @param boolean $value
-     * @return PrepareListener $this
-     * @throws \InvalidArgumentException
-     */
     public function setForceCaseInsensitivity($value)
     {
         if (!is_bool($value)) {
