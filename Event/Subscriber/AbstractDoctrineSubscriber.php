@@ -2,11 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Type;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type;
 
 /**
  * Provide Doctrine ORM and DBAL filters.
@@ -30,12 +31,12 @@ abstract class AbstractDoctrineSubscriber
             if (is_array($values['value']) && sizeof($values['value']) > 0) {
                 $event->setCondition(
                     $expr->in($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
+                    array($paramName => new ArrayCollection($values['value']))
                 );
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Type::STRING))
+                    array($paramName => $values['value'])
                 );
             }
         }
