@@ -144,6 +144,10 @@ See [4.iii section](working-with-the-bundle.md#iii-customize-condition-operator)
 
 This option is used to define the field name on which the condition is applied.
 
+##### The `filter_shared_name` option:
+
+This option is used to define the shared join name on which the condition is applied.
+
 ***
 
 Next: [7. Working with other bundles](working-with-other-bundles.md)
