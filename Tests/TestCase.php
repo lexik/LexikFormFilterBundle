@@ -4,10 +4,8 @@ namespace Lexik\Bundle\FormFilterBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\MongoDBBundle\DependencyInjection\DoctrineMongoDBExtension;
-use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
@@ -18,7 +16,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
 use Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -64,13 +62,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     public function getSqliteEntityManager()
     {
-        $cache = new \Doctrine\Common\Cache\ArrayCache();
+        $arrayAdapter = new ArrayAdapter();
+        $cache = DoctrineProvider::wrap(new ArrayAdapter());
 
-        if (class_exists('Doctrine\Common\Annotations\DocParser')) {
-            $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
-        } else {
-            $reader = new AnnotationReader($cache);
-        }
+        $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
 
         $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
             __DIR__.'/Fixtures/Entity',
@@ -79,7 +74,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(array());
 
         $config->setMetadataDriverImpl($mappingDriver);
-        $config->setMetadataCacheImpl($cache);
+        $config->setMetadataCache($arrayAdapter);
         $config->setQueryCacheImpl($cache);
         $config->setProxyDir(sys_get_temp_dir());
         $config->setProxyNamespace('Proxy');
@@ -99,10 +94,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     public function getMongodbDocumentManager(): DocumentManager
     {
-        $cache = new ArrayCache();
+        $arrayAdapter = new ArrayAdapter();
 
         $config = new Configuration();
-        $config->setMetadataCacheImpl($cache);
+        $config->setMetadataCache($arrayAdapter);
         $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), [__DIR__.'/Fixtures/Document/']));
 
         $config->setAutoGenerateProxyClasses(Configuration::AUTOGENERATE_FILE_NOT_EXISTS);

@@ -55,6 +55,6 @@ jobs:
           perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json
           composer config platform.ext-mongo 1.6.16
           composer require alcaeus/mongo-php-adapter --no-update
-          composer install --no-interaction -vvv
+          composer install --no-interaction
       - name: "Run PHPUnit Tests"
         run: "composer test"
