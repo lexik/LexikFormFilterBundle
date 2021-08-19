@@ -12,7 +12,7 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    name: PHP v${{ matrix.php }} with Mongo v${{ matrix.mongodb }}
+    name: PHP v${{ matrix.php }}, Symfony v${{ matrix.symfony }} with Mongo v${{ matrix.mongodb }}
     strategy:
       matrix:
         include:
@@ -55,6 +55,6 @@ jobs:
           perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json
           composer config platform.ext-mongo 1.6.16
           composer require alcaeus/mongo-php-adapter --no-update
-          composer install --no-interaction
+          composer install --no-interaction -vvv
       - name: "Run PHPUnit Tests"
         run: "composer test"
