@@ -19,7 +19,8 @@ jobs:
           - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "4.4.*"}
           - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "5.1.*"}
           - { os: ubuntu-latest, php: 7.4, mongodb: 3.6, symfony: "5.2.*"}
-          - { os: ubuntu-latest, php: 8.0, mongodb: 3.6, symfony: "5.x-dev"}
+          - { os: ubuntu-latest, php: 7.4, mongodb: 3.6, symfony: "5.3.*"}
+          - { os: ubuntu-latest, php: 8.0, mongodb: 3.6, symfony: "5.4.*@dev"}
     services:
       mongo:
         image: mongo:${{ matrix.mongodb }}
