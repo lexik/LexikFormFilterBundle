@@ -133,7 +133,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'kernel.bundles'          => [
                 'FrameworkBundle' => FrameworkBundle::class,
                 'DoctrineBundle' => DoctrineBundle::class,
-                'LexikJWTAuthenticationBundle' => LexikFormFilterBundle::class
+                'LexikFormFilterBundle' => LexikFormFilterBundle::class
             ],
             'kernel.bundles_metadata' => [],
             'kernel.cache_dir'        => __DIR__,
