@@ -129,7 +129,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
             // this means we have a relation
             if ($child->getConfig()->hasAttribute('add_shared')) {
-                $join = trim($alias . '.' . $child->getName(), '.');
+                $join = $child->getConfig()->getAttribute('filter_shared_name') ?? trim($alias . '.' . $child->getName(), '.');
 
                 $addSharedClosure = $child->getConfig()->getAttribute('add_shared');
 
@@ -150,7 +150,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
             // Doctrine2 embedded object case
             } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
-                $this->addFilters($child, $filterQuery, $alias . '.' . $child->getName());
+                $this->addFilters($child, $filterQuery, $child->getConfig()->getAttribute('filter_field_name') ?? ($alias . '.' . $child->getName()));
 
             // default case
             } else {

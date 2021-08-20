@@ -30,6 +30,10 @@ class FilterTypeExtension extends AbstractTypeExtension
         if (null !== $options['filter_field_name']) {
             $builder->setAttribute('filter_field_name', $options['filter_field_name']);
         }
+
+        if (null !== $options['filter_shared_name']) {
+            $builder->setAttribute('filter_shared_name', $options['filter_shared_name']);
+        }
     }
 
     /**
@@ -42,6 +46,7 @@ class FilterTypeExtension extends AbstractTypeExtension
             'data_extraction_method'   => 'default',
             'filter_condition_builder' => null,
             'filter_field_name'        => null,
+            'filter_shared_name'       => null,
         ));
     }
 
