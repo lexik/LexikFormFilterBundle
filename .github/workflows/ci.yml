@@ -46,7 +46,7 @@ jobs:
         run: composer require symfony/symfony:${{ matrix.symfony }} --no-update
       - name: "Require symfony/messenger"
         run: "composer require --dev symfony/doctrine-messenger --no-update"
-        if: "${{ startsWith(matrix.symfony-require, '5.3') }}"
+        if: "${{ startsWith(matrix.symfony, '5.3') }}"
       - name: Cache Composer dependencies
         uses: actions/cache@v2
         with:
