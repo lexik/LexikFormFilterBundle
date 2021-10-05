@@ -124,7 +124,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::DATETIME))
+                array($paramName => array($values['value'], Types::DATETIME_MUTABLE))
             );
         }
     }
