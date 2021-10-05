@@ -6,7 +6,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide Doctrine ORM and DBAL filters.
@@ -35,7 +35,7 @@ abstract class AbstractDoctrineSubscriber
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Type::STRING))
+                    array($paramName => array($values['value'], Types::STRING))
                 );
             }
         }
@@ -56,7 +56,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($value, Type::BOOLEAN))
+                array($paramName => array($value, Types::BOOLEAN))
             );
         }
     }
@@ -74,7 +74,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Type::STRING))
+                array($paramName => array($values['value'], Types::STRING))
             );
         }
     }
@@ -92,7 +92,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Type::DATE))
+                array($paramName => array($values['value'], Types::DATE))
             );
         }
     }
@@ -124,7 +124,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Type::DATETIME))
+                array($paramName => array($values['value'], Types::DATETIME))
             );
         }
     }
@@ -158,7 +158,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->$op($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], is_int($values['value']) ? Type::INTEGER : Type::FLOAT))
+                array($paramName => array($values['value'], is_int($values['value']) ? Types::INTEGER : Types::FLOAT))
             );
         }
     }
@@ -191,7 +191,7 @@ abstract class AbstractDoctrineSubscriber
                 $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
-                $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Type::INTEGER : Type::FLOAT);
+                $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Types::INTEGER : Types::FLOAT);
             }
         }
 
@@ -211,7 +211,7 @@ abstract class AbstractDoctrineSubscriber
                 $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
-                $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Type::INTEGER : Type::FLOAT);
+                $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT);
             }
         }
 
