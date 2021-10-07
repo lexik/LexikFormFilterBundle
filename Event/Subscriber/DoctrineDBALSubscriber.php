@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DoctrineDBALSubscriber extends AbstractDoctrineSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * @return array
      */
     public static function getSubscribedEvents()
     {
