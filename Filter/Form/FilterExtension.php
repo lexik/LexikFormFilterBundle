@@ -13,7 +13,7 @@ use Symfony\Component\Form\AbstractExtension;
 class FilterExtension extends AbstractExtension
 {
     /**
-     * {@inheritdoc}
+     * @return array
      */
     protected function loadTypes()
     {

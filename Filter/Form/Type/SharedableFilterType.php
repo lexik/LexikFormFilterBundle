@@ -34,7 +34,7 @@ class SharedableFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {

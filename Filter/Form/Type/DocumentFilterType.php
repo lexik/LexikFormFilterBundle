@@ -47,7 +47,7 @@ class DocumentFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return ?string
      */
     public function getParent()
     {
@@ -55,7 +55,7 @@ class DocumentFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {

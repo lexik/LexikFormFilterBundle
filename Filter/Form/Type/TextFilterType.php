@@ -83,7 +83,7 @@ class TextFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return ?string
      */
     public function getParent()
     {
@@ -91,7 +91,7 @@ class TextFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {
