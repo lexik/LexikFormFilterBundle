@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DoctrineMongodbSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * @return array
      */
     public static function getSubscribedEvents()
     {

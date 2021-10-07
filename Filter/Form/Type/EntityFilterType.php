@@ -28,7 +28,7 @@ class EntityFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return ?string
      */
     public function getParent()
     {
@@ -36,7 +36,7 @@ class EntityFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {

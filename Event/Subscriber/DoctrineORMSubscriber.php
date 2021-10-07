@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * @return array
      */
     public static function getSubscribedEvents()
     {

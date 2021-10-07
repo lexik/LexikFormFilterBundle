@@ -65,7 +65,7 @@ class CollectionAdapterFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return ?string
      */
     public function getParent()
     {
@@ -73,7 +73,7 @@ class CollectionAdapterFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {

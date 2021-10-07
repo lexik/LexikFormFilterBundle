@@ -45,7 +45,7 @@ class NumberRangeFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {

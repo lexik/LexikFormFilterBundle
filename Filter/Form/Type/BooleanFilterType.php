@@ -18,7 +18,7 @@ class BooleanFilterType extends AbstractType
     const VALUE_NO  = 'n';
 
     /**
-     * {@inheritdoc}
+     * @return ?string
      */
     public function getParent()
     {
@@ -26,7 +26,7 @@ class BooleanFilterType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getBlockPrefix()
     {
