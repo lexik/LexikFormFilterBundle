@@ -4,7 +4,7 @@ namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -108,7 +108,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                     $expr->eq($filterField, ':'.$paramName),
                     array($paramName => array(
                         $this->getEntityIdentifier($values['value'], $queryBuilder->getEntityManager()),
-                        Type::INTEGER
+                        Types::INTEGER
                     ))
                 );
             }
