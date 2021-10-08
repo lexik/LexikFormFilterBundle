@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "doctrine/orm": "2.10",
+        "doctrine/orm": "^2.10",
         "symfony/form": "^4.4|^5.1",
         "symfony/framework-bundle": "^4.4|^5.1"
     },
