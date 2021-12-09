@@ -36,10 +36,10 @@ class FilterExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function loadTypeExtensions()
+    public function loadTypeExtensions(): array
     {
-        return array(
+        return [
             new FilterTypeExtension(),
-        );
+        ];
     }
 }
