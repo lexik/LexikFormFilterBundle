@@ -19,25 +19,20 @@
     "require": {
         "php": ">=7.1",
         "doctrine/orm": "^2.10",
-        "symfony/form": "^4.4|^5.1",
-        "symfony/framework-bundle": "^4.4|^5.1"
+        "symfony/form": "^4.4|^5.1|^6.0",
+        "symfony/framework-bundle": "^4.4|^5.1|^6.0"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^1.8 || ^2.0",
         "doctrine/mongodb-odm-bundle": "^4.1",
-        "symfony/phpunit-bridge": "^4.4|^5.1",
-        "symfony/var-dumper": "^4.4|^5.1"
+        "symfony/phpunit-bridge": "^4.4|^5.1|^6.0",
+        "symfony/var-dumper": "^4.4|^5.1|^6.0"
     },
     "autoload":     {
         "psr-4": { "Lexik\\Bundle\\FormFilterBundle\\": "" }
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "5.x.x-dev"
-        }
     },
     "suggest": {
         "alcaeus/mongo-php-adapter": "Install this package if using the PHP 7 MongoDB Driver"
