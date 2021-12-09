@@ -11,16 +11,17 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    name: PHP v${{ matrix.php }}, Symfony v${{ matrix.symfony }} with Mongo v${{ matrix.mongodb }}
+    runs-on: ubuntu-latest
+    name: PHP v${{ matrix.php }}, Symfony v${{ matrix.symfony }}} with Mongo v${{ matrix.mongodb }}
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "4.4.*"}
-          - { os: ubuntu-latest, php: 7.3, mongodb: 3.6, symfony: "5.1.*"}
-          - { os: ubuntu-latest, php: 7.4, mongodb: 3.6, symfony: "5.2.*"}
-          - { os: ubuntu-latest, php: 7.4, mongodb: 3.6, symfony: "5.3.*"}
-          - { os: ubuntu-latest, php: 8.0, mongodb: 3.6, symfony: "5.4.*@dev"}
+          - { php: 7.3, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-stable --prefer-lowest'}
+          - { php: 7.4, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
+          - { php: 8.0, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
+          - { php: 8.0, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
+          - { php: 8.1, mongodb: 3.6, symfony: "6.1.*@dev", composer-flags: '' }
     services:
       mongo:
         image: mongo:${{ matrix.mongodb }}
@@ -58,6 +59,6 @@ jobs:
           perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json
           composer config platform.ext-mongo 1.6.16
           composer require alcaeus/mongo-php-adapter --no-update
-          composer install --no-interaction
+          composer install --no-interaction ${{ matrix.composer-flags }}
       - name: "Run PHPUnit Tests"
         run: "composer test"
