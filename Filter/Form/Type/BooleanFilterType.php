@@ -42,11 +42,11 @@ class BooleanFilterType extends AbstractType
             ->setDefaults(array(
                 'required'               => false,
                 'choices'                => array(
+                    'boolean.yes_or_no' => '',
                     'boolean.yes' => self::VALUE_YES,
                     'boolean.no'  => self::VALUE_NO,
                 ),
-                'placeholder'            => 'boolean.yes_or_no',
-                'translation_domain'     => 'LexikFormFilterBundle',
+                'choice_translation_domain' => 'LexikFormFilterBundle',
                 'data_extraction_method' => 'default',
             ))
             ->setAllowedValues('data_extraction_method', array('default'))
