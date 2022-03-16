@@ -8,7 +8,7 @@ number:
     greater_than:       "Plus grand que"
     greater_than_equal: "Plus grand ou égal à"
     lower_than:         "Plus petit que"
-    lower_than_equal:   "Plus petit ou égale à"
+    lower_than_equal:   "Plus petit ou égal à"
 
 text:
     starts:             "Commence par"
