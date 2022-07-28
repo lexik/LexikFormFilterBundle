@@ -116,7 +116,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function initQueryBuilderUpdater()
     {
         $container = $this->createContainerBuilder([
-            'framework' => ['secret' => 'test'],
+            'framework' => [
+                'secret' => 'test',
+                'http_method_override' => true,
+            ],
             'lexik_form_filter' => [
                 'listeners' => [
                     'doctrine_orm' => true, 'doctrine_dbal' => true, 'doctrine_mongodb' => true,
