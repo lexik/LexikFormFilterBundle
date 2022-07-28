@@ -116,7 +116,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function initQueryBuilderUpdater()
     {
         $container = $this->createContainerBuilder([
-            'framework' => ['secret' => 'test'],
+            'framework' => [
+                'secret' => 'test',
+                'http_method_override' => true,
+            ],
             'lexik_form_filter' => [
                 'listeners' => [
                     'doctrine_orm' => true, 'doctrine_dbal' => true, 'doctrine_mongodb' => true,
@@ -145,6 +148,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'kernel.container_class'  => 'AutowiringTestContainer',
             'kernel.charset'          => 'utf8',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
+            'debug.file_link_format' => null,
         ]));
 
         $container->registerExtension(new FrameworkExtension());

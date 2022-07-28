@@ -57,7 +57,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $mongoQB = $this->createDoctrineQueryBuilder();
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
-        $this->assertRegExp($bson[0], $this->toBson($mongoQB->getQueryArray()));
+        $this->assertMatchesRegularExpression($bson[0], $this->toBson($mongoQB->getQueryArray()));
 
         // bind a request to the form - 1 params
         $mongoQB = $this->createDoctrineQueryBuilder();
