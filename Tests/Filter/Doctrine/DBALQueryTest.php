@@ -25,7 +25,7 @@ class DBALQueryTest extends TestCase
 
         $connectionMock
             ->expects($this->any())
-            ->method('getExpressionBuilder')
+            ->method('createExpressionBuilder')
             ->will($this->returnValue($exprMock));
 
         $qb = new QueryBuilder($connectionMock);
