@@ -18,18 +18,9 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('lexik_form_filter');
-
-        if (\method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('lexik_form_filter');
-        }
-
-        $rootNode
+        return (new TreeBuilder('lexik_form_filter'))->getRootNode()
             ->children()
                 ->arrayNode('listeners')
                     ->addDefaultsIfNotSet()
@@ -67,8 +58,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Encoding for case insensitive LIKE comparisons.')
                     ->defaultNull()
                 ->end()
-            ->end();
-
-        return $treeBuilder;
+            ->end()
+        ->end();
     }
 }
