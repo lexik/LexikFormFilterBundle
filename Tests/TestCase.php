@@ -145,6 +145,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'kernel.container_class'  => 'AutowiringTestContainer',
             'kernel.charset'          => 'utf8',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
+            'debug.file_link_format' => null,
         ]));
 
         $container->registerExtension(new FrameworkExtension());
