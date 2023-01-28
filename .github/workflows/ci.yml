@@ -12,12 +12,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: PHP v${{ matrix.php }}, Symfony v${{ matrix.symfony }}} with Mongo v${{ matrix.mongodb }}
+    name: PHP v${{ matrix.php }}, Symfony v${{ matrix.symfony }} with Mongo v${{ matrix.mongodb }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { php: 7.2, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-lowest'}
           - { php: 7.2, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-stable'}
           - { php: 7.3, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-stable'}
           - { php: 7.4, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
