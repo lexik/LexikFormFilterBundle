@@ -20,11 +20,12 @@ class Condition implements ConditionInterface
     private $expression;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      *
      * array(
      *     'param_name_1' => $value,
-     *     'param_nema_2  => array($value, $type),
+     *     'param_name_2  => ExpressionParameterValue($value, $type = null),
+     *     'param_name_3  => array($value, $type), // can be deprecated, as it interferes with array values (link for IN() expressions)
      * )
      */
     private $parameters;

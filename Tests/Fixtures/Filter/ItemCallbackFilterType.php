@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Doctrine\ODM\MongoDB\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionParameterValue;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
@@ -26,11 +27,12 @@ class ItemCallbackFilterType extends AbstractType
                 if (!empty($values['value'])) {
                     if ($filterQuery->getExpr() instanceof Expr) {
                         $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
-                    } else {
-                        $expr = $filterQuery->getExpr()->neq($field, $values['value']);
+                        return $filterQuery->createCondition($expr);
                     }
-
-                    return $filterQuery->createCondition($expr);
+                    return $filterQuery->createCondition(
+                        $filterQuery->getExpr()->neq($field, ':position'),
+                        ['position' => new ExpressionParameterValue($values['value'])]
+                    );
                 }
 
                 return null;
@@ -51,11 +53,13 @@ class ItemCallbackFilterType extends AbstractType
         if (!empty($values['value'])) {
             if ($filterQuery->getExpr() instanceof Expr) {
                 $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
-            } else {
-                $expr = $filterQuery->getExpr()->neq($field, sprintf('\'%s\'', $values['value']));
+                return $filterQuery->createCondition($expr);
             }
-
-            return $filterQuery->createCondition($expr);
+            $paramName = substr($field, strrpos($field, '.') + (false === strrpos($field, '.') ? 0 : 1));
+            return $filterQuery->createCondition(
+                $filterQuery->getExpr()->neq($field, ':' . $paramName),
+                [$paramName => new ExpressionParameterValue($values['value'])]
+            );
         }
 
         return null;
