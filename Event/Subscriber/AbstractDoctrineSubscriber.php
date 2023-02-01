@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Subscriber;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionParameterValue;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
@@ -30,12 +31,12 @@ abstract class AbstractDoctrineSubscriber
             if (is_array($values['value']) && sizeof($values['value']) > 0) {
                 $event->setCondition(
                     $expr->in($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
+                    array($paramName => new ExpressionParameterValue($values['value'], Connection::PARAM_STR_ARRAY))
                 );
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Types::STRING))
+                    array($paramName => new ExpressionParameterValue($values['value'], Types::STRING))
                 );
             }
         }
@@ -56,7 +57,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($value, Types::BOOLEAN))
+                array($paramName => new ExpressionParameterValue($value, Types::BOOLEAN))
             );
         }
     }
@@ -74,7 +75,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::STRING))
+                array($paramName => new ExpressionParameterValue($values['value'], Types::STRING))
             );
         }
     }
@@ -92,7 +93,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::DATE_MUTABLE))
+                array($paramName => new ExpressionParameterValue($values['value'], Types::DATE_MUTABLE))
             );
         }
     }
@@ -124,7 +125,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::DATETIME_MUTABLE))
+                array($paramName => new ExpressionParameterValue($values['value'], Types::DATETIME_MUTABLE))
             );
         }
     }
@@ -158,7 +159,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->$op($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], is_int($values['value']) ? Types::INTEGER : Types::FLOAT))
+                array($paramName => new ExpressionParameterValue($values['value'], is_int($values['value']) ? Types::INTEGER : Types::FLOAT))
             );
         }
     }
@@ -211,7 +212,7 @@ abstract class AbstractDoctrineSubscriber
                 $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
-                $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT);
+                $params[$rightParamName] = new ExpressionParameterValue($rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT);
             }
         }
 
