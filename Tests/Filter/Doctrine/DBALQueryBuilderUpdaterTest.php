@@ -32,7 +32,7 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testApplyFilterOption()
     {
         parent::createApplyFilterOptionTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.name <> \'blabla\') AND (i.position <> 2)',
+            'SELECT i FROM item i WHERE (i.name <> :name) AND (i.position <> :position)',
         ));
     }
 
@@ -82,7 +82,7 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testFilterStandardType()
     {
         parent::createFilterStandardTypeTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = 99)',
+            'SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = :position)',
         ));
     }
 

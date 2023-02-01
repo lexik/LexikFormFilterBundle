@@ -2,12 +2,14 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
-use Doctrine\ORM\Query\Expr\Composite;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\ORM\Query\Expr\Composite;
 use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DoctrineQueryBuilderAdapter;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionParameterValue;
 
 /**
  * Add filter conditions on a Doctrine ORM or DBAL query builder.
@@ -49,9 +51,12 @@ class DoctrineApplyFilterListener
             $qbAdapter->{$this->whereMethod}($expression);
 
             foreach ($this->parameters as $name => $value) {
-                if (is_array($value)) {
-                    list($value, $type) = $value;
-                    $qbAdapter->setParameter($name, $value, $type);
+                if ($value instanceof ExpressionParameterValue) {
+                    $qbAdapter->setParameter($name, $value->value, $value->type);
+                } elseif (is_array($value) && count($value) === 2 && Type::hasType($value[1])) {
+                    // that could be deprecated in favor of the ExpressionParameterValue class above
+                    // as it is kind of a hacky solution for a legacy architectural decision
+                    $qbAdapter->setParameter($name, $value[0], $value[1]);
                 } else {
                     $qbAdapter->setParameter($name, $value);
                 }

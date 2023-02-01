@@ -35,7 +35,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testApplyFilterOption()
     {
         parent::createApplyFilterOptionTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name <> \'blabla\' AND i.position <> 2',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name <> :name AND i.position <> :position',
         ));
     }
 
@@ -85,7 +85,7 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
     public function testFilterStandardType()
     {
         parent::createFilterStandardTypeTest('getDQL', array(
-            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%hey dude%\' AND i.position = 99',
+            'SELECT i FROM Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item i WHERE i.name LIKE \'%hey dude%\' AND i.position = :position',
         ));
     }
 

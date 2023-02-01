@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionParameterValue;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -100,13 +101,13 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 if (count($ids) > 0) {
                     $event->setCondition(
                         $expr->in($filterField, ':'.$paramName),
-                        array($paramName => array($ids, Connection::PARAM_INT_ARRAY))
+                        array($paramName => new ExpressionParameterValue($ids, Connection::PARAM_INT_ARRAY))
                     );
                 }
             } else {
                 $event->setCondition(
                     $expr->eq($filterField, ':'.$paramName),
-                    array($paramName => array(
+                    array($paramName => new ExpressionParameterValue(
                         $this->getEntityIdentifier($values['value'], $queryBuilder->getEntityManager()),
                         Types::INTEGER
                     ))

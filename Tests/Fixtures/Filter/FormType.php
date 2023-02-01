@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
 use Doctrine\ODM\MongoDB\Query\Expr;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionParameterValue;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,11 +25,12 @@ class FormType extends AbstractType
                 if (!empty($values['value'])) {
                     if ($filterQuery->getExpr() instanceof Expr) {
                         $expr = $filterQuery->getExpr()->field($field)->equals($values['value']);
-                    } else {
-                        $expr = $filterQuery->getExpr()->eq($field, $values['value']);
+                        return $filterQuery->createCondition($expr);
                     }
-
-                    return $filterQuery->createCondition($expr);
+                    return $filterQuery->createCondition(
+                        $filterQuery->getExpr()->eq($field, ':position'),
+                        ['position' => new ExpressionParameterValue($values['value'])]
+                    );
                 }
 
                 return null;
