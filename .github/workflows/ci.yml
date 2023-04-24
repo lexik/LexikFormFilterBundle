@@ -17,11 +17,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { php: 7.3, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-stable'}
-          - { php: 7.4, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
-          - { php: 8.0, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
-          - { php: 8.0, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
-          - { php: 8.1, mongodb: 3.6, symfony: "6.1.*@dev", composer-flags: '' }
+          - { php: 7.4, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable --prefer-lowest'}
+          - { php: 8.2, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
+          - { php: 8.2, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
+          - { php: 8.2, mongodb: 3.6, symfony: "6.1.*", composer-flags: '--prefer-stable' }
+          - { php: 8.2, mongodb: 3.6, symfony: "6.1.*", composer-flags: '--prefer-stable' }
+          - { php: 8.2, mongodb: 3.6, symfony: "6.3.*@dev", composer-flags: '' }
+          
     services:
       mongo:
         image: mongo:${{ matrix.mongodb }}
