@@ -21,7 +21,7 @@ jobs:
           - { php: 8.2, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
           - { php: 8.2, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
           - { php: 8.2, mongodb: 3.6, symfony: "6.1.*", composer-flags: '--prefer-stable' }
-          - { php: 8.2, mongodb: 3.6, symfony: "6.1.*", composer-flags: '--prefer-stable' }
+          - { php: 8.2, mongodb: 3.6, symfony: "6.2.*", composer-flags: '--prefer-stable' }
           - { php: 8.2, mongodb: 3.6, symfony: "6.3.*@dev", composer-flags: '' }
           
     services:
