@@ -33,6 +33,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected $formFactory;
 
+    private static $container;
+
     public function setUp(): void
     {
         $this->formFactory = $this->getFormFactory();
@@ -184,6 +186,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $container->addCompilerPass(new RegisterListenersPass());
 
         $container->compile();
+
+        static::$container = $container;
 
         return $container;
     }
