@@ -2,6 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests;
 
+use Doctrine\Common\Annotations\DocParser;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -67,13 +71,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $arrayAdapter = new ArrayAdapter();
         $cache = DoctrineProvider::wrap(new ArrayAdapter());
 
-        $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
+        $reader = new AnnotationReader(new DocParser());
 
-        $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
-            __DIR__.'/Fixtures/Entity',
-        ));
+        $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, [__DIR__.'/Fixtures/Entity']);
 
-        $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(array());
+        $config = Setup::createAnnotationMetadataConfiguration([]);
 
         $config->setMetadataDriverImpl($mappingDriver);
         $config->setMetadataCache($arrayAdapter);
@@ -81,13 +83,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config->setProxyDir(sys_get_temp_dir());
         $config->setProxyNamespace('Proxy');
         $config->setAutoGenerateProxyClasses(true);
-        $config->setClassMetadataFactoryName('Doctrine\ORM\Mapping\ClassMetadataFactory');
-        $config->setDefaultRepositoryClassName('Doctrine\ORM\EntityRepository');
+        $config->setClassMetadataFactoryName(ClassMetadataFactory::class);
+        $config->setDefaultRepositoryClassName(EntityRepository::class);
 
-        $conn = array(
-            'driver' => 'pdo_sqlite',
-            'memory' => true,
-        );
+        $conn = ['driver' => 'pdo_sqlite', 'memory' => true];
 
         $em = EntityManager::create($conn, $config);
 
@@ -110,7 +109,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config->setDefaultDB('lexik_form_filter_bundle_test');
         $config->setHydratorNamespace('Doctrine\ODM\MongoDB\Hydrator');
         $config->setAutoGenerateHydratorClasses(true);
-        $config->setDefaultCommitOptions(array());
+        $config->setDefaultCommitOptions([]);
 
         return DocumentManager::create(null, $config);
     }
@@ -182,10 +181,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveChildDefinitionsPass()]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
-        $container->addCompilerPass(new FormDataExtractorPass());
-        $container->addCompilerPass(new RegisterListenersPass());
+        $container->addCompilerPass(new FormDataExtractorPass(), \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
+        $container->addCompilerPass(new RegisterListenersPass(), \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
 
-        $container->compile();
+        $container->compile(false);
 
         static::$container = $container;
 

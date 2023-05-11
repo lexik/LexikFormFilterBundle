@@ -28,7 +28,7 @@ interface QueryInterface
      * @param array  $parameters
      * @return ConditionInterface
      */
-    public function createCondition($expression, array $parameters = array());
+    public function createCondition($expression, array $parameters = []);
 
     /**
      * Get root alias.

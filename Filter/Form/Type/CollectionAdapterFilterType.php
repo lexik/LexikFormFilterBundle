@@ -19,7 +19,7 @@ class CollectionAdapterFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // update collection to only get one element
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
@@ -42,9 +42,7 @@ class CollectionAdapterFilterType extends AbstractType
 
             // then add one row that will be used for filtering
             $index = 0;
-            $childOptions = array_replace(array(
-                'property_path' => sprintf('[%d]', $index),
-            ), $options['entry_options']);
+            $childOptions = array_replace(['property_path' => sprintf('[%d]', $index)], $options['entry_options']);
 
             $form->add($index, $options['entry_type'], $childOptions);
         });
@@ -53,15 +51,11 @@ class CollectionAdapterFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'entry_type'    => null,
-            'entry_options' => array(),
-            'default_data'  => array(),
-        ));
+        $resolver->setDefaults(['entry_type'    => null, 'entry_options' => [], 'default_data'  => []]);
 
-        $resolver->setRequired(array('entry_type'));
+        $resolver->setRequired(['entry_type']);
     }
 
     /**

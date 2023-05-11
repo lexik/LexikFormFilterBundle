@@ -82,7 +82,7 @@ class GetFilterConditionEvent extends Event
      * @param string $expression
      * @param array  $parameters
      */
-    public function setCondition($expression, array $parameters = array())
+    public function setCondition($expression, array $parameters = [])
     {
         $this->condition = new Condition($expression, $parameters);
     }

@@ -20,40 +20,39 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // Lexik form filter types
-            'lexik_form_filter.apply.mongodb.filter_boolean'        => array('filterBoolean'),
-            'lexik_form_filter.apply.mongodb.filter_checkbox'       => array('filterCheckbox'),
-            'lexik_form_filter.apply.mongodb.filter_choice'         => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.filter_date'           => array('filterDate'),
-            'lexik_form_filter.apply.mongodb.filter_date_range'     => array('filterDateRange'),
-            'lexik_form_filter.apply.mongodb.filter_datetime'       => array('filterDateTime'),
-            'lexik_form_filter.apply.mongodb.filter_datetime_range' => array('filterDateTimeRange'),
-            'lexik_form_filter.apply.mongodb.filter_number'         => array('filterNumber'),
-            'lexik_form_filter.apply.mongodb.filter_number_range'   => array('filterNumberRange'),
-            'lexik_form_filter.apply.mongodb.filter_text'           => array('filterText'),
-            'lexik_form_filter.apply.mongodb.filter_document'       => array('filterDocument'),
-
+            'lexik_form_filter.apply.mongodb.filter_boolean'        => ['filterBoolean'],
+            'lexik_form_filter.apply.mongodb.filter_checkbox'       => ['filterCheckbox'],
+            'lexik_form_filter.apply.mongodb.filter_choice'         => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.filter_date'           => ['filterDate'],
+            'lexik_form_filter.apply.mongodb.filter_date_range'     => ['filterDateRange'],
+            'lexik_form_filter.apply.mongodb.filter_datetime'       => ['filterDateTime'],
+            'lexik_form_filter.apply.mongodb.filter_datetime_range' => ['filterDateTimeRange'],
+            'lexik_form_filter.apply.mongodb.filter_number'         => ['filterNumber'],
+            'lexik_form_filter.apply.mongodb.filter_number_range'   => ['filterNumberRange'],
+            'lexik_form_filter.apply.mongodb.filter_text'           => ['filterText'],
+            'lexik_form_filter.apply.mongodb.filter_document'       => ['filterDocument'],
             // Symfony types
-            'lexik_form_filter.apply.mongodb.text'     => array('filterText'),
-            'lexik_form_filter.apply.mongodb.email'    => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.integer'  => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.money'    => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.number'   => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.percent'  => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.search'   => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.url'      => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.choice'   => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.country'  => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.language' => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.locale'   => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.timezone' => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.date'     => array('filterDate'),
-            'lexik_form_filter.apply.mongodb.datetime' => array('filterDate'),
-            'lexik_form_filter.apply.mongodb.birthday' => array('filterDate'),
-            'lexik_form_filter.apply.mongodb.checkbox' => array('filterValue'),
-            'lexik_form_filter.apply.mongodb.radio'    => array('filterValue'),
-        );
+            'lexik_form_filter.apply.mongodb.text'     => ['filterText'],
+            'lexik_form_filter.apply.mongodb.email'    => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.integer'  => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.money'    => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.number'   => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.percent'  => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.search'   => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.url'      => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.choice'   => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.country'  => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.language' => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.locale'   => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.timezone' => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.date'     => ['filterDate'],
+            'lexik_form_filter.apply.mongodb.datetime' => ['filterDate'],
+            'lexik_form_filter.apply.mongodb.birthday' => ['filterDate'],
+            'lexik_form_filter.apply.mongodb.checkbox' => ['filterValue'],
+            'lexik_form_filter.apply.mongodb.radio'    => ['filterValue'],
+        ];
     }
 
     /**
@@ -277,14 +276,9 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
-            $pattern = isset($values['condition_pattern']) ? $values['condition_pattern'] : FilterOperands::STRING_CONTAINS;
+            $pattern = $values['condition_pattern'] ?? FilterOperands::STRING_CONTAINS;
 
-            $patternValues = array(
-                FilterOperands::STRING_STARTS   => new \MongoRegex('/^' . $values['value'] . '.*/i'),
-                FilterOperands::STRING_ENDS     => new \MongoRegex('/.*' . $values['value'] . '$/i'),
-                FilterOperands::STRING_CONTAINS => new \MongoRegex('/.*' . $values['value'] . '.*/i'),
-                FilterOperands::STRING_EQUALS   => $values['value'],
-            );
+            $patternValues = [FilterOperands::STRING_STARTS   => new \MongoRegex('/^' . $values['value'] . '.*/i'), FilterOperands::STRING_ENDS     => new \MongoRegex('/.*' . $values['value'] . '$/i'), FilterOperands::STRING_CONTAINS => new \MongoRegex('/.*' . $values['value'] . '.*/i'), FilterOperands::STRING_EQUALS   => $values['value']];
 
             if (!isset($patternValues[$pattern])) {
                 throw new \InvalidArgumentException('Wrong type constant in string like expression mapper.');
@@ -317,7 +311,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
             }
 
             if ($values['value'] instanceof Collection) {
-                $ids = array();
+                $ids = [];
 
                 foreach ($values['value'] as $object) {
                     $ids[] = new \MongoId($object->getId());
@@ -349,13 +343,7 @@ class DoctrineMongodbSubscriber implements EventSubscriberInterface
      */
     private function getExprOperatorMethod($operator)
     {
-        $methods = array(
-            'eq'  => 'equals',
-            'gt'  => 'gt',
-            'gte' => 'gte',
-            'lt'  => 'lt',
-            'lte' => 'lte',
-        );
+        $methods = ['eq'  => 'equals', 'gt'  => 'gt', 'gte' => 'gte', 'lt'  => 'lt', 'lte' => 'lte'];
 
         if (!isset($methods[$operator])) {
             throw new \InvalidArgumentException('Wrong type constant for number operator.');

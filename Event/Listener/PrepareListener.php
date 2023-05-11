@@ -2,6 +2,11 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event\Listener;
 
+use Doctrine\ORM\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
+use Doctrine\ODM\MongoDB\Query\Builder;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\MongodbQuery;
 use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 
@@ -41,11 +46,11 @@ class PrepareListener
             return $this->forceCaseInsensitivity;
         }
 
-        if (class_exists('\Doctrine\ORM\QueryBuilder') && $qb instanceof \Doctrine\ORM\QueryBuilder) {
+        if (class_exists('\\' . QueryBuilder::class) && $qb instanceof QueryBuilder) {
             return ($qb->getEntityManager()->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform);
         }
 
-        if (class_exists('\Doctrine\DBAL\Query\QueryBuilder') && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
+        if (class_exists('\\' . \Doctrine\DBAL\Query\QueryBuilder::class) && $qb instanceof \Doctrine\DBAL\Query\QueryBuilder) {
             return ($qb->getConnection()->getDatabasePlatform() instanceof PostgreSqlPlatform);
         }
     }
@@ -79,11 +84,7 @@ class PrepareListener
     {
         $qb = $event->getQueryBuilder();
 
-        $queryClasses = array(
-            'Doctrine\ORM\QueryBuilder'          => 'Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery',
-            'Doctrine\DBAL\Query\QueryBuilder'   => 'Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery',
-            'Doctrine\ODM\MongoDB\Query\Builder' => 'Lexik\Bundle\FormFilterBundle\Filter\Doctrine\MongodbQuery',
-        );
+        $queryClasses = [QueryBuilder::class          => ORMQuery::class, \Doctrine\DBAL\Query\QueryBuilder::class   => DBALQuery::class, Builder::class => MongodbQuery::class];
 
         foreach ($queryClasses as $builderClass => $queryClass) {
             if (class_exists($builderClass) && $qb instanceof $builderClass) {

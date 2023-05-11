@@ -18,6 +18,6 @@ class LexikFormFilterBundle extends Bundle
      {
          parent::build($container);
 
-         $container->addCompilerPass(new FormDataExtractorPass());
+         $container->addCompilerPass(new FormDataExtractorPass(), \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
      }
 }

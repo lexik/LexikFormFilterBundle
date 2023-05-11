@@ -2,12 +2,14 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression;
 
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Literal;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 abstract class ExpressionBuilder
 {
-    const SQL_DATE      = 'Y-m-d';
-    const SQL_DATE_TIME = 'Y-m-d H:i:s';
+    public const SQL_DATE      = 'Y-m-d';
+    public const SQL_DATE_TIME = 'Y-m-d H:i:s';
 
     /**
      * @var mixed
@@ -51,7 +53,7 @@ abstract class ExpressionBuilder
      * @param number $min minimum value
      * @param number $max maximum value
      *
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     * @return Comparison|string
      */
     public function inRange($field, $min, $max)
     {
@@ -94,7 +96,7 @@ abstract class ExpressionBuilder
      * @param null|\DateTime $min   start date
      * @param null|\DateTime $max   end date
      *
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     * @return Comparison|string
      */
     public function dateInRange($field, $min = null, $max = null)
     {
@@ -128,7 +130,7 @@ abstract class ExpressionBuilder
      * @param  string|\DateTime $value alias.fieldName or mysql date string format or DateTime
      * @param  string|\DateTime $min alias.fieldName or mysql date string format or DateTime
      * @param  string|\DateTime $max alias.fieldName or mysql date string format or DateTime
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     * @return Comparison|string
      */
     public function dateTimeInRange($value, $min = null, $max = null)
     {
@@ -165,7 +167,7 @@ abstract class ExpressionBuilder
      * @param  string $value string value
      * @param  int    $type one of FilterOperands::STRING_* constant
      *
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     * @return Comparison|string
      */
     public function stringLike($field, $value, $type = FilterOperands::STRING_CONTAINS)
     {
@@ -183,7 +185,7 @@ abstract class ExpressionBuilder
      * @param  \DateTime $date
      * @param  bool     $isMax
      *
-     * @return \Doctrine\ORM\Query\Expr\Literal|string
+     * @return Literal|string
      */
     protected function convertToSqlDate($date, $isMax = false)
     {
@@ -204,7 +206,7 @@ abstract class ExpressionBuilder
      * Normalize date time boundary
      *
      * @param \DateTime|string $date
-     * @return \Doctrine\ORM\Query\Expr\Literal
+     * @return Literal
      */
     protected function convertToSqlDateTime($date)
     {

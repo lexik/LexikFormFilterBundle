@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  */
@@ -27,7 +28,7 @@ interface FilterBuilderExecuterInterface
     public function getParts();
 
     /**
-     * @return \Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface
+     * @return QueryInterface
      */
     public function getFilterQuery();
 }

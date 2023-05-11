@@ -42,7 +42,7 @@ class DoctrineApplyFilterListener
         $qbAdapter = new DoctrineQueryBuilderAdapter($event->getQueryBuilder());
         $conditionBuilder = $event->getConditionBuilder();
 
-        $this->parameters = array();
+        $this->parameters = [];
         $expression = $this->computeExpression($qbAdapter, $conditionBuilder->getRoot());
 
         if (null !== $expression && $expression->count()) {
@@ -50,7 +50,7 @@ class DoctrineApplyFilterListener
 
             foreach ($this->parameters as $name => $value) {
                 if (is_array($value)) {
-                    list($value, $type) = $value;
+                    [$value, $type] = $value;
                     $qbAdapter->setParameter($name, $value, $type);
                 } else {
                     $qbAdapter->setParameter($name, $value);

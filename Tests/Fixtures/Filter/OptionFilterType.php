@@ -14,7 +14,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
  */
 class OptionFilterType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('label', TextFilterType::class);
         $builder->add('rank', NumberFilterType::class);

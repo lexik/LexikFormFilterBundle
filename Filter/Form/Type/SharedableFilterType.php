@@ -17,7 +17,7 @@ class SharedableFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // keep the closure as attribute to execute it later in the query builder updater
         $builder->setAttribute('add_shared', $options['add_shared']);
@@ -26,11 +26,9 @@ class SharedableFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'add_shared' => function (FilterBuilderExecuterInterface $qbe) {},
-        ));
+        $resolver->setDefaults(['add_shared' => function (FilterBuilderExecuterInterface $qbe) {}]);
     }
 
     /**

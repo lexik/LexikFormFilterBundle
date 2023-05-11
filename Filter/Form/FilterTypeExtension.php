@@ -17,7 +17,7 @@ class FilterTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if (null !== $options['apply_filter']) {
             $builder->setAttribute('apply_filter', $options['apply_filter']);
@@ -39,15 +39,9 @@ class FilterTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'apply_filter'             => null,
-            'data_extraction_method'   => 'default',
-            'filter_condition_builder' => null,
-            'filter_field_name'        => null,
-            'filter_shared_name'       => null,
-        ));
+        $resolver->setDefaults(['apply_filter'             => null, 'data_extraction_method'   => 'default', 'filter_condition_builder' => null, 'filter_field_name'        => null, 'filter_shared_name'       => null]);
     }
 
     /**

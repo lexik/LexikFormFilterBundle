@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ItemEmbeddedOptionsFilterType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ('mongo' === $options['doctrine_builder']) {
             $addShared = function (FilterBuilderExecuterInterface $qbe) {
@@ -36,17 +36,12 @@ class ItemEmbeddedOptionsFilterType extends AbstractType
 
         $builder->add('name', TextFilterType::class);
         $builder->add('position', NumberFilterType::class);
-        $builder->add('options', CollectionAdapterFilterType::class, array(
-            'entry_type' => OptionFilterType::class,
-            'add_shared' => $addShared,
-        ));
+        $builder->add('options', CollectionAdapterFilterType::class, ['entry_type' => OptionFilterType::class, 'add_shared' => $addShared]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'doctrine_builder' => null,
-        ));
+        $resolver->setDefaults(['doctrine_builder' => null]);
     }
 
     /**

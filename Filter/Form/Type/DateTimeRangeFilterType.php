@@ -16,30 +16,22 @@ class DateTimeRangeFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('left_datetime', DateTimeFilterType::class, $options['left_datetime_options']);
         $builder->add('right_datetime', DateTimeFilterType::class, $options['right_datetime_options']);
 
-        $builder->setAttribute('filter_value_keys', array(
-            'left_datetime'  => $options['left_datetime_options'],
-            'right_datetime' => $options['right_datetime_options'],
-        ));
+        $builder->setAttribute('filter_value_keys', ['left_datetime'  => $options['left_datetime_options'], 'right_datetime' => $options['right_datetime_options']]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(array(
-                'required'               => false,
-                'left_datetime_options'  => array(),
-                'right_datetime_options' => array(),
-                'data_extraction_method' => 'value_keys',
-            ))
-            ->setAllowedValues('data_extraction_method', array('value_keys'))
+            ->setDefaults(['required'               => false, 'left_datetime_options'  => [], 'right_datetime_options' => [], 'data_extraction_method' => 'value_keys'])
+            ->setAllowedValues('data_extraction_method', ['value_keys'])
         ;
     }
 

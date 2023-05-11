@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
+use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\DBALExpressionBuilder;
@@ -40,7 +41,7 @@ class DBALQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function getEventPartName()
+    public function getEventPartName(): string
     {
         return 'dbal';
     }
@@ -56,7 +57,7 @@ class DBALQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function createCondition($expression, array $parameters = array())
+    public function createCondition($expression, array $parameters = [])
     {
         return new Condition($expression, $parameters);
     }
@@ -64,7 +65,7 @@ class DBALQuery implements QueryInterface
     /**
      * Get QueryBuilder expr.
      *
-     * @return \Doctrine\DBAL\Query\Expression\ExpressionBuilder
+     * @return ExpressionBuilder
      */
     public function getExpr()
     {
@@ -84,7 +85,7 @@ class DBALQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function hasJoinAlias($joinAlias)
+    public function hasJoinAlias($joinAlias): bool
     {
         $joinParts = $this->queryBuilder->getQueryPart('join');
 

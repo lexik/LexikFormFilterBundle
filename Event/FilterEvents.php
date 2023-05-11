@@ -9,5 +9,5 @@ namespace Lexik\Bundle\FormFilterBundle\Event;
  */
 class FilterEvents
 {
-    const PREPARE = 'lexik_filter.prepare';
+    public const PREPARE = 'lexik_filter.prepare';
 }

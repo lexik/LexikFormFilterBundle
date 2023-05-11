@@ -30,12 +30,12 @@ abstract class AbstractDoctrineSubscriber
             if (is_array($values['value']) && sizeof($values['value']) > 0) {
                 $event->setCondition(
                     $expr->in($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Connection::PARAM_STR_ARRAY))
+                    [$paramName => [$values['value'], Connection::PARAM_STR_ARRAY]]
                 );
             } elseif (!is_array($values['value'])) {
                 $event->setCondition(
                     $expr->eq($event->getField(), ':'.$paramName),
-                    array($paramName => array($values['value'], Types::STRING))
+                    [$paramName => [$values['value'], Types::STRING]]
                 );
             }
         }
@@ -56,7 +56,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($value, Types::BOOLEAN))
+                [$paramName => [$value, Types::BOOLEAN]]
             );
         }
     }
@@ -74,7 +74,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::STRING))
+                [$paramName => [$values['value'], Types::STRING]]
             );
         }
     }
@@ -92,7 +92,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::DATE_MUTABLE))
+                [$paramName => [$values['value'], Types::DATE_MUTABLE]]
             );
         }
     }
@@ -124,7 +124,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->eq($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], Types::DATETIME_MUTABLE))
+                [$paramName => [$values['value'], Types::DATETIME_MUTABLE]]
             );
         }
     }
@@ -158,7 +158,7 @@ abstract class AbstractDoctrineSubscriber
 
             $event->setCondition(
                 $expr->$op($event->getField(), ':'.$paramName),
-                array($paramName => array($values['value'], is_int($values['value']) ? Types::INTEGER : Types::FLOAT))
+                [$paramName => [$values['value'], is_int($values['value']) ? Types::INTEGER : Types::FLOAT]]
             );
         }
     }
@@ -173,7 +173,7 @@ abstract class AbstractDoctrineSubscriber
         $value  = $values['value'];
 
         $expression = $expr->andX();
-        $params = array();
+        $params = [];
 
         if (isset($value['left_number'][0])) {
             $hasSelector = (FilterOperands::OPERAND_SELECTOR === $value['left_number']['condition_operator']);
@@ -191,7 +191,7 @@ abstract class AbstractDoctrineSubscriber
                 $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$leftCond($event->getField(), ':'.$leftParamName));
-                $params[$leftParamName] = array($leftValue, is_int($leftValue) ? Types::INTEGER : Types::FLOAT);
+                $params[$leftParamName] = [$leftValue, is_int($leftValue) ? Types::INTEGER : Types::FLOAT];
             }
         }
 
@@ -211,7 +211,7 @@ abstract class AbstractDoctrineSubscriber
                 $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
 
                 $expression->add($expr->$rightCond($event->getField(), ':'.$rightParamName));
-                $params[$rightParamName] = array($rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT);
+                $params[$rightParamName] = [$rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT];
             }
         }
 

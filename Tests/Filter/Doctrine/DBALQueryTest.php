@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
+use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Connection;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -18,7 +19,7 @@ class DBALQueryTest extends TestCase
         return;
 
         $exprMock = $this
-            ->getMockBuilder('Doctrine\DBAL\Query\Expression\ExpressionBuilder')
+            ->getMockBuilder(ExpressionBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
 

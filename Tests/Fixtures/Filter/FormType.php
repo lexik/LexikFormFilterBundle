@@ -16,24 +16,22 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
  */
 class FormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class);
-        $builder->add('position', IntegerType::class, array(
-            'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
-                if (!empty($values['value'])) {
-                    if ($filterQuery->getExpr() instanceof Expr) {
-                        $expr = $filterQuery->getExpr()->field($field)->equals($values['value']);
-                    } else {
-                        $expr = $filterQuery->getExpr()->eq($field, $values['value']);
-                    }
-
-                    return $filterQuery->createCondition($expr);
+        $builder->add('position', IntegerType::class, ['apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+            if (!empty($values['value'])) {
+                if ($filterQuery->getExpr() instanceof Expr) {
+                    $expr = $filterQuery->getExpr()->field($field)->equals($values['value']);
+                } else {
+                    $expr = $filterQuery->getExpr()->eq($field, $values['value']);
                 }
 
-                return null;
-            },
-        ));
+                return $filterQuery->createCondition($expr);
+            }
+
+            return null;
+        }]);
     }
 
     /**

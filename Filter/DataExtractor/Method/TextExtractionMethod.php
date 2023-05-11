@@ -15,7 +15,7 @@ class TextExtractionMethod implements DataExtractionMethodInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'text';
     }
@@ -26,10 +26,10 @@ class TextExtractionMethod implements DataExtractionMethodInterface
     public function extract(FormInterface $form)
     {
         $data   = $form->getData();
-        $values = array('value' => array());
+        $values = ['value' => []];
 
         if (array_key_exists('text', $data)) {
-            $values = array('value' => $data['text']);
+            $values = ['value' => $data['text']];
             $values += $data;
         }
 

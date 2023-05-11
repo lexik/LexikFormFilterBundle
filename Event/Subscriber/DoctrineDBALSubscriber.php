@@ -16,38 +16,37 @@ class DoctrineDBALSubscriber extends AbstractDoctrineSubscriber implements Event
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // Lexik form filter types
-            'lexik_form_filter.apply.dbal.filter_boolean'        => array('filterBoolean'),
-            'lexik_form_filter.apply.dbal.filter_checkbox'       => array('filterCheckbox'),
-            'lexik_form_filter.apply.dbal.filter_choice'         => array('filterValue'),
-            'lexik_form_filter.apply.dbal.filter_date'           => array('filterDate'),
-            'lexik_form_filter.apply.dbal.filter_date_range'     => array('filterDateRange'),
-            'lexik_form_filter.apply.dbal.filter_datetime'       => array('filterDateTime'),
-            'lexik_form_filter.apply.dbal.filter_datetime_range' => array('filterDateTimeRange'),
-            'lexik_form_filter.apply.dbal.filter_number'         => array('filterNumber'),
-            'lexik_form_filter.apply.dbal.filter_number_range'   => array('filterNumberRange'),
-            'lexik_form_filter.apply.dbal.filter_text'           => array('filterText'),
-
+            'lexik_form_filter.apply.dbal.filter_boolean'        => ['filterBoolean'],
+            'lexik_form_filter.apply.dbal.filter_checkbox'       => ['filterCheckbox'],
+            'lexik_form_filter.apply.dbal.filter_choice'         => ['filterValue'],
+            'lexik_form_filter.apply.dbal.filter_date'           => ['filterDate'],
+            'lexik_form_filter.apply.dbal.filter_date_range'     => ['filterDateRange'],
+            'lexik_form_filter.apply.dbal.filter_datetime'       => ['filterDateTime'],
+            'lexik_form_filter.apply.dbal.filter_datetime_range' => ['filterDateTimeRange'],
+            'lexik_form_filter.apply.dbal.filter_number'         => ['filterNumber'],
+            'lexik_form_filter.apply.dbal.filter_number_range'   => ['filterNumberRange'],
+            'lexik_form_filter.apply.dbal.filter_text'           => ['filterText'],
             // Symfony field types
-            'lexik_form_filter.apply.dbal.text'     => array('filterText'),
-            'lexik_form_filter.apply.dbal.email'    => array('filterValue'),
-            'lexik_form_filter.apply.dbal.integer'  => array('filterValue'),
-            'lexik_form_filter.apply.dbal.money'    => array('filterValue'),
-            'lexik_form_filter.apply.dbal.number'   => array('filterValue'),
-            'lexik_form_filter.apply.dbal.percent'  => array('filterValue'),
-            'lexik_form_filter.apply.dbal.search'   => array('filterValue'),
-            'lexik_form_filter.apply.dbal.url'      => array('filterValue'),
-            'lexik_form_filter.apply.dbal.choice'   => array('filterValue'),
-            'lexik_form_filter.apply.dbal.country'  => array('filterValue'),
-            'lexik_form_filter.apply.dbal.language' => array('filterValue'),
-            'lexik_form_filter.apply.dbal.locale'   => array('filterValue'),
-            'lexik_form_filter.apply.dbal.timezone' => array('filterValue'),
-            'lexik_form_filter.apply.dbal.date'     => array('filterDate'),
-            'lexik_form_filter.apply.dbal.datetime' => array('filterDate'),
-            'lexik_form_filter.apply.dbal.birthday' => array('filterDate'),
-            'lexik_form_filter.apply.dbal.checkbox' => array('filterValue'),
-            'lexik_form_filter.apply.dbal.radio'    => array('filterValue'),
-        );
+            'lexik_form_filter.apply.dbal.text'     => ['filterText'],
+            'lexik_form_filter.apply.dbal.email'    => ['filterValue'],
+            'lexik_form_filter.apply.dbal.integer'  => ['filterValue'],
+            'lexik_form_filter.apply.dbal.money'    => ['filterValue'],
+            'lexik_form_filter.apply.dbal.number'   => ['filterValue'],
+            'lexik_form_filter.apply.dbal.percent'  => ['filterValue'],
+            'lexik_form_filter.apply.dbal.search'   => ['filterValue'],
+            'lexik_form_filter.apply.dbal.url'      => ['filterValue'],
+            'lexik_form_filter.apply.dbal.choice'   => ['filterValue'],
+            'lexik_form_filter.apply.dbal.country'  => ['filterValue'],
+            'lexik_form_filter.apply.dbal.language' => ['filterValue'],
+            'lexik_form_filter.apply.dbal.locale'   => ['filterValue'],
+            'lexik_form_filter.apply.dbal.timezone' => ['filterValue'],
+            'lexik_form_filter.apply.dbal.date'     => ['filterDate'],
+            'lexik_form_filter.apply.dbal.datetime' => ['filterDate'],
+            'lexik_form_filter.apply.dbal.birthday' => ['filterDate'],
+            'lexik_form_filter.apply.dbal.checkbox' => ['filterValue'],
+            'lexik_form_filter.apply.dbal.radio'    => ['filterValue'],
+        ];
     }
 }

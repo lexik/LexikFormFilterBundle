@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\FormFilterBundle\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -21,12 +22,12 @@ class LexikFormFilterExtension extends Extension
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('form.xml');
 
@@ -40,7 +41,7 @@ class LexikFormFilterExtension extends Extension
             $filterPrepareDef = $container->getDefinition('lexik_form_filter.filter_prepare');
             $filterPrepareDef->addMethodCall(
                 'setForceCaseInsensitivity',
-                array($config['force_case_insensitivity'])
+                [$config['force_case_insensitivity']]
             );
         }
 
@@ -48,7 +49,7 @@ class LexikFormFilterExtension extends Extension
             $filterPrepareDef = $container->getDefinition('lexik_form_filter.filter_prepare');
             $filterPrepareDef->addMethodCall(
                 'setEncoding',
-                array($config['encoding'])
+                [$config['encoding']]
             );
         }
 

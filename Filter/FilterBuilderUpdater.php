@@ -92,7 +92,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
             throw new \RuntimeException("Couldn't find any filter query object.");
         }
 
-        $alias = (null !== $alias) ? $alias : $event->getFilterQuery()->getRootAlias();
+        $alias = $alias ?? $event->getFilterQuery()->getRootAlias();
 
         // init parts (= ['joins' -> 'alias']) / the root alias does not target a join
         $this->parts->add('__root__', $alias);
@@ -174,8 +174,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
      */
     protected function getFilterCondition(FormInterface $form, AbstractType $formType, QueryInterface $filterQuery, $alias)
     {
-        $values = $this->prepareFilterValues($form, $formType);
-        $values += array('alias' => $alias);
+        $values = $this->prepareFilterValues($form);
+        $values += ['alias' => $alias];
         $field = $form->getConfig()->getAttribute('filter_field_name') ?? trim($values['alias'] . '.' . $form->getName(), '. ');
 
         $condition = null;

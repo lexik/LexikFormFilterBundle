@@ -2,6 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\ORM\Query\Expr\Andx;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
@@ -29,7 +32,7 @@ class DoctrineQueryBuilderAdapter
     }
 
     /**
-     * @return \Doctrine\DBAL\Query\Expression\CompositeExpression|\Doctrine\ORM\Query\Expr\Andx
+     * @return CompositeExpression|Andx
      */
     public function andX()
     {
@@ -37,7 +40,7 @@ class DoctrineQueryBuilderAdapter
     }
 
     /**
-     * @return \Doctrine\DBAL\Query\Expression\CompositeExpression|\Doctrine\ORM\Query\Expr\Orx
+     * @return CompositeExpression|Orx
      */
     public function orX()
     {

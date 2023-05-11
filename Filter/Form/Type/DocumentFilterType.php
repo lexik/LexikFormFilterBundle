@@ -18,12 +18,9 @@ class DocumentFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->setAttribute('filter_options', array(
-            'reference_type' => $options['reference_type'],
-            'reference_name' => (null !== $options['reference_name']) ? $options['reference_name'] : ucfirst($builder->getName()),
-        ));
+        $builder->setAttribute('filter_options', ['reference_type' => $options['reference_type'], 'reference_name' => $options['reference_name'] ?? ucfirst($builder->getName())]);
     }
 
     /**
@@ -31,18 +28,13 @@ class DocumentFilterType extends AbstractType
      *
      * @param OptionsResolver $resolver The resolver for the options.
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(array(
-                'required'               => false,
-                'data_extraction_method' => 'default',
-                'reference_type'         => 'one',
-                'reference_name'         => null,
-            ))
-            ->setRequired(array('reference_type'))
-            ->setAllowedValues('data_extraction_method', array('default'))
-            ->setAllowedValues('reference_type', array('one', 'many'))
+            ->setDefaults(['required'               => false, 'data_extraction_method' => 'default', 'reference_type'         => 'one', 'reference_name'         => null])
+            ->setRequired(['reference_type'])
+            ->setAllowedValues('data_extraction_method', ['default'])
+            ->setAllowedValues('reference_type', ['one', 'many'])
         ;
     }
 

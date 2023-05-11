@@ -23,41 +23,40 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             // Lexik form filter types
-            'lexik_form_filter.apply.orm.filter_boolean'        => array('filterBoolean'),
-            'lexik_form_filter.apply.orm.filter_checkbox'       => array('filterCheckbox'),
-            'lexik_form_filter.apply.orm.filter_choice'         => array('filterValue'),
-            'lexik_form_filter.apply.orm.filter_date'           => array('filterDate'),
-            'lexik_form_filter.apply.orm.filter_date_range'     => array('filterDateRange'),
-            'lexik_form_filter.apply.orm.filter_datetime'       => array('filterDateTime'),
-            'lexik_form_filter.apply.orm.filter_datetime_range' => array('filterDateTimeRange'),
-            'lexik_form_filter.apply.orm.filter_entity'         => array('filterEntity'),
-            'lexik_form_filter.apply.orm.filter_number'         => array('filterNumber'),
-            'lexik_form_filter.apply.orm.filter_number_range'   => array('filterNumberRange'),
-            'lexik_form_filter.apply.orm.filter_text'           => array('filterText'),
-
+            'lexik_form_filter.apply.orm.filter_boolean'        => ['filterBoolean'],
+            'lexik_form_filter.apply.orm.filter_checkbox'       => ['filterCheckbox'],
+            'lexik_form_filter.apply.orm.filter_choice'         => ['filterValue'],
+            'lexik_form_filter.apply.orm.filter_date'           => ['filterDate'],
+            'lexik_form_filter.apply.orm.filter_date_range'     => ['filterDateRange'],
+            'lexik_form_filter.apply.orm.filter_datetime'       => ['filterDateTime'],
+            'lexik_form_filter.apply.orm.filter_datetime_range' => ['filterDateTimeRange'],
+            'lexik_form_filter.apply.orm.filter_entity'         => ['filterEntity'],
+            'lexik_form_filter.apply.orm.filter_number'         => ['filterNumber'],
+            'lexik_form_filter.apply.orm.filter_number_range'   => ['filterNumberRange'],
+            'lexik_form_filter.apply.orm.filter_text'           => ['filterText'],
             // Symfony types
-            'lexik_form_filter.apply.orm.text'     => array('filterText'),
-            'lexik_form_filter.apply.orm.email'    => array('filterValue'),
-            'lexik_form_filter.apply.orm.integer'  => array('filterValue'),
-            'lexik_form_filter.apply.orm.money'    => array('filterValue'),
-            'lexik_form_filter.apply.orm.number'   => array('filterValue'),
-            'lexik_form_filter.apply.orm.percent'  => array('filterValue'),
-            'lexik_form_filter.apply.orm.search'   => array('filterValue'),
-            'lexik_form_filter.apply.orm.url'      => array('filterValue'),
-            'lexik_form_filter.apply.orm.choice'   => array('filterValue'),
-            'lexik_form_filter.apply.orm.entity'   => array('filterEntity'),
-            'lexik_form_filter.apply.orm.country'  => array('filterValue'),
-            'lexik_form_filter.apply.orm.language' => array('filterValue'),
-            'lexik_form_filter.apply.orm.locale'   => array('filterValue'),
-            'lexik_form_filter.apply.orm.timezone' => array('filterValue'),
-            'lexik_form_filter.apply.orm.date'     => array('filterDate'),
-            'lexik_form_filter.apply.orm.datetime' => array('filterDate'),
-            'lexik_form_filter.apply.orm.birthday' => array('filterDate'),
-            'lexik_form_filter.apply.orm.checkbox' => array('filterValue'),
-            'lexik_form_filter.apply.orm.radio'    => array('filterValue'),
-        );
+            'lexik_form_filter.apply.orm.text'     => ['filterText'],
+            'lexik_form_filter.apply.orm.email'    => ['filterValue'],
+            'lexik_form_filter.apply.orm.integer'  => ['filterValue'],
+            'lexik_form_filter.apply.orm.money'    => ['filterValue'],
+            'lexik_form_filter.apply.orm.number'   => ['filterValue'],
+            'lexik_form_filter.apply.orm.percent'  => ['filterValue'],
+            'lexik_form_filter.apply.orm.search'   => ['filterValue'],
+            'lexik_form_filter.apply.orm.url'      => ['filterValue'],
+            'lexik_form_filter.apply.orm.choice'   => ['filterValue'],
+            'lexik_form_filter.apply.orm.entity'   => ['filterEntity'],
+            'lexik_form_filter.apply.orm.country'  => ['filterValue'],
+            'lexik_form_filter.apply.orm.language' => ['filterValue'],
+            'lexik_form_filter.apply.orm.locale'   => ['filterValue'],
+            'lexik_form_filter.apply.orm.timezone' => ['filterValue'],
+            'lexik_form_filter.apply.orm.date'     => ['filterDate'],
+            'lexik_form_filter.apply.orm.datetime' => ['filterDate'],
+            'lexik_form_filter.apply.orm.birthday' => ['filterDate'],
+            'lexik_form_filter.apply.orm.checkbox' => ['filterValue'],
+            'lexik_form_filter.apply.orm.radio'    => ['filterValue'],
+        ];
     }
 
     /**
@@ -91,7 +90,7 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
             }
 
             if ($values['value'] instanceof Collection) {
-                $ids = array();
+                $ids = [];
 
                 foreach ($values['value'] as $value) {
                     $ids[] = $this->getEntityIdentifier($value, $queryBuilder->getEntityManager());
@@ -100,16 +99,13 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                 if (count($ids) > 0) {
                     $event->setCondition(
                         $expr->in($filterField, ':'.$paramName),
-                        array($paramName => array($ids, Connection::PARAM_INT_ARRAY))
+                        [$paramName => [$ids, Connection::PARAM_INT_ARRAY]]
                     );
                 }
             } else {
                 $event->setCondition(
                     $expr->eq($filterField, ':'.$paramName),
-                    array($paramName => array(
-                        $this->getEntityIdentifier($values['value'], $queryBuilder->getEntityManager()),
-                        Types::INTEGER
-                    ))
+                    [$paramName => [$this->getEntityIdentifier($values['value'], $queryBuilder->getEntityManager()), Types::INTEGER]]
                 );
             }
         }

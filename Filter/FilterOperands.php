@@ -9,23 +9,23 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
  */
 final class FilterOperands
 {
-    const OPERATOR_EQUAL              = 'eq';
-    const OPERATOR_GREATER_THAN       = 'gt';
-    const OPERATOR_GREATER_THAN_EQUAL = 'gte';
-    const OPERATOR_LOWER_THAN         = 'lt';
-    const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
+    public const OPERATOR_EQUAL              = 'eq';
+    public const OPERATOR_GREATER_THAN       = 'gt';
+    public const OPERATOR_GREATER_THAN_EQUAL = 'gte';
+    public const OPERATOR_LOWER_THAN         = 'lt';
+    public const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
 
-    const STRING_STARTS   = 1;
-    const STRING_ENDS     = 2;
-    const STRING_EQUALS   = 3;
-    const STRING_CONTAINS = 4;
+    public const STRING_STARTS   = 1;
+    public const STRING_ENDS     = 2;
+    public const STRING_EQUALS   = 3;
+    public const STRING_CONTAINS = 4;
 
     /**
      * @deprecated use FilterOperands::STRING_CONTAINS
      */
-    const STRING_BOTH = 4;
+    public const STRING_BOTH = 4;
 
-    const OPERAND_SELECTOR = 'selection';
+    public const OPERAND_SELECTOR = 'selection';
 
     /**
      * Returns all available number operands.
@@ -35,13 +35,7 @@ final class FilterOperands
      */
     public static function getNumberOperands($includeSelector = false)
     {
-        $values = array(
-            self::OPERATOR_EQUAL,
-            self::OPERATOR_GREATER_THAN,
-            self::OPERATOR_GREATER_THAN_EQUAL,
-            self::OPERATOR_LOWER_THAN,
-            self::OPERATOR_LOWER_THAN_EQUAL,
-        );
+        $values = [self::OPERATOR_EQUAL, self::OPERATOR_GREATER_THAN, self::OPERATOR_GREATER_THAN_EQUAL, self::OPERATOR_LOWER_THAN, self::OPERATOR_LOWER_THAN_EQUAL];
 
         if ($includeSelector) {
             $values[] = self::OPERAND_SELECTOR;
@@ -58,12 +52,7 @@ final class FilterOperands
      */
     public static function getStringOperands($includeSelector = false)
     {
-        $values = array(
-            self::STRING_STARTS,
-            self::STRING_ENDS,
-            self::STRING_EQUALS,
-            self::STRING_CONTAINS,
-        );
+        $values = [self::STRING_STARTS, self::STRING_ENDS, self::STRING_EQUALS, self::STRING_CONTAINS];
 
         if ($includeSelector) {
             $values[] = self::OPERAND_SELECTOR;
@@ -77,11 +66,11 @@ final class FilterOperands
      *
      * @return array
      */
-    public static function getNumberOperandsChoices()
+    public static function getNumberOperandsChoices(): array
     {
-        $choices = array();
+        $choices = [];
 
-        $reflection = new \ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(self::class);
         foreach ($reflection->getConstants() as $name => $value) {
             if ('OPERATOR_' === substr($name, 0, 9)) {
                 $choices[$value] = strtolower(str_replace('OPERATOR_', 'number.', $name));
@@ -96,11 +85,11 @@ final class FilterOperands
      *
      * @return array
      */
-    public static function getStringOperandsChoices()
+    public static function getStringOperandsChoices(): array
     {
-        $choices = array();
+        $choices = [];
 
-        $reflection = new \ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(self::class);
         foreach ($reflection->getConstants() as $name => $value) {
             if ('STRING_' === substr($name, 0, 7)) {
                 $choices[$value] = strtolower(str_replace('STRING_', 'text.', $name));
@@ -123,7 +112,7 @@ final class FilterOperands
         }
 
         $name = strtoupper(str_replace('text.', 'STRING_', $operand));
-        $reflection = new \ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(self::class);
 
         return $reflection->getConstant($name);
     }

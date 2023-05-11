@@ -1,6 +1,8 @@
 <?php
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -12,14 +14,14 @@ class ORMQueryTest extends TestCase
 {
     public function testHasJoinAlias()
     {
-        $emMock = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+        $emMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $emMock
             ->expects($this->any())
             ->method('getExpressionBuilder')
-            ->will($this->returnValue(new \Doctrine\ORM\Query\Expr()));
+            ->will($this->returnValue(new Expr()));
 
         $qb = new QueryBuilder($emMock);
         $qb->from('Root', 'r');

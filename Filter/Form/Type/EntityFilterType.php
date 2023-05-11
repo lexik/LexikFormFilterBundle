@@ -16,14 +16,11 @@ class EntityFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(array(
-                'required'               => false,
-                'data_extraction_method' => 'default',
-            ))
-            ->setAllowedValues('data_extraction_method', array('default'))
+            ->setDefaults(['required'               => false, 'data_extraction_method' => 'default'])
+            ->setAllowedValues('data_extraction_method', ['default'])
         ;
     }
 
