@@ -19,7 +19,7 @@ class CheckboxFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(['required'               => false, 'data_extraction_method' => 'default'])
+            ->setDefaults(['required' => false, 'data_extraction_method' => 'default'])
             ->setAllowedValues('data_extraction_method', ['default'])
         ;
     }
@@ -27,7 +27,7 @@ class CheckboxFilterType extends AbstractType
     /**
      * @return ?string
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return CheckboxType::class;
     }
@@ -35,7 +35,7 @@ class CheckboxFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_checkbox';
     }

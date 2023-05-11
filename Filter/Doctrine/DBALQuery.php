@@ -3,10 +3,10 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\DBALExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\DBALExpressionBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -31,7 +31,7 @@ class DBALQuery implements QueryInterface
      */
     public function __construct(QueryBuilder $queryBuilder, $forceCaseInsensitivity = false)
     {
-        $this->queryBuilder      = $queryBuilder;
+        $this->queryBuilder = $queryBuilder;
         $this->expressionBuilder = new DBALExpressionBuilder(
             $this->queryBuilder->expr(),
             $forceCaseInsensitivity

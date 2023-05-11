@@ -2,9 +2,6 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CheckboxFilterType;
@@ -12,6 +9,9 @@ use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\DateTimeFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\NumberFilterType;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form filter for tests.
@@ -36,6 +36,6 @@ class ItemFilterType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['with_selector' => false, 'checkbox'      => false, 'datetime'      => false, 'disabled_name' => false]);
+        $resolver->setDefaults(['with_selector' => false, 'checkbox' => false, 'datetime' => false, 'disabled_name' => false]);
     }
 }

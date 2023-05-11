@@ -21,7 +21,7 @@ class DateRangeFilterType extends AbstractType
         $builder->add('left_date', DateFilterType::class, $options['left_date_options']);
         $builder->add('right_date', DateFilterType::class, $options['right_date_options']);
 
-        $builder->setAttribute('filter_value_keys', ['left_date'  => $options['left_date_options'], 'right_date' => $options['right_date_options']]);
+        $builder->setAttribute('filter_value_keys', ['left_date' => $options['left_date_options'], 'right_date' => $options['right_date_options']]);
     }
 
     /**
@@ -30,7 +30,7 @@ class DateRangeFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(['required'               => false, 'left_date_options'      => [], 'right_date_options'     => [], 'data_extraction_method' => 'value_keys'])
+            ->setDefaults(['required' => false, 'left_date_options' => [], 'right_date_options' => [], 'data_extraction_method' => 'value_keys'])
             ->setAllowedValues('data_extraction_method', ['value_keys'])
         ;
     }
@@ -38,7 +38,7 @@ class DateRangeFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_date_range';
     }

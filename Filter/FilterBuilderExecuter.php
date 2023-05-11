@@ -34,8 +34,8 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     public function __construct(QueryInterface $filterQuery, $alias, RelationsAliasBag $parts)
     {
         $this->filterQuery = $filterQuery;
-        $this->alias       = $alias;
-        $this->parts       = $parts;
+        $this->alias = $alias;
+        $this->parts = $parts;
     }
 
     /**

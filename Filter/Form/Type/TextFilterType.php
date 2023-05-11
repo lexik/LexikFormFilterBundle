@@ -49,13 +49,13 @@ class TextFilterType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $defaults = ['required'               => false, 'condition_pattern'      => $this->conditionPattern, 'compound'               => function (Options $options) {
+        $defaults = ['required' => false, 'condition_pattern' => $this->conditionPattern, 'compound' => function (Options $options) {
             return $options['condition_pattern'] == FilterOperands::OPERAND_SELECTOR;
-        }, 'text_options'           => ['required' => false, 'trim'     => true], 'choice_options'         => ['choices'            => FilterOperands::getStringOperandsChoices(), 'required'           => false, 'translation_domain' => 'LexikFormFilterBundle'], 'data_extraction_method' => function (Options $options) {
+        }, 'text_options' => ['required' => false, 'trim' => true], 'choice_options' => ['choices' => FilterOperands::getStringOperandsChoices(), 'required' => false, 'translation_domain' => 'LexikFormFilterBundle'], 'data_extraction_method' => function (Options $options) {
             return $options['compound'] ? 'text' : 'default';
         }];
                 
-        if(version_compare(Kernel::VERSION, '3.1.0') < 0) {
+        if (version_compare(Kernel::VERSION, '3.1.0') < 0) {
             $defaults['choice_options']['choices_as_values'] = true; // must be removed for use in Symfony 3.1, needed for 2.8
         }
         
@@ -69,7 +69,7 @@ class TextFilterType extends AbstractType
     /**
      * @return ?string
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return TextType::class;
     }
@@ -77,7 +77,7 @@ class TextFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_text';
     }

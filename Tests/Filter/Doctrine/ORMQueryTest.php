@@ -1,10 +1,11 @@
 <?php
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Doctrine\ORM\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use PHPUnit\Framework\TestCase;
 
 /**

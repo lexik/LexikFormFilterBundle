@@ -53,7 +53,7 @@ class CollectionAdapterFilterType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['entry_type'    => null, 'entry_options' => [], 'default_data'  => []]);
+        $resolver->setDefaults(['entry_type' => null, 'entry_options' => [], 'default_data' => []]);
 
         $resolver->setRequired(['entry_type']);
     }
@@ -61,7 +61,7 @@ class CollectionAdapterFilterType extends AbstractType
     /**
      * @return ?string
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return SharedableFilterType::class;
     }
@@ -69,7 +69,7 @@ class CollectionAdapterFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_collection_adapter';
     }

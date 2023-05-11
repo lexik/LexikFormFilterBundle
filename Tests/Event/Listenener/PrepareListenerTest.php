@@ -17,8 +17,9 @@ class PrepareListenerTest extends TestCase
         $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
         $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
-        $connection    = $this->getMockBuilder(
-            Connection::class)
+        $connection = $this->getMockBuilder(
+            Connection::class
+        )
             ->disableOriginalConstructor()
             ->getMock();
         $connection->expects($this->any())

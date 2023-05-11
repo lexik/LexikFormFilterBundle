@@ -3,17 +3,17 @@
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Document\Item;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Document\Item;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\FormType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemCallbackFilterType;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
-use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\BooleanFilterType;
-use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\RangeFilterType;
+use Lexik\Bundle\FormFilterBundle\Tests\TestCase;
 
 /**
  * Mongodb query builder tests.
@@ -91,16 +91,16 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $form = $this->formFactory->create(ItemFilterType::class, null, ['with_selector' => true]);
 
         $mongoQB = $this->createDoctrineQueryBuilder();
-        $form->submit(['name'      => ['text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS], 'position'  => ['text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL], 'createdAt' => ['year' => $year, 'month' => 9, 'day' => 27]]);
+        $form->submit(['name' => ['text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS], 'position' => ['text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL], 'createdAt' => ['year' => $year, 'month' => 9, 'day' => 27]]);
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
         $this->assertContains($this->toBson($mongoQB->getQueryArray()), $bson[5]);
 
         // bind a request to the form - datetime + pattern selector
-        $form = $this->formFactory->create(ItemFilterType::class, null, ['with_selector' => true, 'datetime'      => true]);
+        $form = $this->formFactory->create(ItemFilterType::class, null, ['with_selector' => true, 'datetime' => true]);
 
         $mongoQB = $this->createDoctrineQueryBuilder();
-        $form->submit(['name'      => ['text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS], 'position'  => ['text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL], 'createdAt' => ['date' => ['year' => $year, 'month' => 9, 'day' => 27], 'time' => ['hour' => 13, 'minute' => 21]]]);
+        $form->submit(['name' => ['text' => 'blabla', 'condition_pattern' => FilterOperands::STRING_ENDS], 'position' => ['text' => 2, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL], 'createdAt' => ['date' => ['year' => $year, 'month' => 9, 'day' => 27], 'time' => ['hour' => 13, 'minute' => 21]]]);
 
         $filterQueryBuilder->addFilterConditions($form, $mongoQB);
         $this->assertContains($this->toBson($mongoQB->getQueryArray()), $bson[6]);
@@ -156,7 +156,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
     {
         // use filter type options
         $form = $this->formFactory->create(RangeFilterType::class);
-        $form->submit(['position_selector' => ['left_number'  => ['text' => 4, 'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN], 'right_number' => ['text' => 8, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL]]]);
+        $form->submit(['position_selector' => ['left_number' => ['text' => 4, 'condition_operator' => FilterOperands::OPERATOR_GREATER_THAN], 'right_number' => ['text' => 8, 'condition_operator' => FilterOperands::OPERATOR_LOWER_THAN_EQUAL]]]);
 
         $mongoQB = $this->createDoctrineQueryBuilder();
 
@@ -188,7 +188,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
     {
         // use filter type options
         $form = $this->formFactory->create(RangeFilterType::class);
-        $form->submit(['createdAt' => ['left_date'  => '2012-05-12', 'right_date' => ['year' => '2012', 'month' => '5', 'day' => '22']]]);
+        $form->submit(['createdAt' => ['left_date' => '2012-05-12', 'right_date' => ['year' => '2012', 'month' => '5', 'day' => '22']]]);
 
 
         $leftTimestamp = (new \DateTime('2012-05-12'))->getTimestamp() * 1000;
@@ -199,7 +199,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            '{"$and":[{"createdAt":{"$gte":{"$date":{"$numberLong":"'.$leftTimestamp.'"}},"$lt":{"$date":{"$numberLong":"'.$rightTimestamp.'"}}}}]}',
+            '{"$and":[{"createdAt":{"$gte":{"$date":{"$numberLong":"' . $leftTimestamp . '"}},"$lt":{"$date":{"$numberLong":"' . $rightTimestamp . '"}}}}]}',
             $this->toBson($mongoQB->getQueryArray())
         );
     }
@@ -218,7 +218,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $this->initQueryBuilderUpdater()->addFilterConditions($form, $mongoQB);
 
         $this->assertEquals(
-            '{"$and":[{"updatedAt":{"$gte":{"$date":{"$numberLong":"'.$leftTimestamp.'"}},"$lt":{"$date":{"$numberLong":"'.$rightTimestamp.'"}}}}]}',
+            '{"$and":[{"updatedAt":{"$gte":{"$date":{"$numberLong":"' . $leftTimestamp . '"}},"$lt":{"$date":{"$numberLong":"' . $rightTimestamp . '"}}}}]}',
             $this->toBson($mongoQB->getQueryArray())
         );
     }
@@ -226,7 +226,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
     public function testFilterStandardType()
     {
         $form = $this->formFactory->create(FormType::class);
-        $form->submit(['name'     => 'hey dude', 'position' => 99]);
+        $form->submit(['name' => 'hey dude', 'position' => 99]);
 
         $mongoQB = $this->createDoctrineQueryBuilder();
 
@@ -292,7 +292,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         // doctrine query builder without any joins + custom condition builder
-        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['doctrine_builder'         => 'mongo', 'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['doctrine_builder' => 'mongo', 'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
             $builder
                 ->root('or')
                     ->field('options.label')
@@ -315,7 +315,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
         );
 
         // doctrine query builder without any joins + custom condition builder
-        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['doctrine_builder'         => 'mongo', 'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['doctrine_builder' => 'mongo', 'filter_condition_builder' => function (ConditionBuilderInterface $builder) {
             $builder
                 ->root('and')
                     ->orX()
@@ -343,7 +343,7 @@ class MongodbQueryBuilderUpdaterTest extends TestCase
 
     public function testWithDataClass()
     {
-        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['data_class'       => Item::class, 'doctrine_builder' => 'mongo']);
+        $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['data_class' => Item::class, 'doctrine_builder' => 'mongo']);
         $form->submit(['name' => 'dude', 'options' => [['label' => 'color', 'rank' => 6]]]);
 
         $mongoQB = $this->createDoctrineQueryBuilder();

@@ -5,9 +5,9 @@ namespace Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter;
 use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Form filter for tests.
@@ -37,7 +37,7 @@ class FormType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'my_form';
     }

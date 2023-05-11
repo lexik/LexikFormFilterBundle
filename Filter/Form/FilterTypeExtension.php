@@ -2,10 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Form;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Define filtering options.
@@ -41,7 +41,7 @@ class FilterTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['apply_filter'             => null, 'data_extraction_method'   => 'default', 'filter_condition_builder' => null, 'filter_field_name'        => null, 'filter_shared_name'       => null]);
+        $resolver->setDefaults(['apply_filter' => null, 'data_extraction_method' => 'default', 'filter_condition_builder' => null, 'filter_field_name' => null, 'filter_shared_name' => null]);
     }
 
     /**

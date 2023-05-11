@@ -2,22 +2,22 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
+use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
+use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\CollectionAdapterFilterType;
+use Lexik\Bundle\FormFilterBundle\Filter\Form\Type\EmbeddedFilterTypeInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Event\ApplyFilterConditionEvent;
-use Lexik\Bundle\FormFilterBundle\Event\FilterEvents;
-use Lexik\Bundle\FormFilterBundle\Event\PrepareEvent;
-use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Build a query from a given form object, we basically add conditions to the Doctrine query builder.
@@ -276,7 +276,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
 
-            $name = ('' !== $parentName) ? $parentName.'.'.$child->getName() : $child->getName();
+            $name = ('' !== $parentName) ? $parentName . '.' . $child->getName() : $child->getName();
 
             if ($child->getConfig()->hasAttribute('add_shared') || $formType instanceof EmbeddedFilterTypeInterface) {
                 $isCollection = ($formType instanceof CollectionAdapterFilterType);

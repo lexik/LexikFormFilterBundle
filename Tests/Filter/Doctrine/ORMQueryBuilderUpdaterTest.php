@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Filter\Doctrine;
 
-use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
+use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Entity\Item;
 use Lexik\Bundle\FormFilterBundle\Tests\Fixtures\Filter\ItemEmbeddedOptionsFilterType;
 
 /**
@@ -125,19 +125,19 @@ class ORMQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 
         // doctrine query builder without any joins + custom condition builder
         $form = $this->formFactory->create(ItemEmbeddedOptionsFilterType::class, null, ['filter_condition_builder' => function (ConditionBuilderInterface $builder) {
-                $builder
-                    ->root('and')
-                        ->orX()
-                            ->field('name')
-                            ->field('options.label')
-                        ->end()
-                        ->orX()
-                            ->field('options.rank')
-                            ->field('position')
-                        ->end()
+            $builder
+                ->root('and')
+                    ->orX()
+                        ->field('name')
+                        ->field('options.label')
                     ->end()
-                ;
-            }]);
+                    ->orX()
+                        ->field('options.rank')
+                        ->field('position')
+                    ->end()
+                ->end()
+            ;
+        }]);
         $filterQueryBuilder = $this->initQueryBuilderUpdater();
 
         $doctrineQueryBuilder = $this->createDoctrineQueryBuilder();

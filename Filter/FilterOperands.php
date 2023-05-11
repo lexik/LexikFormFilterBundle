@@ -9,15 +9,15 @@ namespace Lexik\Bundle\FormFilterBundle\Filter;
  */
 final class FilterOperands
 {
-    public const OPERATOR_EQUAL              = 'eq';
-    public const OPERATOR_GREATER_THAN       = 'gt';
+    public const OPERATOR_EQUAL = 'eq';
+    public const OPERATOR_GREATER_THAN = 'gt';
     public const OPERATOR_GREATER_THAN_EQUAL = 'gte';
-    public const OPERATOR_LOWER_THAN         = 'lt';
-    public const OPERATOR_LOWER_THAN_EQUAL   = 'lte';
+    public const OPERATOR_LOWER_THAN = 'lt';
+    public const OPERATOR_LOWER_THAN_EQUAL = 'lte';
 
-    public const STRING_STARTS   = 1;
-    public const STRING_ENDS     = 2;
-    public const STRING_EQUALS   = 3;
+    public const STRING_STARTS = 1;
+    public const STRING_ENDS = 2;
+    public const STRING_EQUALS = 3;
     public const STRING_CONTAINS = 4;
 
     /**

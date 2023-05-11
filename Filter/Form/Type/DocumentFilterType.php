@@ -31,7 +31,7 @@ class DocumentFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(['required'               => false, 'data_extraction_method' => 'default', 'reference_type'         => 'one', 'reference_name'         => null])
+            ->setDefaults(['required' => false, 'data_extraction_method' => 'default', 'reference_type' => 'one', 'reference_name' => null])
             ->setRequired(['reference_type'])
             ->setAllowedValues('data_extraction_method', ['default'])
             ->setAllowedValues('reference_type', ['one', 'many'])
@@ -41,7 +41,7 @@ class DocumentFilterType extends AbstractType
     /**
      * @return ?string
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return DocumentType::class;
     }
@@ -49,7 +49,7 @@ class DocumentFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_document';
     }

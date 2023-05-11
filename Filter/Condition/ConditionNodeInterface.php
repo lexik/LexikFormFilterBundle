@@ -8,7 +8,7 @@ namespace Lexik\Bundle\FormFilterBundle\Filter\Condition;
 interface ConditionNodeInterface
 {
     public const EXPR_AND = 'and';
-    public const EXPR_OR  = 'or';
+    public const EXPR_OR = 'or';
 
     /**
      * Start a OR sub expression.

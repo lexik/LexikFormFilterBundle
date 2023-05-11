@@ -25,7 +25,7 @@ class TextExtractionMethod implements DataExtractionMethodInterface
      */
     public function extract(FormInterface $form)
     {
-        $data   = $form->getData();
+        $data = $form->getData();
         $values = ['value' => []];
 
         if (array_key_exists('text', $data)) {

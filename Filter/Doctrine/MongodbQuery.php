@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
-use Doctrine\ODM\MongoDB\Query\Expr;
 use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 

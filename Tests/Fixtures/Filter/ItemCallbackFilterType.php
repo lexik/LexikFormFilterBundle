@@ -37,7 +37,7 @@ class ItemCallbackFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'item_filter';
     }

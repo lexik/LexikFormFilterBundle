@@ -8,7 +8,7 @@ use Lexik\Bundle\FormFilterBundle\Filter\FilterOperands;
 
 abstract class ExpressionBuilder
 {
-    public const SQL_DATE      = 'Y-m-d';
+    public const SQL_DATE = 'Y-m-d';
     public const SQL_DATE_TIME = 'Y-m-d H:i:s';
 
     /**
@@ -112,13 +112,13 @@ abstract class ExpressionBuilder
             return $this->expr()->lte($field, $max);
         } elseif (null === $max) {
             // $min exists
-            return $this->expr()->gte($field,  $min);
+            return $this->expr()->gte($field, $min);
         }
 
         // both $min and $max exists
         return $this->expr()->andX(
             $this->expr()->lte($field, $max),
-            $this->expr()->gte($field,  $min)
+            $this->expr()->gte($field, $min)
         );
     }
 
@@ -139,8 +139,8 @@ abstract class ExpressionBuilder
         }
 
         $value = $this->convertToSqlDateTime($value);
-        $min   = $this->convertToSqlDateTime($min);
-        $max   = $this->convertToSqlDateTime($max);
+        $min = $this->convertToSqlDateTime($min);
+        $max = $this->convertToSqlDateTime($max);
 
         if (!$max && !$min) {
             return null;
@@ -149,11 +149,11 @@ abstract class ExpressionBuilder
         if ($min === null) {
             $findExpression = $this->expr()->lte($value, $max);
         } elseif ($max === null) {
-            $findExpression = $this->expr()->gte($value,  $min);
+            $findExpression = $this->expr()->gte($value, $min);
         } else {
             $findExpression = $this->expr()->andX(
                 $this->expr()->lte($value, $max),
-                $this->expr()->gte($value,  $min)
+                $this->expr()->gte($value, $min)
             );
         }
 
@@ -189,7 +189,7 @@ abstract class ExpressionBuilder
      */
     protected function convertToSqlDate($date, $isMax = false)
     {
-        if (! $date instanceof \DateTime) {
+        if (!$date instanceof \DateTime) {
             return;
         }
 

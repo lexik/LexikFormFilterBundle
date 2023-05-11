@@ -3,10 +3,10 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
-use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -24,7 +24,7 @@ class DoctrineQueryBuilderAdapter
      */
     public function __construct($qb)
     {
-        if (! ($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder)) {
+        if (!($qb instanceof ORMQueryBuilder || $qb  instanceof DBALQueryBuilder)) {
             throw new \RuntimeException('Invalid Doctrine query builder instance.');
         }
 

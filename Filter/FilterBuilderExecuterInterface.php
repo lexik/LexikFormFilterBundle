@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter;
 
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  */
