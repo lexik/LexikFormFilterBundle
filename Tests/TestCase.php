@@ -5,11 +5,15 @@ namespace Lexik\Bundle\FormFilterBundle\Tests;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\ORM\Tools\Setup;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\LexikFormFilterExtension;
 use Lexik\Bundle\FormFilterBundle\Filter\Form\FilterExtension;
@@ -17,6 +21,7 @@ use Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -32,6 +37,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @var FormFactory
      */
     protected $formFactory;
+
+    private static $container;
 
     public function setUp(): void
     {
@@ -65,13 +72,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $arrayAdapter = new ArrayAdapter();
         $cache = DoctrineProvider::wrap(new ArrayAdapter());
 
-        $reader = new AnnotationReader(new \Doctrine\Common\Annotations\DocParser());
+        $reader = new AnnotationReader(new DocParser());
 
-        $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array(
-            __DIR__.'/Fixtures/Entity',
-        ));
+        $mappingDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, [__DIR__ . '/Fixtures/Entity']);
 
-        $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(array());
+        $config = Setup::createAnnotationMetadataConfiguration([]);
 
         $config->setMetadataDriverImpl($mappingDriver);
         $config->setMetadataCache($arrayAdapter);
@@ -79,13 +84,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config->setProxyDir(sys_get_temp_dir());
         $config->setProxyNamespace('Proxy');
         $config->setAutoGenerateProxyClasses(true);
-        $config->setClassMetadataFactoryName('Doctrine\ORM\Mapping\ClassMetadataFactory');
-        $config->setDefaultRepositoryClassName('Doctrine\ORM\EntityRepository');
+        $config->setClassMetadataFactoryName(ClassMetadataFactory::class);
+        $config->setDefaultRepositoryClassName(EntityRepository::class);
 
-        $conn = array(
-            'driver' => 'pdo_sqlite',
-            'memory' => true,
-        );
+        $conn = ['driver' => 'pdo_sqlite', 'memory' => true];
 
         $em = EntityManager::create($conn, $config);
 
@@ -98,7 +100,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $config = new Configuration();
         $config->setMetadataCache($arrayAdapter);
-        $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), [__DIR__.'/Fixtures/Document/']));
+        $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), [__DIR__ . '/Fixtures/Document/']));
 
         $config->setAutoGenerateProxyClasses(Configuration::AUTOGENERATE_FILE_NOT_EXISTS);
         $config->setProxyDir(sys_get_temp_dir());
@@ -108,7 +110,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config->setDefaultDB('lexik_form_filter_bundle_test');
         $config->setHydratorNamespace('Doctrine\ODM\MongoDB\Hydrator');
         $config->setAutoGenerateHydratorClasses(true);
-        $config->setDefaultCommitOptions(array());
+        $config->setDefaultCommitOptions([]);
 
         return DocumentManager::create(null, $config);
     }
@@ -133,20 +135,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private static function createContainerBuilder(array $configs = [])
     {
         $container = new ContainerBuilder(new ParameterBag([
-            'kernel.bundles'          => [
+            'kernel.bundles' => [
                 'FrameworkBundle' => FrameworkBundle::class,
                 'DoctrineBundle' => DoctrineBundle::class,
                 'LexikFormFilterBundle' => LexikFormFilterBundle::class
             ],
             'kernel.bundles_metadata' => [],
-            'kernel.cache_dir'        => __DIR__,
-            'kernel.debug'            => false,
-            'kernel.environment'      => 'test',
-            'kernel.name'             => 'kernel',
-            'kernel.root_dir'         => __DIR__,
-            'kernel.project_dir'      => __DIR__,
-            'kernel.container_class'  => 'AutowiringTestContainer',
-            'kernel.charset'          => 'utf8',
+            'kernel.cache_dir' => __DIR__,
+            'kernel.debug' => false,
+            'kernel.environment' => 'test',
+            'kernel.name' => 'kernel',
+            'kernel.root_dir' => __DIR__,
+            'kernel.project_dir' => __DIR__,
+            'kernel.container_class' => 'AutowiringTestContainer',
+            'kernel.charset' => 'utf8',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
             'debug.file_link_format' => null,
         ]));
@@ -180,12 +182,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveChildDefinitionsPass()]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
-        $container->addCompilerPass(new FormDataExtractorPass());
-        $container->addCompilerPass(new RegisterListenersPass());
+        $container->addCompilerPass(new FormDataExtractorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
+        $container->addCompilerPass(new RegisterListenersPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
 
-        $container->compile();
+        $container->compile(false);
+
+        static::$container = $container;
 
         return $container;
     }
 }
-

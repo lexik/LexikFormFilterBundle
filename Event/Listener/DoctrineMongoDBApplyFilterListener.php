@@ -41,7 +41,7 @@ class DoctrineMongoDBApplyFilterListener
 
         $method = ($node->getOperator() === ConditionNodeInterface::EXPR_AND) ? 'addAnd' : 'addOr';
 
-        $expression = (null === $expr) ? $queryBuilder : $expr;
+        $expression = $expr ?? $queryBuilder;
         $count = 0;
 
         foreach ($node->getFields() as $condition) {

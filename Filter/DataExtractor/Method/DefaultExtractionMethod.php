@@ -15,7 +15,7 @@ class DefaultExtractionMethod implements DataExtractionMethodInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'default';
     }
@@ -25,6 +25,6 @@ class DefaultExtractionMethod implements DataExtractionMethodInterface
      */
     public function extract(FormInterface $form)
     {
-        return array('value' => $form->getData());
+        return ['value' => $form->getData()];
     }
 }

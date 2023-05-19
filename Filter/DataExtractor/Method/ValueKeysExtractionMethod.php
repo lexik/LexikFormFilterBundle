@@ -15,7 +15,7 @@ class ValueKeysExtractionMethod implements DataExtractionMethodInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'value_keys';
     }
@@ -25,15 +25,15 @@ class ValueKeysExtractionMethod implements DataExtractionMethodInterface
      */
     public function extract(FormInterface $form)
     {
-        $data   = $form->getData() ?: array();
-        $keys   = array();
+        $data = $form->getData() ?: [];
+        $keys = [];
         $config = $form->getConfig();
 
         if ($config->hasAttribute('filter_value_keys')) {
             $keys = array_merge($data, $config->getAttribute('filter_value_keys'));
         }
 
-        $values = array('value' => array());
+        $values = ['value' => []];
 
         foreach ($keys as $key => $value) {
             if (array_key_exists($key, $data)) {

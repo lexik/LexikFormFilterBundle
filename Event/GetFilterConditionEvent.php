@@ -2,10 +2,10 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Event;
 
-use Symfony\Contracts\EventDispatcher\Event;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -42,8 +42,8 @@ class GetFilterConditionEvent extends Event
     public function __construct(QueryInterface $filterQuery, $field, $values)
     {
         $this->filterQuery = $filterQuery;
-        $this->field       = $field;
-        $this->values      = $values;
+        $this->field = $field;
+        $this->values = $values;
     }
 
     /**
@@ -82,7 +82,7 @@ class GetFilterConditionEvent extends Event
      * @param string $expression
      * @param array  $parameters
      */
-    public function setCondition($expression, array $parameters = array())
+    public function setCondition($expression, array $parameters = [])
     {
         $this->condition = new Condition($expression, $parameters);
     }

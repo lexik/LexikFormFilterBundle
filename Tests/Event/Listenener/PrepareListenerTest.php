@@ -2,6 +2,9 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Tests\Event\Listener;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Lexik\Bundle\FormFilterBundle\Event\Listener\PrepareListener;
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +17,9 @@ class PrepareListenerTest extends TestCase
         $pgPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\PostgreSqlPlatform')->getMock();
         $myPlatform = $this->getMockBuilder('Doctrine\DBAL\Platforms\MySqlPlatform')->getMock();
 
-        $connection    = $this->getMockBuilder(
-            'Doctrine\DBAL\Connection')
+        $connection = $this->getMockBuilder(
+            Connection::class
+        )
             ->disableOriginalConstructor()
             ->getMock();
         $connection->expects($this->any())
@@ -27,7 +31,7 @@ class PrepareListenerTest extends TestCase
                 $myPlatform
             ));
 
-        $entityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $entityManager = $this->getMockBuilder('\\' . EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,9 +40,9 @@ class PrepareListenerTest extends TestCase
             ->will($this->returnValue($connection));
 
         $queryBuilder = $this
-            ->getMockBuilder('\Doctrine\ORM\QueryBuilder')
-            ->setConstructorArgs(array($entityManager))
-            ->setMethods(array('getEntityManager'))
+            ->getMockBuilder('\\' . QueryBuilder::class)
+            ->setConstructorArgs([$entityManager])
+            ->setMethods(['getEntityManager'])
             ->getMock()
         ;
 
@@ -50,9 +54,9 @@ class PrepareListenerTest extends TestCase
         $this->assertFalse($listener->getForceCaseInsensitivity($queryBuilder));
 
         $queryBuilder = $this
-            ->getMockBuilder('Doctrine\DBAL\Query\QueryBuilder')
-            ->setConstructorArgs(array($connection))
-            ->setMethods(array('getConnection'))
+            ->getMockBuilder(\Doctrine\DBAL\Query\QueryBuilder::class)
+            ->setConstructorArgs([$connection])
+            ->setMethods(['getConnection'])
             ->getMock()
         ;
 

@@ -2,10 +2,12 @@
 
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
-use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
-use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
-use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ORMExpressionBuilder;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ORMExpressionBuilder;
+use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -31,7 +33,7 @@ class ORMQuery implements QueryInterface
      */
     public function __construct(QueryBuilder $queryBuilder, $forceCaseInsensitivity = false, $encoding = null)
     {
-        $this->queryBuilder      = $queryBuilder;
+        $this->queryBuilder = $queryBuilder;
         $this->expressionBuilder = new ORMExpressionBuilder(
             $this->queryBuilder->expr(),
             $forceCaseInsensitivity,
@@ -42,7 +44,7 @@ class ORMQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function getEventPartName()
+    public function getEventPartName(): string
     {
         return 'orm';
     }
@@ -58,7 +60,7 @@ class ORMQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function createCondition($expression, array $parameters = array())
+    public function createCondition($expression, array $parameters = [])
     {
         return new Condition($expression, $parameters);
     }
@@ -66,7 +68,7 @@ class ORMQuery implements QueryInterface
     /**
      * Get QueryBuilder expr.
      *
-     * @return \Doctrine\ORM\Query\Expr
+     * @return Expr
      */
     public function getExpr()
     {
@@ -80,13 +82,13 @@ class ORMQuery implements QueryInterface
     {
         $aliases = $this->queryBuilder->getRootAliases();
 
-        return isset($aliases[0]) ? $aliases[0] : '';
+        return $aliases[0] ?? '';
     }
 
     /**
      * {@inheritDoc}
      */
-    public function hasJoinAlias($joinAlias)
+    public function hasJoinAlias($joinAlias): bool
     {
         $joinParts = $this->queryBuilder->getDQLPart('join');
 
@@ -105,7 +107,7 @@ class ORMQuery implements QueryInterface
     /**
      * Get expr class.
      *
-     * @return \Lexik\Bundle\FormFilterBundle\Filter\Doctrine\Expression\ExpressionBuilder
+     * @return ExpressionBuilder
      */
     public function getExpressionBuilder()
     {

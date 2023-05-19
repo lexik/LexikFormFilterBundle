@@ -16,32 +16,28 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class ItemCallbackFilterType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextFilterType::class, array(
-            'apply_filter' => array($this, 'fieldNameCallback'),
-        ));
-        $builder->add('position', NumberFilterType::class, array(
-            'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
-                if (!empty($values['value'])) {
-                    if ($filterQuery->getExpr() instanceof Expr) {
-                        $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
-                    } else {
-                        $expr = $filterQuery->getExpr()->neq($field, $values['value']);
-                    }
-
-                    return $filterQuery->createCondition($expr);
+        $builder->add('name', TextFilterType::class, ['apply_filter' => [$this, 'fieldNameCallback']]);
+        $builder->add('position', NumberFilterType::class, ['apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+            if (!empty($values['value'])) {
+                if ($filterQuery->getExpr() instanceof Expr) {
+                    $expr = $filterQuery->getExpr()->field($field)->notEqual($values['value']);
+                } else {
+                    $expr = $filterQuery->getExpr()->neq($field, $values['value']);
                 }
 
-                return null;
-            },
-        ));
+                return $filterQuery->createCondition($expr);
+            }
+
+            return null;
+        }]);
     }
 
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'item_filter';
     }

@@ -7,7 +7,7 @@ on:
 env:
   fail-fast: true
   PHPUNIT_FLAGS: "-v"
-  SYMFONY_DEPRECATIONS_HELPER: 40
+  SYMFONY_DEPRECATIONS_HELPER: weak
 
 jobs:
   build:
@@ -17,11 +17,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { php: 7.3, mongodb: 3.6, symfony: "4.4.*", composer-flags: '--prefer-stable'}
           - { php: 7.4, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
-          - { php: 8.0, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
-          - { php: 8.0, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
-          - { php: 8.1, mongodb: 3.6, symfony: "6.1.*@dev", composer-flags: '' }
+          - { php: 8.2, mongodb: 3.6, symfony: "5.4.*", composer-flags: '--prefer-stable'}
+          - { php: 8.2, mongodb: 3.6, symfony: "6.0.*", composer-flags: '--prefer-stable'}
+          - { php: 8.2, mongodb: 3.6, symfony: "6.1.*", composer-flags: '--prefer-stable' }
+          - { php: 8.2, mongodb: 3.6, symfony: "6.2.*", composer-flags: '--prefer-stable' }
+          - { php: 8.2, mongodb: 3.6, symfony: "6.3.*@dev", composer-flags: '' }
+
     services:
       mongo:
         image: mongo:${{ matrix.mongodb }}
@@ -38,25 +40,25 @@ jobs:
           ini-values: date.timezone="Europe/Paris"
           coverage: xdebug
           tools: "composer:v2,flex"
-          
+
       - name: Show PHP version
         run: php -v && composer -V
-        
+
       - name: Download Composer cache dependencies from cache
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      
+
       - name: "Require symfony/messenger"
         run: "composer require --dev symfony/doctrine-messenger --no-update"
         if: "${{ startsWith(matrix.symfony, '5.3') || startsWith(matrix.symfony, '5.4') }}"
-        
+
       - name: Cache Composer dependencies
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ matrix.os }}-composer-
-          
+
       - name: Install dependencies
         run: |
           perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json
@@ -65,6 +67,6 @@ jobs:
           composer update ${{ matrix.composer-flags }} --prefer-dist
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony }}"
-          
+
       - name: "Run PHPUnit Tests"
         run: "composer test"

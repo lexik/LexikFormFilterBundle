@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle\Filter\Doctrine;
 
 use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Expr;
 use Lexik\Bundle\FormFilterBundle\Filter\Condition\Condition;
 use Lexik\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 
@@ -44,7 +45,7 @@ class MongodbQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function getEventPartName()
+    public function getEventPartName(): string
     {
         return 'mongodb';
     }
@@ -52,13 +53,13 @@ class MongodbQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function createCondition($expression, array $parameters = array())
+    public function createCondition($expression, array $parameters = [])
     {
         return new Condition($expression, $parameters);
     }
 
     /**
-     * @return \Doctrine\ODM\MongoDB\Query\Expr
+     * @return Expr
      */
     public function getExpr()
     {

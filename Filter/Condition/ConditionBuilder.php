@@ -21,7 +21,7 @@ class ConditionBuilder implements ConditionBuilderInterface
     {
         $operator = strtolower($operator);
 
-        if (!in_array($operator, array(ConditionNodeInterface::EXPR_AND, ConditionNodeInterface::EXPR_OR))) {
+        if (!in_array($operator, [ConditionNodeInterface::EXPR_AND, ConditionNodeInterface::EXPR_OR])) {
             throw new \RuntimeException(sprintf('Invalid operator "%s", allowed values: and, or', $operator));
         }
 

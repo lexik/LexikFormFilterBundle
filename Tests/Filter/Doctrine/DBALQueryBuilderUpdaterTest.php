@@ -11,79 +11,52 @@ class DBALQueryBuilderUpdaterTest extends DoctrineQueryBuilderUpdater
 {
     public function testBuildQuery()
     {
-        parent::createBuildQueryTest('getSQL', array(
-            'SELECT i FROM item i',
-            'SELECT i FROM item i WHERE i.name LIKE \'blabla\'',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = :p_i_enabled)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = :p_i_enabled)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = :p_i_createdAt)',
-            'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = :p_i_createdAt)',
-        ));
+        parent::createBuildQueryTest('getSQL', ['SELECT i FROM item i', 'SELECT i FROM item i WHERE i.name LIKE \'blabla\'', 'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position)', 'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = :p_i_enabled)', 'SELECT i FROM item i WHERE (i.name LIKE \'blabla\') AND (i.position > :p_i_position) AND (i.enabled = :p_i_enabled)', 'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = :p_i_createdAt)', 'SELECT i FROM item i WHERE (i.name LIKE \'%blabla\') AND (i.position <= :p_i_position) AND (i.createdAt = :p_i_createdAt)']);
     }
 
     public function testDisabledFieldQuery()
     {
-        parent::createDisabledFieldTest('getSQL', array(
-            'SELECT i FROM item i WHERE i.position > :p_i_position',
-        ));
+        parent::createDisabledFieldTest('getSQL', ['SELECT i FROM item i WHERE i.position > :p_i_position']);
     }
 
     public function testApplyFilterOption()
     {
-        parent::createApplyFilterOptionTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.name <> \'blabla\') AND (i.position <> 2)',
-        ));
+        parent::createApplyFilterOptionTest('getSQL', ['SELECT i FROM item i WHERE (i.name <> \'blabla\') AND (i.position <> 2)']);
     }
 
     public function testNumberRange()
     {
-        parent::createNumberRangeTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.position > :p_i_position_left) AND (i.position < :p_i_position_right)',
-        ));
+        parent::createNumberRangeTest('getSQL', ['SELECT i FROM item i WHERE (i.position > :p_i_position_left) AND (i.position < :p_i_position_right)']);
     }
 
     public function testNumberRangeWithSelector()
     {
-        parent::createNumberRangeCompoundTest('getSQL', array(
-                'SELECT i FROM item i WHERE (i.position_selector > :p_i_position_selector_left) AND (i.position_selector <= :p_i_position_selector_right)',
-        ));
+        parent::createNumberRangeCompoundTest('getSQL', ['SELECT i FROM item i WHERE (i.position_selector > :p_i_position_selector_left) AND (i.position_selector <= :p_i_position_selector_right)']);
     }
 
     public function testNumberRangeDefaultValues()
     {
-        parent::createNumberRangeDefaultValuesTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.default_position >= :p_i_default_position_left) AND (i.default_position <= :p_i_default_position_right)',
-        ));
+        parent::createNumberRangeDefaultValuesTest('getSQL', ['SELECT i FROM item i WHERE (i.default_position >= :p_i_default_position_left) AND (i.default_position <= :p_i_default_position_right)']);
     }
 
     public function testDateRange()
     {
-        parent::createDateRangeTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.createdAt <= \'2012-05-22 23:59:59\') AND (i.createdAt >= \'2012-05-12 00:00:00\')',
-        ));
+        parent::createDateRangeTest('getSQL', ['SELECT i FROM item i WHERE (i.createdAt <= \'2012-05-22 23:59:59\') AND (i.createdAt >= \'2012-05-12 00:00:00\')']);
     }
 
     public function testDateRangeWithTimezone()
     {
-        parent::createDateRangeWithTimezoneTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-20 18:59:59\') AND (i.startAt >= \'2015-10-19 19:00:00\')',
-            'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-16 18:59:59\') AND (i.startAt >= \'2015-09-30 19:00:00\')',
-        ));
+        parent::createDateRangeWithTimezoneTest('getSQL', ['SELECT i FROM item i WHERE (i.startAt <= \'2015-10-20 18:59:59\') AND (i.startAt >= \'2015-10-19 19:00:00\')', 'SELECT i FROM item i WHERE (i.startAt <= \'2015-10-16 18:59:59\') AND (i.startAt >= \'2015-09-30 19:00:00\')']);
     }
 
     public function testDateTimeRange()
     {
-        parent::createDateTimeRangeTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.updatedAt <= \'2012-06-10 22:12:00\') AND (i.updatedAt >= \'2012-05-12 14:55:00\')',
-        ));
+        parent::createDateTimeRangeTest('getSQL', ['SELECT i FROM item i WHERE (i.updatedAt <= \'2012-06-10 22:12:00\') AND (i.updatedAt >= \'2012-05-12 14:55:00\')']);
     }
 
     public function testFilterStandardType()
     {
-        parent::createFilterStandardTypeTest('getSQL', array(
-            'SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = 99)',
-        ));
+        parent::createFilterStandardTypeTest('getSQL', ['SELECT i FROM item i WHERE (i.name LIKE \'%hey dude%\') AND (i.position = 99)']);
     }
 
     protected function createDoctrineQueryBuilder()

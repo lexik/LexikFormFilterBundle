@@ -37,8 +37,8 @@ class ConditionNode implements ConditionNodeInterface
     {
         $this->operator = $operator;
         $this->parent = $parent;
-        $this->children = array();
-        $this->fields = array();
+        $this->children = [];
+        $this->fields = [];
     }
 
     /**

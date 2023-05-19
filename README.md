@@ -57,7 +57,7 @@ Please use last tag v5.*
 Credits
 -------
 
-* Lexik <dev@lexik.fr>
+* Lexik <dev@spiriit.fr>
 * [All contributors](https://github.com/lexik/LexikFormFilterBundle/graphs/contributors)
 
 License

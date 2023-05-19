@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\FormFilterBundle;
 
 use Lexik\Bundle\FormFilterBundle\DependencyInjection\Compiler\FormDataExtractorPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -14,10 +15,10 @@ class LexikFormFilterBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-     public function build(ContainerBuilder $container)
-     {
-         parent::build($container);
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
 
-         $container->addCompilerPass(new FormDataExtractorPass());
-     }
+        $container->addCompilerPass(new FormDataExtractorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
+    }
 }

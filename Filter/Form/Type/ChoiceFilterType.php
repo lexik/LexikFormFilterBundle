@@ -16,21 +16,18 @@ class ChoiceFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(array(
-                'required'               => false,
-                'data_extraction_method' => 'default',
-            ))
-            ->setAllowedValues('data_extraction_method', array('default'))
+            ->setDefaults(['required' => false, 'data_extraction_method' => 'default'])
+            ->setAllowedValues('data_extraction_method', ['default'])
         ;
     }
 
     /**
      * @return ?string
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }
@@ -38,7 +35,7 @@ class ChoiceFilterType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_choice';
     }

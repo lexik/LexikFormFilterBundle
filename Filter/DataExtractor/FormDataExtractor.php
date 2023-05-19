@@ -21,7 +21,7 @@ class FormDataExtractor implements FormDataExtractorInterface
      */
     public function __construct()
     {
-        $this->methods = array();
+        $this->methods = [];
     }
 
     /**

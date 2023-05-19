@@ -15,7 +15,7 @@ class RelationsAliasBag
     /**
      * @param array $aliases
      */
-    public function __construct(array $aliases = array())
+    public function __construct(array $aliases = [])
     {
         $this->aliases = $aliases;
     }
@@ -50,7 +50,7 @@ class RelationsAliasBag
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->aliases);
     }
