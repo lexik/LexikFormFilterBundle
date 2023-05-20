@@ -68,7 +68,7 @@ This option allow you to define the default text pattern the `TextFilterType` wi
 lexik_form_filter:
     condition_pattern: text.starts
 ```
-Available values for this option are: `text.contains`, `text.starts`, `text.ends`, `text.equal`.
+Available values for this option are: `text.contains`, `text.starts`, `text.ends`, `text.equals`.
 
 ***
 
