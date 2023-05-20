@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no: 'Igen vagy nem'
+    yes: 'Igen'
+    no: 'Nem'
+
+number:
+    equal: 'Egyenlő'
+    greater_than: 'Nagyobb mint'
+    greater_than_equal: 'Nagyobb vagy egyenlő mint'
+    lower_than: 'Kisebb mint'
+    lower_than_equal: 'Kisebb vagy egyenlő mint'
+
+text:
+    starts: 'Ezzel kezdődik'
+    ends: 'Ezzel végződik'
+    equals: 'Megegyezik'
+    both: 'Tartalmazza'
