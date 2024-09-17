@@ -92,7 +92,7 @@ class DefaultController extends Controller
 
         if ($request->query->has($form->getName())) {
             // manually bind values from the request
-            $form->submit($request->query->get($form->getName()));
+            $form->submit($request->query->all($form->getName()));
 
             // initialize a query builder
             $filterBuilder = $this->get('doctrine.orm.entity_manager')

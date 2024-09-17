@@ -28,7 +28,7 @@ class DefaultController extends Controller
 
         if ($request->query->has($form->getName())) {
             // manually bind values from the request
-            $form->submit($request->query->get($form->getName()));
+            $form->submit($request->query->all($form->getName()));
 
             // build the query from the given form object
             $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $filterBuilder);
