@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "Tak lub Nie"
+    yes:                "Tak"
+    no:                 "Nie"
+
+number:
+    equal:              "Równy"
+    greater_than:       "Większy niż"
+    greater_than_equal: "Większy lub Równy"
+    lower_than:         "Mniejszy niż"
+    lower_than_equal:   "Mniejszy lub Równy"
+
+text:
+    starts:             "Zaczyna się na"
+    ends:               "Kończy się na"
+    equals:             "Równy"
+    both:               "Zawiera"
