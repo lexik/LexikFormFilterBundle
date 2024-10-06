@@ -126,6 +126,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
+            if ($child->getConfig()->getMapped() === false) {
+                continue;
+            }
 
             // this means we have a relation
             if ($child->getConfig()->hasAttribute('add_shared')) {
